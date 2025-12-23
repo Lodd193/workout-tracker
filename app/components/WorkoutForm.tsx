@@ -1,39 +1,45 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '../../lib/supabase'
-import { workoutTypes, exercisesByWorkout } from '../../lib/exercises'
+import { supabase } from '@/lib/supabase'
+import { Exercise, SelectedExercise } from '@/lib/types'
+import ExerciseCard from './ExerciseCard'
+import ExerciseSelector from './ExerciseSelector'
 
 export default function WorkoutForm() {
   const [date, setDate] = useState('')
-  const [workoutType, setWorkoutType] = useState('')
-  const [sets, setSets] = useState<Record<string, { weight: string; reps: string }[]>>({})
+  const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
 
-  const exercises = workoutType ? exercisesByWorkout[workoutType] : []
-
-  const handleWorkoutTypeChange = (type: string) => {
-    setWorkoutType(type)
-    const newSets: Record<string, { weight: string; reps: string }[]> = {}
-    exercisesByWorkout[type]?.forEach((exercise) => {
-      newSets[exercise] = [
-        { weight: '', reps: '' },
-        { weight: '', reps: '' },
-        { weight: '', reps: '' },
-        { weight: '', reps: '' },
-      ]
-    })
-    setSets(newSets)
+  const addExercise = (exercise: Exercise) => {
+    const newExercise: SelectedExercise = {
+      id: crypto.randomUUID(),
+      exerciseId: exercise.id,
+      name: exercise.name,
+      category: exercise.category,
+      sets: Array(4).fill(null).map(() => ({ weight: '', reps: '' })),
+    }
+    setSelectedExercises((prev) => [...prev, newExercise])
+    setIsModalOpen(false)
   }
 
-  const updateSet = (exercise: string, setIndex: number, field: 'weight' | 'reps', value: string) => {
-    setSets((prev) => ({
-      ...prev,
-      [exercise]: prev[exercise].map((s, i) =>
-        i === setIndex ? { ...s, [field]: value } : s
-      ),
-    }))
+  const removeExercise = (id: string) => {
+    setSelectedExercises((prev) => prev.filter((ex) => ex.id !== id))
+  }
+
+  const updateSet = (exerciseId: string, setIndex: number, field: 'weight' | 'reps', value: string) => {
+    setSelectedExercises((prev) =>
+      prev.map((ex) =>
+        ex.id === exerciseId
+          ? {
+              ...ex,
+              sets: ex.sets.map((s, i) => (i === setIndex ? { ...s, [field]: value } : s)),
+            }
+          : ex
+      )
+    )
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,24 +47,30 @@ export default function WorkoutForm() {
     setSaving(true)
     setMessage('')
 
-    const rows = []
-
-    for (const exercise of exercises) {
-      const exerciseSets = sets[exercise] || []
-      for (let i = 0; i < exerciseSets.length; i++) {
-        const { weight, reps } = exerciseSets[i]
-        if (weight && reps) {
-          rows.push({
-            date,
-            workout_type: workoutType,
-            exercise_name: exercise,
-            set_number: i + 1,
-            weight_kg: parseFloat(weight),
-            reps: parseInt(reps),
-          })
-        }
-      }
+    if (!date) {
+      setMessage('Please select a date.')
+      setSaving(false)
+      return
     }
+
+    if (selectedExercises.length === 0) {
+      setMessage('Please add at least one exercise.')
+      setSaving(false)
+      return
+    }
+
+    const rows = selectedExercises.flatMap((exercise) =>
+      exercise.sets
+        .map((set, index) => ({
+          date,
+          workout_type: exercise.category,
+          exercise_name: exercise.name,
+          set_number: index + 1,
+          weight_kg: parseFloat(set.weight),
+          reps: parseInt(set.reps),
+        }))
+        .filter((row) => !isNaN(row.weight_kg) && !isNaN(row.reps))
+    )
 
     if (rows.length === 0) {
       setMessage('No sets to save. Enter at least one set.')
@@ -73,23 +85,22 @@ export default function WorkoutForm() {
     } else {
       setMessage(`Saved ${rows.length} sets!`)
       setDate('')
-      setWorkoutType('')
-      setSets({})
+      setSelectedExercises([])
     }
 
     setSaving(false)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-8 px-4">
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
-        
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
+      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white tracking-tight">
-            Workout Log
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400
+                         bg-clip-text text-transparent tracking-tight">
+            Workout Tracker
           </h1>
-          <p className="text-slate-400 mt-1">Track your progress</p>
+          <p className="text-slate-400 mt-2">Build your workout, track your progress</p>
         </div>
 
         {/* Date Input */}
@@ -102,99 +113,99 @@ export default function WorkoutForm() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white 
+            className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white
                        focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
-                       transition-all duration-200"
+                       transition-all duration-200 backdrop-blur-sm"
           />
         </div>
 
-        {/* Workout Type Select */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-300 uppercase tracking-wide">
-            Workout Type
-          </label>
-          <select
-            value={workoutType}
-            onChange={(e) => handleWorkoutTypeChange(e.target.value)}
-            required
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white 
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
-                       transition-all duration-200 appearance-none cursor-pointer"
+        {/* Add Exercise Button */}
+        <div className="flex justify-center pt-4">
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4
+                       rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/30
+                       hover:from-emerald-400 hover:to-cyan-400
+                       transform transition-all duration-200 hover:scale-105 active:scale-95
+                       flex items-center gap-3"
           >
-            <option value="" className="bg-slate-800">Select workout...</option>
-            {workoutTypes.map((w) => (
-              <option key={w.value} value={w.value} className="bg-slate-800">
-                {w.label}
-              </option>
-            ))}
-          </select>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Exercise
+          </button>
         </div>
 
-        {/* Exercise Cards */}
-        <div className="space-y-4">
-          {exercises.map((exercise, exerciseIndex) => (
-            <div 
-              key={exercise} 
-              className="bg-slate-800/50 border border-slate-700 rounded-2xl p-4 
-                         backdrop-blur-sm transition-all duration-300"
-              style={{ animationDelay: `${exerciseIndex * 50}ms` }}
-            >
-              <h3 className="font-semibold text-white text-lg mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center text-sm font-bold">
-                  {exerciseIndex + 1}
-                </span>
-                {exercise}
-              </h3>
-              
-              <div className="grid grid-cols-4 gap-3">
-                {sets[exercise]?.map((set, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="text-xs text-slate-500 font-medium text-center uppercase">
-                      Set {i + 1}
-                    </div>
-                    <input
-                      type="number"
-                      placeholder="kg"
-                      value={set.weight}
-                      onChange={(e) => updateSet(exercise, i, 'weight', e.target.value)}
-                      className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-2 py-2.5 
-                                 text-white text-center text-sm font-medium
-                                 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
-                                 placeholder:text-slate-600 transition-all duration-200"
-                    />
-                    <input
-                      type="number"
-                      placeholder="reps"
-                      value={set.reps}
-                      onChange={(e) => updateSet(exercise, i, 'reps', e.target.value)}
-                      className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-2 py-2.5 
-                                 text-white text-center text-sm font-medium
-                                 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
-                                 placeholder:text-slate-600 transition-all duration-200"
-                    />
-                  </div>
-                ))}
-              </div>
+        {/* Selected Exercises */}
+        {selectedExercises.length > 0 && (
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-white">
+                Your Workout ({selectedExercises.length} exercise{selectedExercises.length !== 1 ? 's' : ''})
+              </h2>
             </div>
-          ))}
-        </div>
+            {selectedExercises.map((exercise, index) => (
+              <ExerciseCard
+                key={exercise.id}
+                exercise={exercise}
+                index={index}
+                onRemove={() => removeExercise(exercise.id)}
+                onUpdateSet={(setIndex, field, value) => updateSet(exercise.id, setIndex, field, value)}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {selectedExercises.length === 0 && (
+          <div className="text-center py-12 bg-slate-800/30 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
+            <svg
+              className="w-16 h-16 mx-auto text-slate-600 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+            <p className="text-slate-400 text-lg mb-2">No exercises added yet</p>
+            <p className="text-slate-500 text-sm">Click "Add Exercise" to build your workout</p>
+          </div>
+        )}
 
         {/* Submit Button */}
-        {workoutType && (
+        {selectedExercises.length > 0 && (
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl 
+            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl
                        font-semibold text-lg shadow-lg shadow-emerald-500/25
-                       hover:from-emerald-400 hover:to-emerald-500 
+                       hover:from-emerald-400 hover:to-emerald-500
                        disabled:opacity-50 disabled:cursor-not-allowed
                        transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             {saving ? (
               <span className="flex items-center justify-center gap-2">
                 <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
                 </svg>
                 Saving...
               </span>
@@ -206,16 +217,20 @@ export default function WorkoutForm() {
 
         {/* Message */}
         {message && (
-          <div className={`text-center py-3 px-4 rounded-xl font-medium ${
-            message.includes('Error') 
-              ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
-              : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-          }`}>
+          <div
+            className={`text-center py-3 px-4 rounded-xl font-medium animate-slideIn ${
+              message.includes('Error')
+                ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+            }`}
+          >
             {message}
           </div>
         )}
-
       </form>
+
+      {/* Exercise Selector Modal */}
+      <ExerciseSelector isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelectExercise={addExercise} />
     </div>
   )
 }
