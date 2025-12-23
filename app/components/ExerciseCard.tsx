@@ -3,6 +3,7 @@ import { SelectedExercise } from '@/lib/types'
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import SetInput from './SetInput'
 import { fetchLastPerformance } from '@/lib/api/analytics'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 
 interface ExerciseCardProps {
   exercise: SelectedExercise
@@ -13,6 +14,7 @@ interface ExerciseCardProps {
 
 export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }: ExerciseCardProps) {
   const gradientColor = CATEGORY_COLORS[exercise.category]
+  const { weightUnit, convertWeight, formatWeight } = useSettings()
   const [bulkWeight, setBulkWeight] = useState('')
   const [bulkReps, setBulkReps] = useState('')
   const [showBulkFill, setShowBulkFill] = useState(false)
@@ -39,8 +41,13 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
 
   const fillAllSets = () => {
     if (!bulkWeight || !bulkReps) return
+
+    // Convert bulk weight to kg if user is in lbs mode
+    const weightInKg =
+      weightUnit === 'lbs' ? (parseFloat(bulkWeight) / 2.20462).toString() : bulkWeight
+
     for (let i = 0; i < exercise.sets.length; i++) {
-      onUpdateSet(i, 'weight', bulkWeight)
+      onUpdateSet(i, 'weight', weightInKg)
       onUpdateSet(i, 'reps', bulkReps)
     }
     setBulkWeight('')
@@ -53,10 +60,21 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
     const { weight_kg, reps } = lastPerformance.bestSet
 
     // Suggest weight increase if reps >= 8, otherwise suggest rep increase
+    const increment = weightUnit === 'lbs' ? 5 : 2.5 // 5 lbs ≈ 2.5 kg
     if (reps >= 8) {
-      return { weight: weight_kg + 2.5, reps, type: 'weight' }
+      return {
+        weight: convertWeight(weight_kg + 2.5), // Convert suggested weight to display unit
+        reps,
+        type: 'weight',
+        increment: weightUnit === 'lbs' ? '5lbs' : '2.5kg',
+      }
     } else {
-      return { weight: weight_kg, reps: reps + 1, type: 'reps' }
+      return {
+        weight: convertWeight(weight_kg),
+        reps: reps + 1,
+        type: 'reps',
+        increment: '',
+      }
     }
   }
 
@@ -125,17 +143,19 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
             <div className="flex-1 min-w-0">
               <div className="text-sm font-semibold text-cyan-400 mb-1">Last time ({formatDate(lastPerformance.date)})</div>
               <div className="text-sm text-white mb-2">
-                Best set: {lastPerformance.bestSet.weight_kg}kg × {lastPerformance.bestSet.reps} reps
+                Best set: {formatWeight(lastPerformance.bestSet.weight_kg)} × {lastPerformance.bestSet.reps} reps
               </div>
               {suggestion && (
                 <div className="flex items-center gap-2 text-xs">
                   <span className="text-slate-400">Try:</span>
                   <span className="font-bold text-emerald-400">
-                    {suggestion.weight}kg × {suggestion.reps} reps
+                    {suggestion.weight}{weightUnit} × {suggestion.reps} reps
                   </span>
-                  <span className="text-slate-500">
-                    ({suggestion.type === 'weight' ? '+2.5kg' : '+1 rep'})
-                  </span>
+                  {suggestion.increment && (
+                    <span className="text-slate-500">
+                      ({suggestion.type === 'weight' ? `+${suggestion.increment}` : '+1 rep'})
+                    </span>
+                  )}
                 </div>
               )}
             </div>
@@ -168,12 +188,12 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
               <input
                 type="number"
                 step="0.5"
-                placeholder="Weight"
+                placeholder={`Weight (${weightUnit})`}
                 value={bulkWeight}
                 onChange={(e) => setBulkWeight(e.target.value)}
                 className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
-              <span className="text-slate-400 text-sm">kg ×</span>
+              <span className="text-slate-400 text-sm">{weightUnit} ×</span>
               <input
                 type="number"
                 placeholder="Reps"

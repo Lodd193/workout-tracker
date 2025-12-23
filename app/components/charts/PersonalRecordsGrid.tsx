@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import { PersonalRecord } from '@/lib/types'
 import { CATEGORY_COLORS } from '@/lib/exercises'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 
 interface PersonalRecordsGridProps {
   records: PersonalRecord[]
 }
 
 export default function PersonalRecordsGrid({ records }: PersonalRecordsGridProps) {
+  const { formatWeight } = useSettings()
   const [sortBy, setSortBy] = useState<'weight' | 'date' | 'name'>('weight')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -106,7 +108,7 @@ export default function PersonalRecordsGrid({ records }: PersonalRecordsGridProp
                 {/* PR Weight */}
                 <div className="mb-3">
                   <div className="text-3xl font-bold text-emerald-400">
-                    {record.max_weight} <span className="text-lg text-slate-400">kg</span>
+                    {formatWeight(record.max_weight)}
                   </div>
                   <div className="text-xs text-slate-500 mt-1">{record.reps_at_max} reps @ max</div>
                 </div>

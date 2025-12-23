@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { fetchWeightProgression } from '@/lib/api/analytics'
 import { WeightProgressionDataPoint } from '@/lib/types'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 import ChartSkeleton from './ChartSkeleton'
 
 interface WeightProgressionChartProps {
@@ -13,6 +14,7 @@ interface WeightProgressionChartProps {
 }
 
 export default function WeightProgressionChart({ selectedExercise, exercises, onExerciseChange }: WeightProgressionChartProps) {
+  const { weightUnit, convertWeight } = useSettings()
   const [data, setData] = useState<WeightProgressionDataPoint[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -33,6 +35,13 @@ export default function WeightProgressionChart({ selectedExercise, exercises, on
 
     loadData()
   }, [selectedExercise])
+
+  // Convert data for display
+  const displayData = data.map((point) => ({
+    ...point,
+    maxWeight: Math.round(convertWeight(point.maxWeight) * 10) / 10,
+    avgWeight: Math.round(convertWeight(point.avgWeight) * 10) / 10,
+  }))
 
   if (loading) {
     return <ChartSkeleton />
@@ -82,14 +91,14 @@ export default function WeightProgressionChart({ selectedExercise, exercises, on
       ) : (
         <>
           <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+            <LineChart data={displayData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
               <XAxis dataKey="displayDate" stroke="#94a3b8" style={{ fontSize: '12px' }} tickLine={false} />
               <YAxis
                 stroke="#94a3b8"
                 style={{ fontSize: '12px' }}
                 tickLine={false}
-                label={{ value: 'Weight (kg)', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
+                label={{ value: `Weight (${weightUnit})`, angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
               />
               <Tooltip
                 contentStyle={{
@@ -125,7 +134,9 @@ export default function WeightProgressionChart({ selectedExercise, exercises, on
           {/* Chart Stats */}
           <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-700">
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald-400">{Math.max(...data.map((d) => d.maxWeight)).toFixed(1)} kg</div>
+              <div className="text-2xl font-bold text-emerald-400">
+                {Math.max(...displayData.map((d) => d.maxWeight)).toFixed(1)} {weightUnit}
+              </div>
               <div className="text-xs text-slate-400 mt-1">Peak Weight</div>
             </div>
             <div className="text-center">

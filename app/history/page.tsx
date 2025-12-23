@@ -9,8 +9,10 @@ import {
   WorkoutHistoryEntry,
 } from '@/lib/api/analytics'
 import { CATEGORY_COLORS } from '@/lib/exercises'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 
 export default function HistoryPage() {
+  const { weightUnit, convertWeight, formatWeight } = useSettings()
   const [history, setHistory] = useState<WorkoutHistoryEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [editingSet, setEditingSet] = useState<number | null>(null)
@@ -36,20 +38,25 @@ export default function HistoryPage() {
 
   const handleEditSet = (setId: number, currentWeight: number, currentReps: number) => {
     setEditingSet(setId)
-    setEditWeight(currentWeight.toString())
+    // Convert to display unit
+    const displayWeight = convertWeight(currentWeight)
+    setEditWeight(displayWeight.toString())
     setEditReps(currentReps.toString())
   }
 
   const handleSaveEdit = async (setId: number) => {
-    const weight = parseFloat(editWeight)
+    const displayWeight = parseFloat(editWeight)
     const reps = parseInt(editReps)
 
-    if (isNaN(weight) || isNaN(reps)) {
+    if (isNaN(displayWeight) || isNaN(reps)) {
       alert('Please enter valid numbers')
       return
     }
 
-    const success = await updateWorkoutSet(setId, { weight_kg: weight, reps })
+    // Convert back to kg for storage
+    const weightInKg = weightUnit === 'lbs' ? displayWeight / 2.20462 : displayWeight
+
+    const success = await updateWorkoutSet(setId, { weight_kg: weightInKg, reps })
     if (success) {
       setEditingSet(null)
       loadHistory() // Refresh data
@@ -232,7 +239,7 @@ export default function HistoryPage() {
                                     autoFocus
                                   />
                                 ) : (
-                                  <span className="text-white">{set.weight_kg}kg</span>
+                                  <span className="text-white">{formatWeight(set.weight_kg)}</span>
                                 )}
                               </div>
                               <div className="py-2">

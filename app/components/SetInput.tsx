@@ -1,4 +1,7 @@
+'use client'
+
 import { SetData } from '@/lib/types'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 
 interface SetInputProps {
   setNumber: number
@@ -8,6 +11,32 @@ interface SetInputProps {
 }
 
 export default function SetInput({ setNumber, setData, onWeightChange, onRepsChange }: SetInputProps) {
+  const { weightUnit, convertWeight } = useSettings()
+
+  // Convert kg value from state to display value
+  const displayWeight = setData.weight
+    ? weightUnit === 'lbs'
+      ? Math.round(parseFloat(setData.weight) * 2.20462 * 10) / 10
+      : parseFloat(setData.weight)
+    : ''
+
+  const handleWeightChange = (value: string) => {
+    if (!value) {
+      onWeightChange('')
+      return
+    }
+
+    // Convert input value back to kg if needed
+    const numValue = parseFloat(value)
+    if (isNaN(numValue)) {
+      onWeightChange(value) // Let parent handle invalid input
+      return
+    }
+
+    const kgValue = weightUnit === 'lbs' ? numValue / 2.20462 : numValue
+    onWeightChange(kgValue.toString())
+  }
+
   return (
     <div className="space-y-2">
       <div className="text-xs text-slate-500 font-medium text-center uppercase tracking-wide">
@@ -15,9 +44,10 @@ export default function SetInput({ setNumber, setData, onWeightChange, onRepsCha
       </div>
       <input
         type="number"
-        placeholder="kg"
-        value={setData.weight}
-        onChange={(e) => onWeightChange(e.target.value)}
+        step={weightUnit === 'lbs' ? '0.5' : '0.5'}
+        placeholder={weightUnit}
+        value={displayWeight}
+        onChange={(e) => handleWeightChange(e.target.value)}
         className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-2 py-2.5
                    text-white text-center text-sm font-medium
                    focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
