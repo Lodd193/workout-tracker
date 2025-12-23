@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Exercise, SelectedExercise, WorkoutTemplate } from '@/lib/types'
 import ExerciseCard from './ExerciseCard'
@@ -19,6 +19,43 @@ export default function WorkoutForm() {
   const [lastWorkoutDate, setLastWorkoutDate] = useState<string | null>(null)
   const [isTemplateSelectorOpen, setIsTemplateSelectorOpen] = useState(false)
   const [isSaveTemplateOpen, setIsSaveTemplateOpen] = useState(false)
+  const [workoutStartTime, setWorkoutStartTime] = useState<number | null>(null)
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Start timer when exercises are added
+  useEffect(() => {
+    if (selectedExercises.length > 0 && !workoutStartTime) {
+      setWorkoutStartTime(Date.now())
+    }
+  }, [selectedExercises.length])
+
+  // Update elapsed time every second
+  useEffect(() => {
+    if (workoutStartTime) {
+      timerRef.current = setInterval(() => {
+        setElapsedTime(Math.floor((Date.now() - workoutStartTime) / 1000))
+      }, 1000)
+    } else {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+      }
+    }
+  }, [workoutStartTime])
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    if (mins === 0) return `${secs}s`
+    return `${mins}m ${secs}s`
+  }
 
   const addExercise = (exercise: Exercise) => {
     const newExercise: SelectedExercise = {
@@ -183,9 +220,12 @@ export default function WorkoutForm() {
     if (error) {
       setMessage('Error saving: ' + error.message)
     } else {
-      setMessage(`Saved ${rows.length} sets!`)
+      const duration = workoutStartTime ? Math.floor((Date.now() - workoutStartTime) / 60000) : 0
+      setMessage(`Saved ${rows.length} sets!${duration > 0 ? ` Duration: ${duration}min` : ''}`)
       setDate('')
       setSelectedExercises([])
+      setWorkoutStartTime(null)
+      setElapsedTime(0)
     }
 
     setSaving(false)
@@ -293,9 +333,19 @@ export default function WorkoutForm() {
         {selectedExercises.length > 0 && (
           <div className="space-y-4 pt-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-white">
-                Your Workout ({selectedExercises.length} exercise{selectedExercises.length !== 1 ? 's' : ''})
-              </h2>
+              <div>
+                <h2 className="text-xl font-semibold text-white">
+                  Your Workout ({selectedExercises.length} exercise{selectedExercises.length !== 1 ? 's' : ''})
+                </h2>
+                {workoutStartTime && elapsedTime > 0 && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-sm text-cyan-400 font-medium">{formatDuration(elapsedTime)}</span>
+                  </div>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => setIsSaveTemplateOpen(true)}

@@ -605,3 +605,157 @@ function groupByExercise(logs: WorkoutLog[]): Record<string, WorkoutLog[]> {
     {} as Record<string, WorkoutLog[]>
   )
 }
+
+// ============ WORKOUT HISTORY MANAGEMENT ============
+
+export interface WorkoutHistoryEntry {
+  date: string
+  exercises: Array<{
+    exercise_name: string
+    workout_type: string
+    sets: Array<{
+      id: number
+      set_number: number
+      weight_kg: number
+      reps: number
+    }>
+  }>
+  totalSets: number
+  totalVolume: number
+  duration?: number // minutes
+}
+
+/**
+ * Fetch workout history grouped by date
+ */
+export async function fetchWorkoutHistory(): Promise<WorkoutHistoryEntry[]> {
+  const logs = await fetchAllWorkoutLogs()
+
+  // Group by date
+  const groupedByDate = logs.reduce((acc, log) => {
+    if (!acc[log.date]) {
+      acc[log.date] = []
+    }
+    acc[log.date].push(log)
+    return acc
+  }, {} as Record<string, WorkoutLog[]>)
+
+  // Transform into history entries
+  const history: WorkoutHistoryEntry[] = Object.entries(groupedByDate).map(([date, dayLogs]) => {
+    // Group by exercise
+    const exerciseMap = new Map<string, typeof dayLogs>()
+    dayLogs.forEach((log) => {
+      if (!exerciseMap.has(log.exercise_name)) {
+        exerciseMap.set(log.exercise_name, [])
+      }
+      exerciseMap.get(log.exercise_name)!.push(log)
+    })
+
+    const exercises = Array.from(exerciseMap.entries()).map(([exerciseName, exerciseLogs]) => ({
+      exercise_name: exerciseName,
+      workout_type: exerciseLogs[0].workout_type,
+      sets: exerciseLogs.map((log) => ({
+        id: log.id,
+        set_number: log.set_number,
+        weight_kg: log.weight_kg,
+        reps: log.reps,
+      })),
+    }))
+
+    const totalSets = dayLogs.length
+    const totalVolume = dayLogs.reduce((sum, log) => sum + log.weight_kg * log.reps, 0)
+
+    return {
+      date,
+      exercises,
+      totalSets,
+      totalVolume: Math.round(totalVolume),
+      duration: undefined, // Will add duration tracking later
+    }
+  })
+
+  // Sort by date descending (newest first)
+  return history.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+}
+
+/**
+ * Update a specific workout set
+ */
+export async function updateWorkoutSet(
+  setId: number,
+  updates: { weight_kg?: number; reps?: number }
+): Promise<boolean> {
+  const { error } = await supabase.from('workout_logs').update(updates).eq('id', setId)
+
+  if (error) {
+    console.error('Error updating set:', error)
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Delete a specific workout set
+ */
+export async function deleteWorkoutSet(setId: number): Promise<boolean> {
+  const { error } = await supabase.from('workout_logs').delete().eq('id', setId)
+
+  if (error) {
+    console.error('Error deleting set:', error)
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Delete all sets for a specific date (entire workout)
+ */
+export async function deleteWorkoutByDate(date: string): Promise<boolean> {
+  const { error } = await supabase.from('workout_logs').delete().eq('date', date)
+
+  if (error) {
+    console.error('Error deleting workout:', error)
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Fetch last performance for a specific exercise
+ */
+export async function fetchLastPerformance(exerciseName: string): Promise<{
+  date: string
+  sets: Array<{ weight_kg: number; reps: number }>
+  bestSet: { weight_kg: number; reps: number }
+} | null> {
+  const { data, error } = await supabase
+    .from('workout_logs')
+    .select('date, weight_kg, reps')
+    .eq('exercise_name', exerciseName)
+    .order('date', { ascending: false })
+    .limit(20) // Get recent sets
+
+  if (error || !data || data.length === 0) {
+    return null
+  }
+
+  // Get the most recent date
+  const lastDate = data[0].date
+  const lastSets = data.filter((log) => log.date === lastDate)
+
+  // Find best set (highest 1RM estimate)
+  const bestSet = lastSets.reduce((best, set) => {
+    const current1RM = calculate1RM(set.weight_kg, set.reps)
+    const best1RM = calculate1RM(best.weight_kg, best.reps)
+    return current1RM > best1RM ? set : best
+  })
+
+  return {
+    date: lastDate,
+    sets: lastSets.map((s) => ({ weight_kg: s.weight_kg, reps: s.reps })),
+    bestSet: { weight_kg: bestSet.weight_kg, reps: bestSet.reps },
+  }
+}

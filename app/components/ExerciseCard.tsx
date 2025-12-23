@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SelectedExercise } from '@/lib/types'
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import SetInput from './SetInput'
+import { fetchLastPerformance } from '@/lib/api/analytics'
 
 interface ExerciseCardProps {
   exercise: SelectedExercise
@@ -15,6 +16,26 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
   const [bulkWeight, setBulkWeight] = useState('')
   const [bulkReps, setBulkReps] = useState('')
   const [showBulkFill, setShowBulkFill] = useState(false)
+  const [lastPerformance, setLastPerformance] = useState<{
+    date: string
+    bestSet: { weight_kg: number; reps: number }
+  } | null>(null)
+  const [loadingLast, setLoadingLast] = useState(false)
+
+  useEffect(() => {
+    loadLastPerformance()
+  }, [exercise.name])
+
+  const loadLastPerformance = async () => {
+    setLoadingLast(true)
+    try {
+      const data = await fetchLastPerformance(exercise.name)
+      setLastPerformance(data)
+    } catch (error) {
+      console.error('Error loading last performance:', error)
+    }
+    setLoadingLast(false)
+  }
 
   const fillAllSets = () => {
     if (!bulkWeight || !bulkReps) return
@@ -25,6 +46,31 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
     setBulkWeight('')
     setBulkReps('')
     setShowBulkFill(false)
+  }
+
+  const getSuggestion = () => {
+    if (!lastPerformance) return null
+    const { weight_kg, reps } = lastPerformance.bestSet
+
+    // Suggest weight increase if reps >= 8, otherwise suggest rep increase
+    if (reps >= 8) {
+      return { weight: weight_kg + 2.5, reps, type: 'weight' }
+    } else {
+      return { weight: weight_kg, reps: reps + 1, type: 'reps' }
+    }
+  }
+
+  const suggestion = getSuggestion()
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    const today = new Date()
+    const diffDays = Math.floor((today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
+
+    if (diffDays === 0) return 'earlier today'
+    if (diffDays === 1) return 'yesterday'
+    if (diffDays < 7) return `${diffDays} days ago`
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   return (
@@ -66,6 +112,36 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
           </svg>
         </button>
       </div>
+
+      {/* Progressive Overload Assistant */}
+      {lastPerformance && (
+        <div className="mb-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold text-cyan-400 mb-1">Last time ({formatDate(lastPerformance.date)})</div>
+              <div className="text-sm text-white mb-2">
+                Best set: {lastPerformance.bestSet.weight_kg}kg × {lastPerformance.bestSet.reps} reps
+              </div>
+              {suggestion && (
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="text-slate-400">Try:</span>
+                  <span className="font-bold text-emerald-400">
+                    {suggestion.weight}kg × {suggestion.reps} reps
+                  </span>
+                  <span className="text-slate-500">
+                    ({suggestion.type === 'weight' ? '+2.5kg' : '+1 rep'})
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Fill Section */}
       <div className="mb-4">
