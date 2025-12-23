@@ -12,6 +12,9 @@ import WeightProgressionChart from '@/app/components/charts/WeightProgressionCha
 import PersonalRecordsGrid from '@/app/components/charts/PersonalRecordsGrid'
 import WorkoutFrequencyHeatmap from '@/app/components/charts/WorkoutFrequencyHeatmap'
 import ChartSkeleton from '@/app/components/charts/ChartSkeleton'
+import VolumeProgressionChart from '@/app/components/charts/VolumeProgressionChart'
+import AdvancedMetricsPanel from '@/app/components/charts/AdvancedMetricsPanel'
+import WeekComparisonCard from '@/app/components/charts/WeekComparisonCard'
 
 export default function ProgressPage() {
   const [loading, setLoading] = useState(true)
@@ -114,6 +117,23 @@ export default function ProgressPage() {
           exercises={exercises}
           onExerciseChange={setSelectedExercise}
         />
+
+        {/* Volume Progression Chart */}
+        <VolumeProgressionChart
+          selectedExercise={selectedExercise}
+          exercises={exercises}
+          onExerciseChange={setSelectedExercise}
+        />
+
+        {/* Advanced Metrics Panel (1RM & Progress Rates) */}
+        <AdvancedMetricsPanel
+          selectedExercise={selectedExercise}
+          exercises={exercises}
+          onExerciseChange={setSelectedExercise}
+        />
+
+        {/* Week-over-Week Comparison */}
+        <WeekComparisonCard />
 
         {/* Personal Records Grid */}
         <PersonalRecordsGrid records={personalRecords} />

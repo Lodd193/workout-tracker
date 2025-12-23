@@ -12,6 +12,8 @@ export default function WorkoutForm() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [loadingLastWorkout, setLoadingLastWorkout] = useState(false)
+  const [lastWorkoutDate, setLastWorkoutDate] = useState<string | null>(null)
 
   const addExercise = (exercise: Exercise) => {
     const newExercise: SelectedExercise = {
@@ -40,6 +42,77 @@ export default function WorkoutForm() {
           : ex
       )
     )
+  }
+
+  const loadLastWorkout = async () => {
+    setLoadingLastWorkout(true)
+    try {
+      const { data, error } = await supabase
+        .from('workout_logs')
+        .select('date, exercise_name, workout_type, set_number, weight_kg, reps')
+        .order('date', { ascending: false })
+        .limit(100)
+
+      if (error) throw error
+      if (!data || data.length === 0) {
+        setMessage('No previous workouts found')
+        setLoadingLastWorkout(false)
+        return
+      }
+
+      const lastDate = data[0].date
+      setLastWorkoutDate(lastDate)
+
+      const lastWorkoutLogs = data.filter((log) => log.date === lastDate)
+
+      const exerciseMap = new Map<string, { name: string; category: string; sets: Array<{ weight: string; reps: string }> }>()
+
+      lastWorkoutLogs.forEach((log) => {
+        if (!exerciseMap.has(log.exercise_name)) {
+          exerciseMap.set(log.exercise_name, {
+            name: log.exercise_name,
+            category: log.workout_type,
+            sets: [],
+          })
+        }
+        const exercise = exerciseMap.get(log.exercise_name)!
+        exercise.sets[log.set_number - 1] = {
+          weight: log.weight_kg.toString(),
+          reps: log.reps.toString(),
+        }
+      })
+
+      const exercises: SelectedExercise[] = Array.from(exerciseMap.values()).map((ex) => ({
+        id: crypto.randomUUID(),
+        exerciseId: ex.name.toLowerCase().replace(/\s+/g, '-'),
+        name: ex.name,
+        category: ex.category as any,
+        sets: ex.sets.length === 4 ? ex.sets : [...ex.sets, ...Array(4 - ex.sets.length).fill({ weight: '', reps: '' })],
+      }))
+
+      setSelectedExercises(exercises)
+      setDate(getTodayDate())
+      setMessage(`Loaded workout from ${formatDate(lastDate)} (${exercises.length} exercises)`)
+    } catch (error) {
+      console.error('Error loading last workout:', error)
+      setMessage('Error loading last workout')
+    }
+    setLoadingLastWorkout(false)
+  }
+
+  const setPresetDate = (daysAgo: number) => {
+    const date = new Date()
+    date.setDate(date.getDate() + daysAgo)
+    setDate(date.toISOString().split('T')[0])
+  }
+
+  const getTodayDate = () => {
+    return new Date().toISOString().split('T')[0]
+  }
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -107,6 +180,29 @@ export default function WorkoutForm() {
           <label className="block text-sm font-semibold text-slate-300 uppercase tracking-wide">
             Date
           </label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            <button
+              type="button"
+              onClick={() => setPresetDate(0)}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all"
+            >
+              Today
+            </button>
+            <button
+              type="button"
+              onClick={() => setPresetDate(-1)}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all"
+            >
+              Yesterday
+            </button>
+            <button
+              type="button"
+              onClick={() => setPresetDate(-2)}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all"
+            >
+              2 Days Ago
+            </button>
+          </div>
           <input
             type="date"
             value={date}
@@ -116,12 +212,35 @@ export default function WorkoutForm() {
           />
         </div>
 
-        {/* Add Exercise Button */}
-        <div className="flex justify-center pt-4">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+          <button
+            type="button"
+            onClick={loadLastWorkout}
+            disabled={loadingLastWorkout}
+            className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-6 py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loadingLastWorkout ? (
+              <>
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Loading...
+              </>
+            ) : (
+              <>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copy Last Workout
+              </>
+            )}
+          </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/30 hover:from-emerald-400 hover:to-cyan-400 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-3"
+            className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-6 py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/30 hover:from-emerald-400 hover:to-cyan-400 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
