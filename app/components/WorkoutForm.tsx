@@ -96,8 +96,7 @@ export default function WorkoutForm() {
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400
-                         bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
             Workout Tracker
           </h1>
           <p className="text-slate-400 mt-2">Build your workout, track your progress</p>
@@ -113,9 +112,7 @@ export default function WorkoutForm() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
-                       transition-all duration-200 backdrop-blur-sm"
+            className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
           />
         </div>
 
@@ -124,11 +121,7 @@ export default function WorkoutForm() {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4
-                       rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/30
-                       hover:from-emerald-400 hover:to-cyan-400
-                       transform transition-all duration-200 hover:scale-105 active:scale-95
-                       flex items-center gap-3"
+            className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/30 hover:from-emerald-400 hover:to-cyan-400 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-3"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -183,11 +176,7 @@ export default function WorkoutForm() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl
-                       font-semibold text-lg shadow-lg shadow-emerald-500/25
-                       hover:from-emerald-400 hover:to-emerald-500
-                       disabled:opacity-50 disabled:cursor-not-allowed
-                       transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/25 hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             {saving ? (
               <span className="flex items-center justify-center gap-2">
