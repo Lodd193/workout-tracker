@@ -83,3 +83,17 @@ export interface AnalyticsSummary {
   longestStreak: number
   avgWorkoutsPerWeek: number
 }
+
+// ============ WORKOUT TEMPLATES ============
+
+export interface WorkoutTemplate {
+  id: string                // Unique template ID
+  name: string              // User-defined name (e.g., "Push Day")
+  exercises: Array<{
+    exerciseId: string      // Reference to exercise library
+    name: string
+    category: ExerciseCategory
+  }>
+  createdAt: string         // ISO timestamp
+  updatedAt: string         // ISO timestamp
+}

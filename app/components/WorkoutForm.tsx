@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Exercise, SelectedExercise } from '@/lib/types'
+import { Exercise, SelectedExercise, WorkoutTemplate } from '@/lib/types'
 import ExerciseCard from './ExerciseCard'
 import ExerciseSelector from './ExerciseSelector'
+import TemplateSelector from './TemplateSelector'
+import SaveTemplateModal from './SaveTemplateModal'
+import { EXERCISES } from '@/lib/exercises'
 
 export default function WorkoutForm() {
   const [date, setDate] = useState('')
@@ -14,6 +17,8 @@ export default function WorkoutForm() {
   const [message, setMessage] = useState('')
   const [loadingLastWorkout, setLoadingLastWorkout] = useState(false)
   const [lastWorkoutDate, setLastWorkoutDate] = useState<string | null>(null)
+  const [isTemplateSelectorOpen, setIsTemplateSelectorOpen] = useState(false)
+  const [isSaveTemplateOpen, setIsSaveTemplateOpen] = useState(false)
 
   const addExercise = (exercise: Exercise) => {
     const newExercise: SelectedExercise = {
@@ -115,6 +120,28 @@ export default function WorkoutForm() {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
+  const handleLoadTemplate = (template: WorkoutTemplate) => {
+    // Convert template exercises to selected exercises with empty sets
+    const exercises: SelectedExercise[] = template.exercises.map((ex) => {
+      // Find the full exercise from EXERCISES to get all details
+      const fullExercise = EXERCISES.find((e) => e.id === ex.exerciseId || e.name === ex.name)
+
+      return {
+        id: crypto.randomUUID(),
+        exerciseId: fullExercise?.id || ex.exerciseId,
+        name: ex.name,
+        category: ex.category,
+        sets: Array(4)
+          .fill(null)
+          .map(() => ({ weight: '', reps: '' })),
+      }
+    })
+
+    setSelectedExercises(exercises)
+    setDate(getTodayDate())
+    setMessage(`Loaded template "${template.name}" (${template.exercises.length} exercises)`)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
@@ -213,12 +240,12 @@ export default function WorkoutForm() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
           <button
             type="button"
             onClick={loadLastWorkout}
             disabled={loadingLastWorkout}
-            className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-6 py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-4 rounded-xl font-semibold shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingLastWorkout ? (
               <>
@@ -230,22 +257,35 @@ export default function WorkoutForm() {
               </>
             ) : (
               <>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                Copy Last Workout
+                <span className="hidden sm:inline">Copy Last</span>
+                <span className="sm:hidden">Copy</span>
               </>
             )}
           </button>
           <button
             type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-6 py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/30 hover:from-emerald-400 hover:to-cyan-400 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+            onClick={() => setIsTemplateSelectorOpen(true)}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white px-4 py-4 rounded-xl font-semibold shadow-lg shadow-purple-500/30 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            <span className="hidden sm:inline">Load Template</span>
+            <span className="sm:hidden">Template</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-4 py-4 rounded-xl font-semibold shadow-lg shadow-emerald-500/30 hover:from-emerald-400 hover:to-cyan-400 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Add Exercise
+            <span className="hidden sm:inline">Add Exercise</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
 
@@ -256,6 +296,21 @@ export default function WorkoutForm() {
               <h2 className="text-xl font-semibold text-white">
                 Your Workout ({selectedExercises.length} exercise{selectedExercises.length !== 1 ? 's' : ''})
               </h2>
+              <button
+                type="button"
+                onClick={() => setIsSaveTemplateOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 hover:text-purple-300 transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                  />
+                </svg>
+                <span className="text-sm font-semibold">Save as Template</span>
+              </button>
             </div>
             {selectedExercises.map((exercise, index) => (
               <ExerciseCard
@@ -339,6 +394,21 @@ export default function WorkoutForm() {
 
       {/* Exercise Selector Modal */}
       <ExerciseSelector isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelectExercise={addExercise} />
+
+      {/* Template Selector Modal */}
+      <TemplateSelector
+        isOpen={isTemplateSelectorOpen}
+        onClose={() => setIsTemplateSelectorOpen(false)}
+        onSelectTemplate={handleLoadTemplate}
+      />
+
+      {/* Save Template Modal */}
+      <SaveTemplateModal
+        isOpen={isSaveTemplateOpen}
+        onClose={() => setIsSaveTemplateOpen(false)}
+        exercises={selectedExercises}
+        onSaved={() => setMessage('Template saved successfully!')}
+      />
     </div>
   )
 }
