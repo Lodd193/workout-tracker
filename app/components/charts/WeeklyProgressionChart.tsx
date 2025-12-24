@@ -174,7 +174,7 @@ export default function WeeklyProgressionChart({
                 borderRadius: '8px',
                 color: '#f1f5f9',
               }}
-              formatter={(value: number | undefined, name: string, props: any) => {
+              formatter={(value: number | undefined, name: string | undefined, props: any) => {
                 const week = props.payload
                 return [
                   <div key="tooltip" className="space-y-1">
