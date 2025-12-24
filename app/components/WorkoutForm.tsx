@@ -52,7 +52,14 @@ export default function WorkoutForm() {
     }
   }, [workoutStartTime])
 
-  const formatDuration = (seconds: number) => {
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good morning'
+    if (hour < 18) return 'Good afternoon'
+    return 'Good evening'
+  }
+
+    const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     if (mins === 0) return `${secs}s`
@@ -249,7 +256,7 @@ export default function WorkoutForm() {
           </h1>
           {user?.email && (
             <p className="text-emerald-400 mt-3 font-medium">
-              Welcome back, {user.email}!
+              {getGreeting()}, {user.email.split('@')[0]}!
             </p>
           )}
           <p className="text-slate-400 mt-2">Build your workout, track your progress</p>
