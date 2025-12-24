@@ -22,6 +22,22 @@ export async function fetchAllWorkoutLogs(): Promise<WorkoutLog[]> {
   return data || []
 }
 
+// ============ FETCH WORKOUT LOGS FOR SPECIFIC EXERCISE ============
+export async function fetchWorkoutLogs(exerciseName: string): Promise<WorkoutLog[]> {
+  const { data, error } = await supabase
+    .from('workout_logs')
+    .select('*')
+    .eq('exercise_name', exerciseName)
+    .order('date', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching workout logs:', error)
+    throw error
+  }
+
+  return data || []
+}
+
 // ============ WEIGHT PROGRESSION FOR SPECIFIC EXERCISE ============
 export async function fetchWeightProgression(exerciseName: string): Promise<WeightProgressionDataPoint[]> {
   const { data, error } = await supabase
