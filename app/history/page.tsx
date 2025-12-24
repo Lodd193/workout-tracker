@@ -20,6 +20,7 @@ export default function HistoryPage() {
   const [editReps, setEditReps] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [expandedWorkouts, setExpandedWorkouts] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     loadHistory()
@@ -83,6 +84,18 @@ export default function HistoryPage() {
       setConfirmDelete(date)
       setTimeout(() => setConfirmDelete(null), 3000)
     }
+  }
+
+  const toggleWorkout = (date: string) => {
+    setExpandedWorkouts(prev => {
+      const next = new Set(prev)
+      if (next.has(date)) {
+        next.delete(date)
+      } else {
+        next.add(date)
+      }
+      return next
+    })
   }
 
   const formatDate = (dateStr: string) => {
@@ -182,13 +195,30 @@ export default function HistoryPage() {
               >
                 {/* Workout Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-white">{formatDate(entry.date)}</h3>
-                    <p className="text-slate-400 text-sm mt-1">
-                      {entry.exercises.length} exercise{entry.exercises.length !== 1 ? 's' : ''} •{' '}
-                      {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • {entry.totalVolume.toLocaleString()}kg volume
-                    </p>
-                  </div>
+                  <button
+                    onClick={() => toggleWorkout(entry.date)}
+                    className="flex items-center gap-3 flex-1 text-left group"
+                  >
+                    <svg
+                      className={`w-6 h-6 text-slate-400 group-hover:text-emerald-400 transition-all ${
+                        expandedWorkouts.has(entry.date) ? 'rotate-90' : ''
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <div>
+                      <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                        {formatDate(entry.date)}
+                      </h3>
+                      <p className="text-slate-400 text-sm mt-1">
+                        {entry.exercises.length} exercise{entry.exercises.length !== 1 ? 's' : ''} •{' '}
+                        {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • {entry.totalVolume.toLocaleString()}kg volume
+                      </p>
+                    </div>
+                  </button>
                   <button
                     onClick={() => handleDeleteWorkout(entry.date)}
                     className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
@@ -202,98 +232,100 @@ export default function HistoryPage() {
                 </div>
 
                 {/* Exercises */}
-                <div className="space-y-4">
-                  {entry.exercises.map((exercise, exIdx) => {
-                    const gradientColor = CATEGORY_COLORS[exercise.workout_type as keyof typeof CATEGORY_COLORS] || 'from-slate-500 to-slate-600'
+                {expandedWorkouts.has(entry.date) && (
+                  <div className="space-y-4">
+                    {entry.exercises.map((exercise, exIdx) => {
+                      const gradientColor = CATEGORY_COLORS[exercise.workout_type as keyof typeof CATEGORY_COLORS] || 'from-slate-500 to-slate-600'
 
-                    return (
-                      <div key={exIdx} className="bg-slate-700/30 rounded-lg p-4">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className={`w-8 h-8 bg-gradient-to-br ${gradientColor} rounded-lg flex items-center justify-center text-sm font-bold text-white`}>
-                            {exIdx + 1}
-                          </div>
-                          <h4 className="text-white font-semibold">{exercise.exercise_name}</h4>
-                          <span className="text-xs text-slate-400 ml-auto">
-                            {exercise.sets.length} set{exercise.sets.length !== 1 ? 's' : ''}
-                          </span>
-                        </div>
-
-                        {/* Sets Table */}
-                        <div className="grid grid-cols-4 gap-2">
-                          <div className="text-xs text-slate-400 uppercase font-semibold">Set</div>
-                          <div className="text-xs text-slate-400 uppercase font-semibold">Weight</div>
-                          <div className="text-xs text-slate-400 uppercase font-semibold">Reps</div>
-                          <div className="text-xs text-slate-400 uppercase font-semibold">Actions</div>
-
-                          {exercise.sets.map((set) => (
-                            <div key={set.id} className="contents">
-                              <div className="text-white py-2">{set.set_number}</div>
-                              <div className="py-2">
-                                {editingSet === set.id ? (
-                                  <input
-                                    type="number"
-                                    step="0.5"
-                                    value={editWeight}
-                                    onChange={(e) => setEditWeight(e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm"
-                                    autoFocus
-                                  />
-                                ) : (
-                                  <span className="text-white">{formatWeight(set.weight_kg)}</span>
-                                )}
-                              </div>
-                              <div className="py-2">
-                                {editingSet === set.id ? (
-                                  <input
-                                    type="number"
-                                    value={editReps}
-                                    onChange={(e) => setEditReps(e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm"
-                                  />
-                                ) : (
-                                  <span className="text-white">{set.reps}</span>
-                                )}
-                              </div>
-                              <div className="py-2 flex gap-1">
-                                {editingSet === set.id ? (
-                                  <>
-                                    <button
-                                      onClick={() => handleSaveEdit(set.id)}
-                                      className="px-2 py-1 bg-emerald-500 text-white text-xs rounded hover:bg-emerald-400"
-                                    >
-                                      Save
-                                    </button>
-                                    <button
-                                      onClick={() => setEditingSet(null)}
-                                      className="px-2 py-1 bg-slate-600 text-white text-xs rounded hover:bg-slate-500"
-                                    >
-                                      Cancel
-                                    </button>
-                                  </>
-                                ) : (
-                                  <>
-                                    <button
-                                      onClick={() => handleEditSet(set.id, set.weight_kg, set.reps)}
-                                      className="px-2 py-1 bg-slate-600 text-white text-xs rounded hover:bg-slate-500"
-                                    >
-                                      Edit
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteSet(set.id)}
-                                      className="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded hover:bg-red-500/30"
-                                    >
-                                      Del
-                                    </button>
-                                  </>
-                                )}
-                              </div>
+                      return (
+                        <div key={exIdx} className="bg-slate-700/30 rounded-lg p-4">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className={`w-8 h-8 bg-gradient-to-br ${gradientColor} rounded-lg flex items-center justify-center text-sm font-bold text-white`}>
+                              {exIdx + 1}
                             </div>
-                          ))}
+                            <h4 className="text-white font-semibold">{exercise.exercise_name}</h4>
+                            <span className="text-xs text-slate-400 ml-auto">
+                              {exercise.sets.length} set{exercise.sets.length !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+
+                          {/* Sets Table */}
+                          <div className="grid grid-cols-4 gap-2">
+                            <div className="text-xs text-slate-400 uppercase font-semibold">Set</div>
+                            <div className="text-xs text-slate-400 uppercase font-semibold">Weight</div>
+                            <div className="text-xs text-slate-400 uppercase font-semibold">Reps</div>
+                            <div className="text-xs text-slate-400 uppercase font-semibold">Actions</div>
+
+                            {exercise.sets.map((set) => (
+                              <div key={set.id} className="contents">
+                                <div className="text-white py-2">{set.set_number}</div>
+                                <div className="py-2">
+                                  {editingSet === set.id ? (
+                                    <input
+                                      type="number"
+                                      step="0.5"
+                                      value={editWeight}
+                                      onChange={(e) => setEditWeight(e.target.value)}
+                                      className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm"
+                                      autoFocus
+                                    />
+                                  ) : (
+                                    <span className="text-white">{formatWeight(set.weight_kg)}</span>
+                                  )}
+                                </div>
+                                <div className="py-2">
+                                  {editingSet === set.id ? (
+                                    <input
+                                      type="number"
+                                      value={editReps}
+                                      onChange={(e) => setEditReps(e.target.value)}
+                                      className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm"
+                                    />
+                                  ) : (
+                                    <span className="text-white">{set.reps}</span>
+                                  )}
+                                </div>
+                                <div className="py-2 flex gap-1">
+                                  {editingSet === set.id ? (
+                                    <>
+                                      <button
+                                        onClick={() => handleSaveEdit(set.id)}
+                                        className="px-2 py-1 bg-emerald-500 text-white text-xs rounded hover:bg-emerald-400"
+                                      >
+                                        Save
+                                      </button>
+                                      <button
+                                        onClick={() => setEditingSet(null)}
+                                        className="px-2 py-1 bg-slate-600 text-white text-xs rounded hover:bg-slate-500"
+                                      >
+                                        Cancel
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        onClick={() => handleEditSet(set.id, set.weight_kg, set.reps)}
+                                        className="px-2 py-1 bg-slate-600 text-white text-xs rounded hover:bg-slate-500"
+                                      >
+                                        Edit
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteSet(set.id)}
+                                        className="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded hover:bg-red-500/30"
+                                      >
+                                        Del
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             ))}
           </div>
