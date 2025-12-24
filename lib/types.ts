@@ -163,3 +163,55 @@ export interface MilestonePrediction {
   weeks_remaining: number | null
   is_achievable: boolean
 }
+
+// ============ PROGRESSIVE OVERLOAD TRACKING ============
+
+export interface WeeklyProgressionData {
+  week_start: string                // ISO date (YYYY-MM-DD)
+  week_end: string
+  avg_weight: number
+  max_weight: number
+  total_volume: number              // sum(weight × reps) for the week
+  total_sets: number
+  total_reps: number
+  sessions_count: number
+  week_label: string                // e.g., "Jan 1-7"
+  progression_status: 'improving' | 'plateau' | 'declining'
+}
+
+export interface VolumeLoadDataPoint {
+  date: string                      // ISO date
+  total_volume: number              // weight × reps × sets for that day
+  total_sets: number
+  avg_weight: number
+  displayDate: string               // Formatted for chart (e.g., "Jan 15")
+}
+
+export interface ProgressiveOverloadRecommendation {
+  exercise_name: string
+  current_working_weight: number    // Most common weight in recent sessions
+  suggested_next_weight: number     // Smart increment suggestion
+  reasoning: string                 // Why this recommendation
+  confidence: 'high' | 'medium' | 'low'
+  ready_to_progress: boolean
+  consistency_score: number         // 0-100, how consistent recent performance is
+}
+
+export interface SetBySetAnalysis {
+  exercise_name: string
+  recent_sessions: Array<{
+    date: string
+    sets: Array<{
+      set_number: number
+      weight_kg: number
+      reps: number
+      volume: number                // weight × reps
+    }>
+    avg_weight: number
+    total_volume: number
+    drop_off_percentage: number     // % decline from set 1 to last set
+  }>
+  avg_drop_off: number              // Average drop-off across all sessions
+  consistency_rating: 'excellent' | 'good' | 'fair' | 'needs-improvement'
+  recommendation: string
+}

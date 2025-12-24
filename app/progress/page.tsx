@@ -19,6 +19,10 @@ import WorkoutCalendar from '@/app/components/WorkoutCalendar'
 import WeeklyCardioTracker from '@/app/components/WeeklyCardioTracker'
 import GoalsDashboard from '@/app/components/GoalsDashboard'
 import PredictiveInsights from '@/app/components/PredictiveInsights'
+import WeeklyProgressionChart from '@/app/components/charts/WeeklyProgressionChart'
+import VolumeLoadTrendChart from '@/app/components/charts/VolumeLoadTrendChart'
+import ProgressiveOverloadPanel from '@/app/components/ProgressiveOverloadPanel'
+import SetConsistencyAnalysis from '@/app/components/SetConsistencyAnalysis'
 
 type TabType = 'overview' | 'analytics' | 'insights'
 
@@ -176,6 +180,34 @@ export default function ProgressPage() {
 
         {activeTab === 'analytics' && (
           <div className="space-y-8">
+            {/* Progressive Overload Recommendations */}
+            <ProgressiveOverloadPanel
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
+
+            {/* Week-over-Week Progression */}
+            <WeeklyProgressionChart
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
+
+            {/* Volume Load Trends */}
+            <VolumeLoadTrendChart
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
+
+            {/* Set Consistency Analysis */}
+            <SetConsistencyAnalysis
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
+
             {/* Weight Progression Chart */}
             <WeightProgressionChart
               selectedExercise={selectedExercise}
