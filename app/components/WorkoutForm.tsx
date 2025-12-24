@@ -9,6 +9,7 @@ import ExerciseSelector from './ExerciseSelector'
 import TemplateSelector from './TemplateSelector'
 import SaveTemplateModal from './SaveTemplateModal'
 import { EXERCISES } from '@/lib/exercises'
+import ConfirmDialog from './ConfirmDialog'
 
 export default function WorkoutForm() {
   const { user } = useAuth()
@@ -24,6 +25,10 @@ export default function WorkoutForm() {
   const [workoutStartTime, setWorkoutStartTime] = useState<number | null>(null)
   const [elapsedTime, setElapsedTime] = useState(0)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; exerciseId: string | null }>({
+    isOpen: false,
+    exerciseId: null,
+  })
 
   // Start timer when exercises are added
   useEffect(() => {
@@ -79,7 +84,18 @@ export default function WorkoutForm() {
   }
 
   const removeExercise = (id: string) => {
-    setSelectedExercises((prev) => prev.filter((ex) => ex.id !== id))
+    setDeleteConfirm({ isOpen: true, exerciseId: id })
+  }
+
+  const confirmRemoveExercise = () => {
+    if (deleteConfirm.exerciseId) {
+      setSelectedExercises((prev) => prev.filter((ex) => ex.id !== deleteConfirm.exerciseId))
+      setDeleteConfirm({ isOpen: false, exerciseId: null })
+    }
+  }
+
+  const cancelRemoveExercise = () => {
+    setDeleteConfirm({ isOpen: false, exerciseId: null })
   }
 
   const updateSet = (exerciseId: string, setIndex: number, field: 'weight' | 'reps', value: string) => {
@@ -470,6 +486,18 @@ export default function WorkoutForm() {
         isOpen={isTemplateSelectorOpen}
         onClose={() => setIsTemplateSelectorOpen(false)}
         onSelectTemplate={handleLoadTemplate}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Remove Exercise?"
+        message="Are you sure you want to remove this exercise from your workout? This action cannot be undone."
+        confirmText="Remove"
+        cancelText="Keep"
+        onConfirm={confirmRemoveExercise}
+        onCancel={cancelRemoveExercise}
+        variant="danger"
       />
 
       {/* Save Template Modal */}

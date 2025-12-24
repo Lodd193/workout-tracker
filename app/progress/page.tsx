@@ -15,6 +15,7 @@ import ChartSkeleton from '@/app/components/charts/ChartSkeleton'
 import VolumeProgressionChart from '@/app/components/charts/VolumeProgressionChart'
 import AdvancedMetricsPanel from '@/app/components/charts/AdvancedMetricsPanel'
 import WeekComparisonCard from '@/app/components/charts/WeekComparisonCard'
+import WorkoutCalendar from '@/app/components/WorkoutCalendar'
 
 export default function ProgressPage() {
   const [loading, setLoading] = useState(true)
@@ -134,6 +135,9 @@ export default function ProgressPage() {
 
         {/* Week-over-Week Comparison */}
         <WeekComparisonCard />
+
+        {/* Workout Calendar with Streaks */}
+        <WorkoutCalendar />
 
         {/* Personal Records Grid */}
         <PersonalRecordsGrid records={personalRecords} />

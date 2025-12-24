@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { SelectedExercise } from '@/lib/types'
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import SetInput from './SetInput'
-import { fetchLastPerformance } from '@/lib/api/analytics'
+import { fetchLastPerformance, fetchPersonalRecords } from '@/lib/api/analytics'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 
 interface ExerciseCardProps {
@@ -23,10 +23,21 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }:
     bestSet: { weight_kg: number; reps: number }
   } | null>(null)
   const [loadingLast, setLoadingLast] = useState(false)
+  const [personalRecord, setPersonalRecord] = useState<{ max_weight: number; reps_at_max: number; date_achieved: string } | null>(null)
 
   useEffect(() => {
     loadLastPerformance()
   }, [exercise.name])
+
+  const loadPersonalRecord = async () => {
+    try {
+      const records = await fetchPersonalRecords()
+      const pr = records.find(r => r.exercise_name === exercise.name)
+      setPersonalRecord(pr || null)
+    } catch (error) {
+      console.error('Error loading personal record:', error)
+    }
+  }
 
   const loadLastPerformance = async () => {
     setLoadingLast(true)
