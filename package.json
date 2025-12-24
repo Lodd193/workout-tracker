@@ -1,7 +1,8 @@
 {
-  "name": "workout-tracker",
+  "name": "ironinsights",
   "version": "0.1.0",
   "private": true,
+  "description": "Data-driven strength training analytics",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

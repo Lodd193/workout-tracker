@@ -49,17 +49,19 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center transform transition-transform group-hover:scale-110">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                />
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                {/* Barbell bar */}
+                <line x1="4" y1="12" x2="20" y2="12" strokeWidth={2.5} strokeLinecap="round" />
+                {/* Left weight plate */}
+                <rect x="3" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
+                {/* Right weight plate */}
+                <rect x="18" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
+                {/* Upward trending graph line */}
+                <polyline points="7,16 10,13 13,14 16,10 19,8" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7" />
               </svg>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent hidden sm:block">
-              Workout Tracker
+              IronInsights
             </span>
           </Link>
 

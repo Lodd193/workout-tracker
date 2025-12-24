@@ -39,14 +39,21 @@ export default function LoginPage() {
         {/* Header with Icon */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              {/* Barbell bar */}
+              <line x1="4" y1="12" x2="20" y2="12" strokeWidth={2.5} strokeLinecap="round" />
+              {/* Left weight plate */}
+              <rect x="3" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
+              {/* Right weight plate */}
+              <rect x="18" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
+              {/* Upward trending graph line */}
+              <polyline points="7,16 10,13 13,14 16,10 19,8" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7" />
             </svg>
           </div>
           <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight mb-3">
-            Workout Tracker
+            IronInsights
           </h1>
-          <p className="text-slate-400 text-lg">Your complete fitness companion</p>
+          <p className="text-slate-400 text-lg">Data-driven strength training</p>
         </div>
 
         {/* Login Form Card */}
