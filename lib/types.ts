@@ -99,3 +99,38 @@ export interface WorkoutTemplate {
   createdAt: string         // ISO timestamp
   updatedAt: string         // ISO timestamp
 }
+
+// ============ USER GOALS ============
+
+export interface UserGoal {
+  id: number
+  user_id: string
+  exercise_name: string
+  target_weight_kg: number
+  target_date: string | null      // ISO date string (YYYY-MM-DD) or null
+  created_at: string               // ISO timestamp
+  achieved_at: string | null       // ISO timestamp or null
+  is_active: boolean
+  notes: string | null
+}
+
+export interface GoalProgress {
+  goal: UserGoal
+  currentWeight: number            // Current max weight for this exercise
+  currentWeightDate: string        // Date of current PR
+  progressPercentage: number       // (current / target) * 100
+  weightRemaining: number          // target - current
+  isAchieved: boolean              // currentWeight >= target_weight_kg
+  onTrackStatus: 'ahead' | 'on-track' | 'behind' | 'unknown'
+  estimatedCompletion: string | null  // Estimated date based on trend
+  daysRemaining: number | null     // Days until target_date
+  progressRate: number             // kg/week based on recent trend
+  recentTrend: 'improving' | 'plateau' | 'declining'
+}
+
+export interface GoalFormData {
+  exercise_name: string
+  target_weight_kg: number
+  target_date: string | null
+  notes: string | null
+}

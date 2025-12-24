@@ -17,6 +17,7 @@ import AdvancedMetricsPanel from '@/app/components/charts/AdvancedMetricsPanel'
 import WeekComparisonCard from '@/app/components/charts/WeekComparisonCard'
 import WorkoutCalendar from '@/app/components/WorkoutCalendar'
 import WeeklyCardioTracker from '@/app/components/WeeklyCardioTracker'
+import GoalsDashboard from '@/app/components/GoalsDashboard'
 
 export default function ProgressPage() {
   const [loading, setLoading] = useState(true)
@@ -112,6 +113,9 @@ export default function ProgressPage() {
           <StatCard label="Longest Streak" value={`${summary.longestStreak}d`} icon="trophy" />
           <StatCard label="Avg/Week" value={summary.avgWorkoutsPerWeek} icon="trending" />
         </div>
+
+        {/* Goals Dashboard */}
+        <GoalsDashboard />
 
         {/* Weight Progression Chart */}
         <WeightProgressionChart

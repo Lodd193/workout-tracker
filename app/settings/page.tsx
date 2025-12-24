@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useSettings } from '@/lib/contexts/SettingsContext'
+import GoalManagement from '@/app/components/GoalManagement'
 
 export default function SettingsPage() {
   const { weightUnit, toggleWeightUnit, weeklyCardioGoal, setWeeklyCardioGoal } = useSettings()
@@ -110,6 +111,9 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
+
+          {/* Weight Goals Management */}
+          <GoalManagement />
 
           {/* Info Card */}
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-2xl p-5">
