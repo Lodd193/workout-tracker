@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 
 export default function WeeklyCardioTracker() {
+  const { weeklyCardioGoal } = useSettings()
   const [weeklyMinutes, setWeeklyMinutes] = useState(0)
   const [loading, setLoading] = useState(true)
-  const weeklyGoal = 150
 
   useEffect(() => {
     loadWeeklyCardio()
@@ -44,8 +45,8 @@ export default function WeeklyCardioTracker() {
     }
   }
 
-  const percentage = Math.min((weeklyMinutes / weeklyGoal) * 100, 100)
-  const isOnTrack = weeklyMinutes >= weeklyGoal
+  const percentage = Math.min((weeklyMinutes / weeklyCardioGoal) * 100, 100)
+  const isOnTrack = weeklyMinutes >= weeklyCardioGoal
 
   if (loading) {
     return (
@@ -65,7 +66,7 @@ export default function WeeklyCardioTracker() {
           </svg>
           Weekly Cardio
         </h2>
-        <span className="text-sm text-slate-400">Goal: {weeklyGoal} min/week</span>
+        <span className="text-sm text-slate-400">Goal: {weeklyCardioGoal} min/week</span>
       </div>
 
       {/* Progress Bar */}
@@ -85,7 +86,7 @@ export default function WeeklyCardioTracker() {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <div className="text-3xl font-bold text-white">
-              {weeklyMinutes} <span className="text-lg text-slate-300">/ {weeklyGoal}</span>
+              {weeklyMinutes} <span className="text-lg text-slate-300">/ {weeklyCardioGoal}</span>
             </div>
             <div className="text-xs text-slate-400 mt-0.5">minutes</div>
           </div>
@@ -103,7 +104,7 @@ export default function WeeklyCardioTracker() {
           </div>
         ) : (
           <div className="text-slate-400">
-            <span className="font-semibold text-sky-400">{weeklyGoal - weeklyMinutes} minutes</span> remaining this week
+            <span className="font-semibold text-sky-400">{weeklyCardioGoal - weeklyMinutes} minutes</span> remaining this week
           </div>
         )}
       </div>

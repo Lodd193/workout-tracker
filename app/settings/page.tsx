@@ -1,9 +1,19 @@
 'use client'
 
+import { useState } from 'react'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 
 export default function SettingsPage() {
-  const { weightUnit, toggleWeightUnit } = useSettings()
+  const { weightUnit, toggleWeightUnit, weeklyCardioGoal, setWeeklyCardioGoal } = useSettings()
+  const [goalInput, setGoalInput] = useState(weeklyCardioGoal.toString())
+
+  const handleGoalChange = (value: string) => {
+    setGoalInput(value)
+    const numValue = parseInt(value, 10)
+    if (!isNaN(numValue) && numValue > 0) {
+      setWeeklyCardioGoal(numValue)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
@@ -65,6 +75,41 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Weekly Cardio Goal */}
+          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md hover:border-slate-600 transition-all">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-indigo-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Weekly Cardio Goal</h3>
+                  <p className="text-sm text-slate-400 mt-0.5">Set your target cardio minutes per week</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={goalInput}
+                  onChange={(e) => handleGoalChange(e.target.value)}
+                  min="1"
+                  className="w-24 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-center font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                />
+                <span className="text-slate-400 font-medium">min</span>
+              </div>
+            </div>
+            <div className="mt-4 bg-slate-700/30 rounded-lg p-3">
+              <p className="text-sm text-slate-300">
+                <span className="font-semibold text-white">Current goal:</span>{' '}
+                {weeklyCardioGoal} minutes per week
+              </p>
+              <p className="text-xs text-slate-400 mt-1">
+                WHO recommends at least 150 minutes of moderate cardio per week
+              </p>
+            </div>
+          </div>
 
           {/* Info Card */}
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-2xl p-5">

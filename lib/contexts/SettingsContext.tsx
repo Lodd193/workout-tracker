@@ -9,19 +9,24 @@ interface SettingsContextType {
   toggleWeightUnit: () => void
   convertWeight: (kg: number) => number
   formatWeight: (kg: number) => string
+  weeklyCardioGoal: number
+  setWeeklyCardioGoal: (goal: number) => void
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [weightUnit, setWeightUnit] = useState<WeightUnit>('kg')
+  const [weeklyCardioGoal, setWeeklyCardioGoalState] = useState<number>(150)
   const [mounted, setMounted] = useState(false)
 
   // Load settings from localStorage on mount
   useEffect(() => {
     const savedUnit = localStorage.getItem('weightUnit') as WeightUnit | null
+    const savedCardioGoal = localStorage.getItem('weeklyCardioGoal')
 
     if (savedUnit) setWeightUnit(savedUnit)
+    if (savedCardioGoal) setWeeklyCardioGoalState(parseInt(savedCardioGoal, 10))
 
     setMounted(true)
   }, [])
@@ -30,6 +35,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg'
     setWeightUnit(newUnit)
     localStorage.setItem('weightUnit', newUnit)
+  }
+
+  const setWeeklyCardioGoal = (goal: number) => {
+    setWeeklyCardioGoalState(goal)
+    localStorage.setItem('weeklyCardioGoal', goal.toString())
   }
 
   // Convert kg to lbs or return kg
@@ -58,6 +68,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         toggleWeightUnit,
         convertWeight,
         formatWeight,
+        weeklyCardioGoal,
+        setWeeklyCardioGoal,
       }}
     >
       {children}
@@ -74,6 +86,8 @@ export function useSettings() {
       toggleWeightUnit: () => {},
       convertWeight: (kg: number) => kg,
       formatWeight: (kg: number) => `${kg}kg`,
+      weeklyCardioGoal: 150,
+      setWeeklyCardioGoal: () => {},
     }
   }
   return context
