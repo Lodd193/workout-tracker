@@ -172,16 +172,20 @@ export async function calculateGoalProgress(goal: UserGoal): Promise<GoalProgres
 
   if (isAchieved) {
     onTrackStatus = 'ahead'
-  } else if (progressRate > 0 && weightRemaining > 0) {
-    // Estimate weeks to complete
-    const weeksToComplete = weightRemaining / progressRate
-    const estimatedDate = new Date()
-    estimatedDate.setDate(estimatedDate.getDate() + (weeksToComplete * 7))
-    estimatedCompletion = estimatedDate.toISOString().split('T')[0]
+  } else if (goal.target_date && daysRemaining !== null && weightRemaining > 0) {
+    // Calculate required progress rate to hit goal
+    const weeksRemaining = daysRemaining / 7
+    const requiredRate = weightRemaining / weeksRemaining
 
-    // Determine if on track
-    if (goal.target_date && daysRemaining !== null) {
-      const weeksRemaining = daysRemaining / 7
+    // If we have good historical data (progressRate > 0)
+    if (progressRate > 0) {
+      // Estimate weeks to complete based on current rate
+      const weeksToComplete = weightRemaining / progressRate
+      const estimatedDate = new Date()
+      estimatedDate.setDate(estimatedDate.getDate() + (weeksToComplete * 7))
+      estimatedCompletion = estimatedDate.toISOString().split('T')[0]
+
+      // Compare actual rate vs required rate
       if (weeksToComplete <= weeksRemaining * 0.8) {
         onTrackStatus = 'ahead'
       } else if (weeksToComplete <= weeksRemaining * 1.2) {
@@ -190,12 +194,36 @@ export async function calculateGoalProgress(goal: UserGoal): Promise<GoalProgres
         onTrackStatus = 'behind'
       }
     } else {
-      // No deadline, just check if making progress
-      onTrackStatus = recentTrend === 'improving' ? 'on-track' : 'behind'
+      // Insufficient historical data - use required rate to determine feasibility
+      // Consider goals requiring <2kg/week as reasonable/on-track
+      // Goals requiring 2-3kg/week as challenging but possible
+      // Goals requiring >3kg/week as unrealistic/behind
+      if (requiredRate <= 2.0) {
+        onTrackStatus = 'on-track'
+      } else if (requiredRate <= 3.0) {
+        onTrackStatus = 'behind'
+      } else {
+        onTrackStatus = 'behind'
+      }
+
+      // Set estimated completion based on required rate
+      const estimatedDate = new Date()
+      estimatedDate.setDate(estimatedDate.getDate() + (weeksRemaining * 7))
+      estimatedCompletion = estimatedDate.toISOString().split('T')[0]
     }
-  } else if (currentWeight > 0) {
-    // Has data but no progress
-    onTrackStatus = 'behind'
+  } else if (!goal.target_date && weightRemaining > 0) {
+    // No deadline - check if making progress
+    if (progressRate > 0 && recentTrend === 'improving') {
+      onTrackStatus = 'on-track'
+      // Estimate completion based on current rate
+      const weeksToComplete = weightRemaining / progressRate
+      const estimatedDate = new Date()
+      estimatedDate.setDate(estimatedDate.getDate() + (weeksToComplete * 7))
+      estimatedCompletion = estimatedDate.toISOString().split('T')[0]
+    } else if (currentWeight > 0) {
+      // Has data but no clear progress
+      onTrackStatus = 'behind'
+    }
   }
 
   return {
