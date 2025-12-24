@@ -247,6 +247,11 @@ export default function WorkoutForm() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
             Workout Tracker
           </h1>
+          {user?.email && (
+            <p className="text-emerald-400 mt-3 font-medium">
+              Welcome back, {user.email}!
+            </p>
+          )}
           <p className="text-slate-400 mt-2">Build your workout, track your progress</p>
         </div>
 
