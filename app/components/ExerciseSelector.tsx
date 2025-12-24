@@ -66,7 +66,7 @@ export default function ExerciseSelector({ isOpen, onClose, onSelectExercise }: 
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 border-b border-slate-700">
+        <div className="p-4 pt-6 border-b border-slate-700">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-bold text-white">Select Exercise</h2>
             <button
@@ -128,7 +128,7 @@ export default function ExerciseSelector({ isOpen, onClose, onSelectExercise }: 
         </div>
 
         {/* Exercise List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-1.5 min-h-0">
+        <div className="flex-1 overflow-y-auto p-4 space-y-1.5 min-h-[40vh]">
           {filteredExercises.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-slate-400 text-lg">No exercises found</p>

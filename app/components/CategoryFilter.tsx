@@ -10,7 +10,7 @@ export default function CategoryFilter({ selectedCategory, onSelectCategory }: C
   const categories = ['all', ...ALL_CATEGORIES] as const
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex gap-3 overflow-x-auto pb-2 whitespace-nowrap">
       {categories.map((category) => {
         const isActive = selectedCategory === category
         const label = category === 'all' ? 'All' : CATEGORY_LABELS[category as ExerciseCategory]
@@ -19,7 +19,7 @@ export default function CategoryFilter({ selectedCategory, onSelectCategory }: C
           <button
             key={category}
             onClick={() => onSelectCategory(category)}
-            className={`px-5 py-3 rounded-lg text-base font-semibold transition-all duration-200
+            className={`px-5 py-3 rounded-lg text-base font-semibold transition-all duration-200 flex-shrink-0
                        ${
                          isActive
                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 scale-105'
