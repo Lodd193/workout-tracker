@@ -3,13 +3,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 type WeightUnit = 'kg' | 'lbs'
-type Theme = 'dark' | 'light'
 
 interface SettingsContextType {
   weightUnit: WeightUnit
-  theme: Theme
   toggleWeightUnit: () => void
-  toggleTheme: () => void
   convertWeight: (kg: number) => number
   formatWeight: (kg: number) => string
 }
@@ -18,44 +15,21 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [weightUnit, setWeightUnit] = useState<WeightUnit>('kg')
-  const [theme, setTheme] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
 
   // Load settings from localStorage on mount
   useEffect(() => {
     const savedUnit = localStorage.getItem('weightUnit') as WeightUnit | null
-    const savedTheme = localStorage.getItem('theme') as Theme | null
 
     if (savedUnit) setWeightUnit(savedUnit)
-    if (savedTheme) setTheme(savedTheme)
 
     setMounted(true)
   }, [])
-
-  // Apply theme to document
-  useEffect(() => {
-    if (!mounted) return
-
-    const root = document.documentElement
-    if (theme === 'light') {
-      root.classList.remove('dark')
-      root.classList.add('light')
-    } else {
-      root.classList.remove('light')
-      root.classList.add('dark')
-    }
-  }, [theme, mounted])
 
   const toggleWeightUnit = () => {
     const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg'
     setWeightUnit(newUnit)
     localStorage.setItem('weightUnit', newUnit)
-  }
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
   }
 
   // Convert kg to lbs or return kg
@@ -81,9 +55,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     <SettingsContext.Provider
       value={{
         weightUnit,
-        theme,
         toggleWeightUnit,
-        toggleTheme,
         convertWeight,
         formatWeight,
       }}
@@ -99,9 +71,7 @@ export function useSettings() {
     // Return default values for SSR
     return {
       weightUnit: 'kg' as const,
-      theme: 'dark' as const,
       toggleWeightUnit: () => {},
-      toggleTheme: () => {},
       convertWeight: (kg: number) => kg,
       formatWeight: (kg: number) => `${kg}kg`,
     }
