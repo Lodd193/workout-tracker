@@ -2,9 +2,16 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { useAuth } from '@/lib/contexts/AuthContext'
 
 export default function Navigation() {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
+
+  // Don't show navigation on login/signup pages
+  if (pathname === '/login' || pathname === '/signup') {
+    return null
+  }
 
   const links = [
     {
@@ -50,7 +57,7 @@ export default function Navigation() {
             </span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation Links + Logout Button */}
           <div className="flex items-center gap-2">
             {links.map((link) => {
               const isActive = pathname === link.href
@@ -71,6 +78,25 @@ export default function Navigation() {
                 </Link>
               )
             })}
+
+            {/* Logout Button */}
+            {user && (
+              <button
+                onClick={signOut}
+                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800"
+                title="Sign out"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

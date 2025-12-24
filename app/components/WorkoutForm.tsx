@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useAuth } from '@/lib/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Exercise, SelectedExercise, WorkoutTemplate } from '@/lib/types'
 import ExerciseCard from './ExerciseCard'
@@ -9,6 +10,7 @@ import TemplateSelector from './TemplateSelector'
 import SaveTemplateModal from './SaveTemplateModal'
 import { EXERCISES } from '@/lib/exercises'
 
+  const { user } = useAuth()
 export default function WorkoutForm() {
   const [date, setDate] = useState('')
   const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([])
@@ -196,9 +198,15 @@ export default function WorkoutForm() {
       return
     }
 
+    if (!user) {
+      setMessage('You must be logged in to save workouts.')
+      setSaving(false)
+      return
+    }
+
     const rows = selectedExercises.flatMap((exercise) =>
       exercise.sets
-        .map((set, index) => ({
+        .map((set, index) => ({ user_id: user.id,
           date,
           workout_type: exercise.category,
           exercise_name: exercise.name,

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import { SettingsProvider } from "@/lib/contexts/SettingsContext";
+import { AuthProvider } from "@/lib/contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +27,8 @@ export const viewport: Viewport = {
   userScalable: true,
 };
 
+export const dynamic = 'force-dynamic'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,10 +39,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950`}
       >
-        <SettingsProvider>
-          <Navigation />
-          {children}
-        </SettingsProvider>
+        <AuthProvider>
+          <SettingsProvider>
+            <Navigation />
+            {children}
+          </SettingsProvider>
+        </AuthProvider>
       </body>
     </html>
   );
