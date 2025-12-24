@@ -19,6 +19,8 @@ import WorkoutCalendar from '@/app/components/WorkoutCalendar'
 import WeeklyCardioTracker from '@/app/components/WeeklyCardioTracker'
 import GoalsDashboard from '@/app/components/GoalsDashboard'
 
+type TabType = 'overview' | 'analytics' | 'insights'
+
 export default function ProgressPage() {
   const [loading, setLoading] = useState(true)
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null)
@@ -26,6 +28,7 @@ export default function ProgressPage() {
   const [frequencyData, setFrequencyData] = useState<WorkoutDayData[]>([])
   const [exercises, setExercises] = useState<string[]>([])
   const [selectedExercise, setSelectedExercise] = useState<string>('')
+  const [activeTab, setActiveTab] = useState<TabType>('overview')
 
   useEffect(() => {
     async function loadData() {
@@ -104,54 +107,109 @@ export default function ProgressPage() {
           <p className="text-slate-400 mt-2">Track your strength gains and consistency</p>
         </div>
 
-        {/* Summary Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <StatCard label="Total Workouts" value={summary.totalWorkouts} icon="calendar" />
-          <StatCard label="Total Sets" value={summary.totalSets} icon="layers" />
-          <StatCard label="Exercises" value={summary.totalExercises} icon="activity" />
-          <StatCard label="Current Streak" value={`${summary.currentStreak}d`} icon="flame" highlight />
-          <StatCard label="Longest Streak" value={`${summary.longestStreak}d`} icon="trophy" />
-          <StatCard label="Avg/Week" value={summary.avgWorkoutsPerWeek} icon="trending" />
+        {/* Tabs Navigation */}
+        <div className="flex justify-center">
+          <div className="inline-flex bg-slate-800/60 border border-slate-700 rounded-xl p-1 backdrop-blur-md">
+            <TabButton
+              active={activeTab === 'overview'}
+              onClick={() => setActiveTab('overview')}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+              }
+            >
+              Overview
+            </TabButton>
+            <TabButton
+              active={activeTab === 'analytics'}
+              onClick={() => setActiveTab('analytics')}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              }
+            >
+              Exercise Analytics
+            </TabButton>
+            <TabButton
+              active={activeTab === 'insights'}
+              onClick={() => setActiveTab('insights')}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              }
+            >
+              Insights & Trends
+            </TabButton>
+          </div>
         </div>
 
-        {/* Goals Dashboard */}
-        <GoalsDashboard />
+        {/* Tab Content */}
+        {activeTab === 'overview' && (
+          <div className="space-y-8">
+            {/* Summary Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <StatCard label="Total Workouts" value={summary.totalWorkouts} icon="calendar" />
+              <StatCard label="Total Sets" value={summary.totalSets} icon="layers" />
+              <StatCard label="Exercises" value={summary.totalExercises} icon="activity" />
+              <StatCard label="Current Streak" value={`${summary.currentStreak}d`} icon="flame" highlight />
+              <StatCard label="Longest Streak" value={`${summary.longestStreak}d`} icon="trophy" />
+              <StatCard label="Avg/Week" value={summary.avgWorkoutsPerWeek} icon="trending" />
+            </div>
 
-        {/* Weight Progression Chart */}
-        <WeightProgressionChart
-          selectedExercise={selectedExercise}
-          exercises={exercises}
-          onExerciseChange={setSelectedExercise}
-        />
+            {/* Goals Dashboard */}
+            <GoalsDashboard />
 
-        {/* Volume Progression Chart */}
-        <VolumeProgressionChart
-          selectedExercise={selectedExercise}
-          exercises={exercises}
-          onExerciseChange={setSelectedExercise}
-        />
+            {/* Workout Calendar with Streaks */}
+            <WorkoutCalendar />
 
-        {/* Advanced Metrics Panel (1RM & Progress Rates) */}
-        <AdvancedMetricsPanel
-          selectedExercise={selectedExercise}
-          exercises={exercises}
-          onExerciseChange={setSelectedExercise}
-        />
+            {/* Weekly Cardio Tracker */}
+            <WeeklyCardioTracker />
+          </div>
+        )}
 
-        {/* Week-over-Week Comparison */}
-        <WeekComparisonCard />
+        {activeTab === 'analytics' && (
+          <div className="space-y-8">
+            {/* Weight Progression Chart */}
+            <WeightProgressionChart
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
 
-        {/* Workout Calendar with Streaks */}
-        <WorkoutCalendar />
+            {/* Volume Progression Chart */}
+            <VolumeProgressionChart
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
 
-        {/* Weekly Cardio Tracker */}
-        <WeeklyCardioTracker />
+            {/* Advanced Metrics Panel (1RM & Progress Rates) */}
+            <AdvancedMetricsPanel
+              selectedExercise={selectedExercise}
+              exercises={exercises}
+              onExerciseChange={setSelectedExercise}
+            />
 
-        {/* Personal Records Grid */}
-        <PersonalRecordsGrid records={personalRecords} />
+            {/* Personal Records Grid */}
+            <PersonalRecordsGrid records={personalRecords} />
+          </div>
+        )}
 
-        {/* Workout Frequency Heatmap */}
-        <WorkoutFrequencyHeatmap data={frequencyData} />
+        {activeTab === 'insights' && (
+          <div className="space-y-8">
+            {/* Week-over-Week Comparison */}
+            <WeekComparisonCard />
+
+            {/* Workout Frequency Heatmap */}
+            <WorkoutFrequencyHeatmap data={frequencyData} />
+          </div>
+        )}
       </div>
     </div>
   )
@@ -200,5 +258,33 @@ function StatCard({
       <div className="text-2xl font-bold text-white mb-1">{value}</div>
       <div className="text-xs text-slate-400 uppercase tracking-wide">{label}</div>
     </div>
+  )
+}
+
+// Tab Button Component
+function TabButton({
+  active,
+  onClick,
+  icon,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  icon: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200
+                ${
+                  active
+                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                }`}
+    >
+      {icon}
+      <span className="hidden sm:inline">{children}</span>
+    </button>
   )
 }
