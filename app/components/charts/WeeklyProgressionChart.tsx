@@ -178,7 +178,7 @@ export default function WeeklyProgressionChart({
                 const week = props.payload
                 return [
                   <div key="tooltip" className="space-y-1">
-                    <div className="font-semibold">
+                    <div className="font-semibold text-white">
                       {metric === 'volume' ? 'Total Volume:' : 'Max Weight:'}{' '}
                       {metric === 'volume' ? `${value}kg` : formatWeight(value as number)}
                     </div>
@@ -188,7 +188,7 @@ export default function WeeklyProgressionChart({
                     <div className="text-sm text-slate-400">
                       Total Sets: {week.total_sets}
                     </div>
-                    <div className="text-sm">
+                    <div className="text-sm text-slate-300">
                       Status:{' '}
                       <span
                         className="font-semibold"
