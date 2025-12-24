@@ -93,6 +93,12 @@ export const EXERCISES: Exercise[] = [
   { id: 'cable-crunch', name: 'Cable Crunches', category: 'core', categoryLabel: 'Core' },
   { id: 'plank', name: 'Plank Variations', category: 'core', categoryLabel: 'Core' },
   { id: 'russian-twist', name: 'Russian Twists', category: 'core', categoryLabel: 'Core' },
+
+  // CARDIO
+  { id: 'bike', name: 'Bike', category: 'cardio', categoryLabel: 'Cardio' },
+  { id: 'run', name: 'Run', category: 'cardio', categoryLabel: 'Cardio' },
+  { id: 'walk', name: 'Walk', category: 'cardio', categoryLabel: 'Cardio' },
+  { id: 'row', name: 'Row', category: 'cardio', categoryLabel: 'Cardio' },
 ]
 
 // Category labels for display
