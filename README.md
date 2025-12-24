@@ -23,14 +23,16 @@ A modern, full-stack workout tracking application built with Next.js and Supabas
 
 ### 💪 **Workout Tracking**
 - Log workouts with date, exercise, weight, and reps
-- 70+ exercises across 13 categories:
+- 70+ exercises across 14 categories:
+  - **Cardio** (Bike, Run, Walk, Row) - Duration-based tracking
   - Chest (Upper, Mid, Lower)
   - Back (Vertical, Horizontal)
   - Shoulders
   - Arms (Biceps, Triceps)
   - Legs (Quads, Hamstrings, Glutes, Calves)
   - Core
-- Multiple sets per exercise
+- Multiple sets per exercise (strength training)
+- **Duration tracking for cardio** exercises in minutes
 - Quick data entry with bulk fill
 - Progressive overload tracking with smart suggestions
 - **Delete confirmations** to prevent accidental data loss
@@ -46,6 +48,11 @@ A modern, full-stack workout tracking application built with Next.js and Supabas
 - Volume tracking over time
 - 1RM estimation using Epley formula
 - Week-over-week performance comparisons
+- **Weekly cardio tracker** - Monitor cardio minutes with 150min/week goal
+- Weight progression charts with trend analysis
+- Volume tracking over time
+- 1RM estimation using Epley formula
+- Week-over-week performance comparisons
 - Average workouts per week calculation
 
 ### 📝 **Workout History**
@@ -57,7 +64,8 @@ A modern, full-stack workout tracking application built with Next.js and Supabas
 ### ⚙️ **Customization**
 - Toggle between kg/lbs units
 - Dark mode interface
-- Workout templates (save and reuse)
+- **Pre-made workout templates** - PPL, Upper/Lower, Full Body, Bro Split, Starting Strength
+- Custom templates (save and reuse your own routines)
 - Responsive mobile design
 - **Progressive Web App (PWA)** - Install on any device
 - **Full offline support** with service worker caching
@@ -175,15 +183,18 @@ workout-tracker/
 │   │   ├── WorkoutForm.tsx
 │   │   ├── ExerciseSelector.tsx
 │   │   ├── ExerciseCard.tsx
-│   │   ├── WorkoutCalendar.tsx  # NEW: Calendar with streaks
-│   │   ├── ConfirmDialog.tsx    # NEW: Delete confirmations
-│   │   ├── PWAInstaller.tsx     # NEW: Service worker registration
+│   │   ├── CardioInput.tsx          # NEW: Duration input for cardio
+│   │   ├── WeeklyCardioTracker.tsx  # NEW: Weekly cardio progress
+│   │   ├── WorkoutCalendar.tsx      # Calendar with streaks
+│   │   ├── TemplateSelector.tsx     # Pre-made & custom templates
+│   │   ├── ConfirmDialog.tsx        # Delete confirmations
+│   │   ├── PWAInstaller.tsx         # Service worker registration
 │   │   ├── Navigation.tsx
 │   │   └── ...
 │   ├── login/            # Login page
 │   ├── signup/           # Signup page
 │   ├── history/          # Workout history page
-│   ├── progress/         # Analytics page (with calendar)
+│   ├── progress/         # Analytics page (with calendar & cardio tracker)
 │   ├── settings/         # Settings page
 │   └── layout.tsx        # Root layout
 ├── lib/
@@ -193,6 +204,7 @@ workout-tracker/
 │   ├── api/              # API functions
 │   │   └── analytics.ts  # Includes PR tracking, streaks, etc.
 │   ├── exercises.ts      # Exercise library (70+ exercises)
+│   ├── premadeTemplates.ts  # NEW: Pre-made workout templates
 │   ├── supabase.ts       # Supabase client
 │   └── types.ts          # TypeScript types
 ├── public/
@@ -217,6 +229,7 @@ workout-tracker/
 
 ### Logging a Workout
 
+#### Strength Training:
 1. Select today's date (or any past date)
 2. Click **"Add Exercise"**
 3. Search or browse for an exercise
@@ -224,13 +237,20 @@ workout-tracker/
 5. Use **quick fill** to populate all sets with the same weight/reps
 6. Enter weight and reps for each set (or modify individually)
 7. Click **"Save Workout"**
-8. Works offline - syncs automatically when back online!
+
+#### Cardio:
+1. Select a cardio exercise (Bike, Run, Walk, or Row)
+2. Enter the total duration in minutes
+3. Use quick-add buttons (10, 15, 20, 30, 45, 60 min) for faster entry
+4. Click **"Save Workout"**
+5. Track your weekly cardio progress toward the 150min goal on the Progress page
 
 ### Viewing Progress
 
 - **History**: See all past workouts, edit or delete entries
 - **Progress**: View charts, PRs, volume trends, and analytics
-  - **Calendar**: Visual heat map of your workout consistency
+  - **Calendar**: Visual heat map of your workout consistency (cardio shown in sky-blue)
+  - **Weekly Cardio Tracker**: Monitor cardio minutes with progress bar
   - **Streaks**: Track your current and longest workout streaks
   - **Personal Records**: All-time bests for each exercise
   - **Charts**: Weight progression and volume trends
@@ -238,9 +258,21 @@ workout-tracker/
 
 ### Using Templates
 
+#### Pre-Made Templates:
+1. Click **"Load Template"** when starting a workout
+2. Select the **"Pre-Made"** tab
+3. Choose from 11 proven workout routines:
+   - **PPL (Push/Pull/Legs)**: Push Day, Pull Day, Legs Day
+   - **Upper/Lower**: Upper Day, Lower Day
+   - **Full Body Workout**
+   - **Bro Split**: Chest, Back, Shoulders, Arms, Legs
+   - **Starting Strength**
+4. Template loads all exercises - edit as needed
+
+#### Custom Templates:
 1. Create a workout with your favorite exercises
 2. Click **"Save as Template"**
-3. Load templates for future workouts with one click
+3. Load from the **"Custom"** tab for future workouts
 
 ## 🔐 Security
 
