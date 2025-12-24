@@ -8,6 +8,13 @@ A modern, full-stack workout tracking application built with Next.js and Supabas
 
 ## ✨ Features
 
+### 📱 **Progressive Web App**
+- **Install on any device** - Works like a native app
+- **Offline support** - Log workouts without internet connection
+- **Background sync** - Automatically syncs when connection is restored
+- **Fast loading** - Service worker caching for instant access
+- **Push notifications ready** - Stay motivated with reminders
+
 ### 🔒 **Secure Authentication**
 - Email/password authentication via Supabase Auth
 - Row Level Security (RLS) for data isolation
@@ -25,16 +32,21 @@ A modern, full-stack workout tracking application built with Next.js and Supabas
   - Core
 - Multiple sets per exercise
 - Quick data entry with bulk fill
-- Progressive overload tracking
+- Progressive overload tracking with smart suggestions
+- **Delete confirmations** to prevent accidental data loss
+- **Time-based personalized greetings** (Good morning/afternoon/evening)
+- Real-time workout timer
 
 ### 📊 **Analytics & Progress**
-- Personal records (PRs) for each exercise
-- Weight progression charts
+- **Personal records (PRs)** displayed with 🏆 badges on exercise cards
+- **Exercise history** showing last performance and smart progression suggestions
+- **Interactive calendar view** with GitHub-style workout heat map
+- **Workout streaks tracker** - current streak, longest streak, and consistency stats
+- Weight progression charts with trend analysis
 - Volume tracking over time
 - 1RM estimation using Epley formula
-- Workout frequency heatmap
-- Week-over-week comparisons
-- Current and longest workout streaks
+- Week-over-week performance comparisons
+- Average workouts per week calculation
 
 ### 📝 **Workout History**
 - Complete workout history with dates
@@ -47,6 +59,9 @@ A modern, full-stack workout tracking application built with Next.js and Supabas
 - Dark mode interface
 - Workout templates (save and reuse)
 - Responsive mobile design
+- **Progressive Web App (PWA)** - Install on any device
+- **Full offline support** with service worker caching
+- Background sync for offline workouts
 
 ## 🛠️ Tech Stack
 
@@ -159,12 +174,16 @@ workout-tracker/
 │   ├── components/        # React components
 │   │   ├── WorkoutForm.tsx
 │   │   ├── ExerciseSelector.tsx
+│   │   ├── ExerciseCard.tsx
+│   │   ├── WorkoutCalendar.tsx  # NEW: Calendar with streaks
+│   │   ├── ConfirmDialog.tsx    # NEW: Delete confirmations
+│   │   ├── PWAInstaller.tsx     # NEW: Service worker registration
 │   │   ├── Navigation.tsx
 │   │   └── ...
 │   ├── login/            # Login page
 │   ├── signup/           # Signup page
 │   ├── history/          # Workout history page
-│   ├── progress/         # Analytics page
+│   ├── progress/         # Analytics page (with calendar)
 │   ├── settings/         # Settings page
 │   └── layout.tsx        # Root layout
 ├── lib/
@@ -172,10 +191,15 @@ workout-tracker/
 │   │   ├── AuthContext.tsx
 │   │   └── SettingsContext.tsx
 │   ├── api/              # API functions
-│   │   └── analytics.ts
-│   ├── exercises.ts      # Exercise library
+│   │   └── analytics.ts  # Includes PR tracking, streaks, etc.
+│   ├── exercises.ts      # Exercise library (70+ exercises)
 │   ├── supabase.ts       # Supabase client
 │   └── types.ts          # TypeScript types
+├── public/
+│   ├── manifest.json     # PWA manifest
+│   ├── sw.js             # Service worker for offline support
+│   ├── offline.html      # Offline fallback page
+│   └── icon-*.png        # PWA icons
 ├── database/
 │   ├── migration_add_auth.sql
 │   └── SETUP_INSTRUCTIONS.md
@@ -184,19 +208,33 @@ workout-tracker/
 
 ## 🎯 Usage
 
+### Installing as a PWA
+
+1. Open the app in your browser (Chrome, Edge, Safari)
+2. Look for the install icon in the address bar
+3. Click **"Install"** to add to your home screen/desktop
+4. Launch the app anytime - even offline!
+
 ### Logging a Workout
 
 1. Select today's date (or any past date)
 2. Click **"Add Exercise"**
 3. Search or browse for an exercise
-4. Enter weight and reps for each set
-5. Click **"Save Workout"**
+4. See your **last performance** and **personal record** for that exercise
+5. Use **quick fill** to populate all sets with the same weight/reps
+6. Enter weight and reps for each set (or modify individually)
+7. Click **"Save Workout"**
+8. Works offline - syncs automatically when back online!
 
 ### Viewing Progress
 
 - **History**: See all past workouts, edit or delete entries
 - **Progress**: View charts, PRs, volume trends, and analytics
-- **Settings**: Toggle units (kg/lbs)
+  - **Calendar**: Visual heat map of your workout consistency
+  - **Streaks**: Track your current and longest workout streaks
+  - **Personal Records**: All-time bests for each exercise
+  - **Charts**: Weight progression and volume trends
+- **Settings**: Toggle units (kg/lbs), manage account
 
 ### Using Templates
 
