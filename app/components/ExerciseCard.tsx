@@ -29,8 +29,10 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
   const [personalRecord, setPersonalRecord] = useState<{ max_weight: number; reps_at_max: number; date_achieved: string } | null>(null)
 
   useEffect(() => {
-    loadLastPerformance()
-  }, [exercise.name])
+    if (!isCardio) {
+      loadLastPerformance()
+    }
+  }, [exercise.name, isCardio])
 
   const loadPersonalRecord = async () => {
     try {
@@ -145,8 +147,8 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
         </button>
       </div>
 
-      {/* Progressive Overload Assistant */}
-      {lastPerformance && (
+      {/* Progressive Overload Assistant - Only for strength exercises */}
+      {!isCardio && lastPerformance && (
         <div className="mb-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3">
           <div className="flex items-start gap-3">
             <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -177,83 +179,92 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
         </div>
       )}
 
-      {/* Quick Fill Section */}
-      <div className="mb-4">
-        {!showBulkFill ? (
-          <button
-            type="button"
-            onClick={() => setShowBulkFill(true)}
-            className="text-sm text-emerald-400 hover:text-emerald-300 flex items-center gap-2 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            Quick Fill All Sets
-          </button>
-        ) : (
-          <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 space-y-2">
-            <div className="flex items-center gap-2 mb-2">
-              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {/* Quick Fill Section - Only for strength exercises */}
+      {!isCardio && (
+        <div className="mb-4">
+          {!showBulkFill ? (
+            <button
+              type="button"
+              onClick={() => setShowBulkFill(true)}
+              className="text-sm text-emerald-400 hover:text-emerald-300 flex items-center gap-2 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="text-sm font-semibold text-emerald-400">Quick Fill</span>
+              Quick Fill All Sets
+            </button>
+          ) : (
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 space-y-2">
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span className="text-sm font-semibold text-emerald-400">Quick Fill</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  step="0.5"
+                  placeholder={`Weight (${weightUnit})`}
+                  value={bulkWeight}
+                  onChange={(e) => setBulkWeight(e.target.value)}
+                  className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                <span className="text-slate-400 text-sm">{weightUnit} ×</span>
+                <input
+                  type="number"
+                  placeholder="Reps"
+                  value={bulkReps}
+                  onChange={(e) => setBulkReps(e.target.value)}
+                  className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                <span className="text-slate-400 text-sm">reps</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={fillAllSets}
+                  disabled={!bulkWeight || !bulkReps}
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Apply to All Sets
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowBulkFill(false)
+                    setBulkWeight('')
+                    setBulkReps('')
+                  }}
+                  className="px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                step="0.5"
-                placeholder={`Weight (${weightUnit})`}
-                value={bulkWeight}
-                onChange={(e) => setBulkWeight(e.target.value)}
-                className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-              <span className="text-slate-400 text-sm">{weightUnit} ×</span>
-              <input
-                type="number"
-                placeholder="Reps"
-                value={bulkReps}
-                onChange={(e) => setBulkReps(e.target.value)}
-                className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-              <span className="text-slate-400 text-sm">reps</span>
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={fillAllSets}
-                disabled={!bulkWeight || !bulkReps}
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              >
-                Apply to All Sets
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowBulkFill(false)
-                  setBulkWeight('')
-                  setBulkReps('')
-                }}
-                className="px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
-      {/* Sets Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {exercise.sets.map((set, setIndex) => (
-          <SetInput
-            key={setIndex}
-            setNumber={setIndex + 1}
-            setData={set}
-            onWeightChange={(value) => onUpdateSet(setIndex, 'weight', value)}
-            onRepsChange={(value) => onUpdateSet(setIndex, 'reps', value)}
-          />
-        ))}
-      </div>
+      {/* Cardio Input or Sets Grid */}
+      {isCardio ? (
+        <CardioInput
+          duration={exercise.duration || 0}
+          onDurationChange={(duration) => onUpdateDuration?.(duration)}
+        />
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {exercise.sets.map((set, setIndex) => (
+            <SetInput
+              key={setIndex}
+              setNumber={setIndex + 1}
+              setData={set}
+              onWeightChange={(value) => onUpdateSet(setIndex, 'weight', value)}
+              onRepsChange={(value) => onUpdateSet(setIndex, 'reps', value)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
