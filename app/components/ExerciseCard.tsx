@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { SelectedExercise } from '@/lib/types'
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import SetInput from './SetInput'
+import CardioInput from './CardioInput'
 import { fetchLastPerformance, fetchPersonalRecords } from '@/lib/api/analytics'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 
@@ -10,10 +11,12 @@ interface ExerciseCardProps {
   index: number
   onRemove: () => void
   onUpdateSet: (setIndex: number, field: 'weight' | 'reps', value: string) => void
+  onUpdateDuration?: (duration: number) => void
 }
 
-export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet }: ExerciseCardProps) {
+export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, onUpdateDuration }: ExerciseCardProps) {
   const gradientColor = CATEGORY_COLORS[exercise.category]
+  const isCardio = exercise.category === 'cardio'
   const { weightUnit, convertWeight, formatWeight } = useSettings()
   const [bulkWeight, setBulkWeight] = useState('')
   const [bulkReps, setBulkReps] = useState('')

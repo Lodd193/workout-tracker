@@ -16,6 +16,7 @@ import VolumeProgressionChart from '@/app/components/charts/VolumeProgressionCha
 import AdvancedMetricsPanel from '@/app/components/charts/AdvancedMetricsPanel'
 import WeekComparisonCard from '@/app/components/charts/WeekComparisonCard'
 import WorkoutCalendar from '@/app/components/WorkoutCalendar'
+import WeeklyCardioTracker from '@/app/components/WeeklyCardioTracker'
 
 export default function ProgressPage() {
   const [loading, setLoading] = useState(true)
@@ -138,6 +139,9 @@ export default function ProgressPage() {
 
         {/* Workout Calendar with Streaks */}
         <WorkoutCalendar />
+
+        {/* Weekly Cardio Tracker */}
+        <WeeklyCardioTracker />
 
         {/* Personal Records Grid */}
         <PersonalRecordsGrid records={personalRecords} />

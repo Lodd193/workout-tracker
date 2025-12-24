@@ -12,6 +12,7 @@ export type ExerciseCategory =
   | 'legs_glutes'
   | 'legs_calves'
   | 'core'
+  | 'cardio'
 
 export interface Exercise {
   id: string
@@ -31,6 +32,7 @@ export interface SelectedExercise {
   name: string
   category: ExerciseCategory
   sets: SetData[]
+  duration?: number       // for cardio exercises (minutes)
 }
 
 // ============ ANALYTICS TYPES ============

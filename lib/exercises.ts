@@ -110,6 +110,7 @@ export const CATEGORY_LABELS: Record<ExerciseCategory, string> = {
   'legs_glutes': 'Legs - Glutes',
   'legs_calves': 'Legs - Calves',
   'core': 'Core',
+  'cardio': 'Cardio',
 }
 
 // Category colors for visual identity (Tailwind gradient classes)
@@ -127,10 +128,12 @@ export const CATEGORY_COLORS: Record<ExerciseCategory, string> = {
   'legs_glutes': 'from-green-700 to-emerald-700',
   'legs_calves': 'from-teal-500 to-cyan-500',
   'core': 'from-yellow-500 to-amber-500',
+  'cardio': 'from-sky-500 to-indigo-500',
 }
 
 // Get all unique categories
 export const ALL_CATEGORIES: ExerciseCategory[] = [
+  'cardio',
   'chest_upper',
   'chest_mid',
   'chest_lower',

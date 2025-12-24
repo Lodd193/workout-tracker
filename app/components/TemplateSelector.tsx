@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { WorkoutTemplate } from '@/lib/types'
 import { getAllTemplates, deleteTemplate } from '@/lib/templates'
 import { CATEGORY_COLORS } from '@/lib/exercises'
+import { PREMADE_TEMPLATES } from '@/lib/premadeTemplates'
 
 interface TemplateSelectorProps {
   isOpen: boolean

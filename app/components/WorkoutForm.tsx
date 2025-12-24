@@ -72,12 +72,14 @@ export default function WorkoutForm() {
   }
 
   const addExercise = (exercise: Exercise) => {
+    const isCardio = exercise.category === 'cardio'
     const newExercise: SelectedExercise = {
       id: crypto.randomUUID(),
       exerciseId: exercise.id,
       name: exercise.name,
       category: exercise.category,
-      sets: Array(4).fill(null).map(() => ({ weight: '', reps: '' })),
+      sets: isCardio ? [] : Array(4).fill(null).map(() => ({ weight: '', reps: '' })),
+      duration: isCardio ? 0 : undefined,
     }
     setSelectedExercises((prev) => [...prev, newExercise])
     setIsModalOpen(false)
@@ -106,6 +108,16 @@ export default function WorkoutForm() {
               ...ex,
               sets: ex.sets.map((s, i) => (i === setIndex ? { ...s, [field]: value } : s)),
             }
+          : ex
+      )
+    )
+  }
+
+  const updateDuration = (exerciseId: string, duration: number) => {
+    setSelectedExercises((prev) =>
+      prev.map((ex) =>
+        ex.id === exerciseId
+          ? { ...ex, duration }
           : ex
       )
     )
@@ -227,9 +239,24 @@ export default function WorkoutForm() {
       return
     }
 
-    const rows = selectedExercises.flatMap((exercise) =>
-      exercise.sets
-        .map((set, index) => ({ user_id: user.id,
+    const rows = selectedExercises.flatMap((exercise) => {
+      // Handle cardio exercises
+      if (exercise.category === 'cardio' && exercise.duration && exercise.duration > 0) {
+        return [{
+          user_id: user.id,
+          date,
+          workout_type: exercise.category,
+          exercise_name: exercise.name,
+          set_number: 1,
+          weight_kg: 0,
+          reps: exercise.duration, // Store duration in reps field
+        }]
+      }
+
+      // Handle strength exercises
+      return exercise.sets
+        .map((set, index) => ({
+          user_id: user.id,
           date,
           workout_type: exercise.category,
           exercise_name: exercise.name,
@@ -238,7 +265,7 @@ export default function WorkoutForm() {
           reps: parseInt(set.reps),
         }))
         .filter((row) => !isNaN(row.weight_kg) && !isNaN(row.reps))
-    )
+    })
 
     if (rows.length === 0) {
       setMessage('No sets to save. Enter at least one set.')
@@ -405,6 +432,7 @@ export default function WorkoutForm() {
                 index={index}
                 onRemove={() => removeExercise(exercise.id)}
                 onUpdateSet={(setIndex, field, value) => updateSet(exercise.id, setIndex, field, value)}
+                onUpdateDuration={(duration) => updateDuration(exercise.id, duration)}
               />
             ))}
           </div>
