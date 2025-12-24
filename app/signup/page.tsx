@@ -32,14 +32,20 @@ export default function SignupPage() {
 
     setLoading(true)
 
-    const result = await signUp(email, password)
+    try {
+      const result = await signUp(email, password)
 
-    if (result.error) {
-      setError(result.error)
+      if (result.error) {
+        setError(result.error)
+        setLoading(false)
+      } else {
+        // Success! Force hard redirect
+        window.location.href = '/'
+      }
+    } catch (err) {
+      console.error('Signup error:', err)
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
-    } else {
-      // Success! Redirect to home
-      router.push('/')
     }
   }
 

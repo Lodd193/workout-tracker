@@ -10,8 +10,8 @@ import TemplateSelector from './TemplateSelector'
 import SaveTemplateModal from './SaveTemplateModal'
 import { EXERCISES } from '@/lib/exercises'
 
-  const { user } = useAuth()
 export default function WorkoutForm() {
+  const { user } = useAuth()
   const [date, setDate] = useState('')
   const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)

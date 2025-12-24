@@ -6,11 +6,23 @@ import { useAuth } from '@/lib/contexts/AuthContext'
 
 export default function Navigation() {
   const pathname = usePathname()
-  const { user, signOut } = useAuth()
-
+  
   // Don't show navigation on login/signup pages
   if (pathname === '/login' || pathname === '/signup') {
     return null
+  }
+
+  // Safely get auth context - might not be available during SSR
+  let user = null
+  let signOut = () => {}
+  
+  try {
+    const auth = useAuth()
+    user = auth.user
+    signOut = auth.signOut
+  } catch (e) {
+    // Auth context not available yet
+    console.log('[Navigation] Auth context not available')
   }
 
   const links = [

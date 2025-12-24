@@ -20,7 +20,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check active session on mount
+    console.log('[Auth] Checking for existing session...')
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('[Auth] Session check result:', session ? 'Found session' : 'No session')
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -29,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('[Auth] Auth state changed:', _event, session ? 'User logged in' : 'User logged out')
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -37,32 +40,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    console.log('[Auth] Attempting sign in for:', email)
+    
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
+    console.log('[Auth] Sign in result:', { data, error })
+
     if (error) {
+      console.error('[Auth] Sign in error:', error.message)
       return { error: error.message }
     }
 
+    console.log('[Auth] Sign in successful!')
     return {}
   }
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    console.log('[Auth] Attempting sign up for:', email)
+    
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     })
 
+    console.log('[Auth] Sign up result:', { data, error })
+
     if (error) {
+      console.error('[Auth] Sign up error:', error.message)
       return { error: error.message }
     }
 
+    console.log('[Auth] Sign up successful!')
     return {}
   }
 
   const signOut = async () => {
+    console.log('[Auth] Signing out...')
     await supabase.auth.signOut()
   }
 

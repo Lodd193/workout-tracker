@@ -3,15 +3,14 @@
 import { useEffect } from 'react'
 import { useAuth } from '@/lib/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-import WorkoutForm from './components/WorkoutForm'
 
-export default function Home() {
+export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
     if (!loading && !user) {
-      console.log('[Home] No user found, redirecting to login...')
+      console.log('[ProtectedRoute] No user found, redirecting to login...')
       router.push('/login')
     }
   }, [user, loading, router])
@@ -25,14 +24,10 @@ export default function Home() {
     )
   }
 
-  // Show nothing if not logged in (redirect will happen)
+  // Don't render if not logged in
   if (!user) {
     return null
   }
 
-  return (
-    <main className="min-h-screen bg-gray-50 py-8">
-      <WorkoutForm />
-    </main>
-  )
+  return <>{children}</>
 }

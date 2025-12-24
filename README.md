@@ -1,152 +1,258 @@
-# Workout Tracker
+# 🏋️ Workout Tracker
 
-A comprehensive web app for tracking your weightlifting workouts and visualizing your progress over time.
+A modern, full-stack workout tracking application built with Next.js and Supabase. Track your exercises, monitor progress, and achieve your fitness goals with a beautiful, responsive interface.
 
-## Features
+![Workout Tracker](https://img.shields.io/badge/Next.js-16.1.0-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20Database-green?style=for-the-badge&logo=supabase)
 
-### Workout Logging
-- **Dynamic Exercise Selection**: Choose from 70+ exercises organized by movement categories
-- **Flexible Workouts**: Build custom workouts by adding any exercises you want
-- **Detailed Tracking**: Log weight (kg) and reps for up to 4 sets per exercise
-- **Exercise Categories**: Chest (Upper/Mid/Lower), Back (Vertical/Horizontal), Shoulders, Arms, Legs, Core
-- **Search & Filter**: Find exercises quickly with search and category filtering
+## ✨ Features
 
-### Progress Analytics
-- **Weight Progression Charts**: Visualize strength gains over time for each exercise with interactive line charts
-- **Personal Records**: Track your best lifts with max weight, reps, and date achieved
-- **Workout Frequency Heatmap**: GitHub-style calendar showing your training consistency over 12 months
-- **Summary Statistics**:
-  - Total workouts and sets
-  - Unique exercises performed
-  - Current and longest workout streaks
-  - Average workouts per week
+### 🔒 **Secure Authentication**
+- Email/password authentication via Supabase Auth
+- Row Level Security (RLS) for data isolation
+- Protected routes with middleware
+- Persistent sessions
 
-### User Experience
-- **Modern Dark Theme**: Professional glassmorphism design with emerald/cyan accents
-- **Smooth Animations**: Polished interactions and transitions
-- **Mobile Responsive**: Works seamlessly on all devices
-- **Navigation**: Easy switching between Log Workout and Progress pages
-- **Loading States**: Skeleton loaders and empty states for better UX
+### 💪 **Workout Tracking**
+- Log workouts with date, exercise, weight, and reps
+- 70+ exercises across 13 categories:
+  - Chest (Upper, Mid, Lower)
+  - Back (Vertical, Horizontal)
+  - Shoulders
+  - Arms (Biceps, Triceps)
+  - Legs (Quads, Hamstrings, Glutes, Calves)
+  - Core
+- Multiple sets per exercise
+- Quick data entry with bulk fill
+- Progressive overload tracking
 
-## Tech Stack
+### 📊 **Analytics & Progress**
+- Personal records (PRs) for each exercise
+- Weight progression charts
+- Volume tracking over time
+- 1RM estimation using Epley formula
+- Workout frequency heatmap
+- Week-over-week comparisons
+- Current and longest workout streaks
 
-- **Frontend**: Next.js 16 (App Router) + React 19 + TypeScript
-- **Styling**: Tailwind CSS 4
-- **Charts**: Recharts
+### 📝 **Workout History**
+- Complete workout history with dates
+- Edit and delete past workouts
+- View sets, reps, and weights
+- Filter by exercise or date
+
+### ⚙️ **Customization**
+- Toggle between kg/lbs units
+- Dark mode interface
+- Workout templates (save and reuse)
+- Responsive mobile design
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **Styling**: Tailwind CSS
 - **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel
+- **Authentication**: Supabase Auth
+- **Deployment**: Vercel (recommended)
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- A Supabase account and project
+- Node.js 18+ and npm
+- A Supabase account ([sign up free](https://supabase.com))
 
-### Installation
+### 1. Clone the Repository
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/Lodd193/workout-tracker.git
 cd workout-tracker
 ```
 
-2. Install dependencies:
+### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
-3. Create a `.env.local` file with your Supabase credentials:
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+### 3. Set Up Supabase
 
-4. Run the development server:
-```bash
-npm run dev
-```
-
-5. Open [http://localhost:3000](http://localhost:3000) to see the app.
-
-## Database Setup
-
-Create a `workout_logs` table in Supabase with the following schema:
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to **Table Editor** and create the `workout_logs` table:
 
 ```sql
 CREATE TABLE workout_logs (
-  id SERIAL PRIMARY KEY,
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
   workout_type TEXT NOT NULL,
   exercise_name TEXT NOT NULL,
   set_number INTEGER NOT NULL,
-  weight_kg DECIMAL NOT NULL,
+  weight_kg NUMERIC NOT NULL,
   reps INTEGER NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Optional: Add indexes for better query performance
-CREATE INDEX idx_workout_logs_date ON workout_logs(date DESC);
-CREATE INDEX idx_workout_logs_exercise ON workout_logs(exercise_name);
+-- Create index for better performance
+CREATE INDEX workout_logs_user_id_idx ON workout_logs(user_id);
+CREATE INDEX workout_logs_date_idx ON workout_logs(date);
 ```
 
-## Deploy on Vercel
+3. **Enable Row Level Security:**
 
-The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new):
+Run the migration SQL from `database/migration_add_auth.sql` in the Supabase SQL Editor.
 
-1. Push your code to GitHub
-2. Import the repository in Vercel
-3. Add environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Deploy
+This will:
+- Enable RLS on `workout_logs`
+- Create policies to isolate user data
+- Ensure users can only access their own workouts
 
-Vercel will automatically deploy updates when you push to the main branch.
+### 4. Configure Environment Variables
 
-## Project Structure
+1. Copy `.env.local.example` to `.env.local`:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+2. Get your Supabase credentials:
+   - Go to **Supabase Dashboard** → **Settings** → **API**
+   - Copy **Project URL** and **anon/public key**
+
+3. Update `.env.local`:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your-project-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+### 5. Run the Development Server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 6. Create Your Account
+
+1. Visit the app (you'll be redirected to `/login`)
+2. Click **"Sign up"**
+3. Enter your email and password
+4. You're ready to start tracking workouts! 🎉
+
+## 📖 Detailed Setup Guide
+
+For step-by-step authentication setup instructions, see:
+- **[database/SETUP_INSTRUCTIONS.md](database/SETUP_INSTRUCTIONS.md)**
+
+This includes:
+- Database migration steps
+- Email confirmation settings
+- Testing authentication
+- Troubleshooting tips
+
+## 🏗️ Project Structure
 
 ```
 workout-tracker/
 ├── app/
-│   ├── components/
-│   │   ├── Navigation.tsx           # Navigation bar
-│   │   ├── WorkoutForm.tsx          # Workout logging form
-│   │   ├── ExerciseCard.tsx         # Exercise display component
-│   │   ├── ExerciseSelector.tsx     # Modal for selecting exercises
-│   │   └── charts/                  # Progress tracking charts
-│   │       ├── WeightProgressionChart.tsx
-│   │       ├── PersonalRecordsGrid.tsx
-│   │       └── WorkoutFrequencyHeatmap.tsx
-│   ├── progress/
-│   │   └── page.tsx                 # Progress analytics page
-│   ├── page.tsx                     # Home page (workout logging)
-│   └── layout.tsx                   # Root layout
+│   ├── components/        # React components
+│   │   ├── WorkoutForm.tsx
+│   │   ├── ExerciseSelector.tsx
+│   │   ├── Navigation.tsx
+│   │   └── ...
+│   ├── login/            # Login page
+│   ├── signup/           # Signup page
+│   ├── history/          # Workout history page
+│   ├── progress/         # Analytics page
+│   ├── settings/         # Settings page
+│   └── layout.tsx        # Root layout
 ├── lib/
-│   ├── api/
-│   │   └── analytics.ts             # Data fetching & processing
-│   ├── exercises.ts                 # Exercise library (70+ exercises)
-│   ├── types.ts                     # TypeScript type definitions
-│   └── supabase.ts                  # Supabase client
-└── package.json
+│   ├── contexts/         # React contexts
+│   │   ├── AuthContext.tsx
+│   │   └── SettingsContext.tsx
+│   ├── api/              # API functions
+│   │   └── analytics.ts
+│   ├── exercises.ts      # Exercise library
+│   ├── supabase.ts       # Supabase client
+│   └── types.ts          # TypeScript types
+├── database/
+│   ├── migration_add_auth.sql
+│   └── SETUP_INSTRUCTIONS.md
+└── middleware.ts         # Route protection
 ```
 
-## Screenshots
+## 🎯 Usage
 
-### Workout Logging
-- Dynamic exercise selection from 70+ exercises
-- Category-based organization
-- Real-time search and filtering
+### Logging a Workout
 
-### Progress Tracking
-- Interactive weight progression charts
-- Personal records grid with search/sort
-- 12-month workout frequency heatmap
-- Summary statistics with streak tracking
+1. Select today's date (or any past date)
+2. Click **"Add Exercise"**
+3. Search or browse for an exercise
+4. Enter weight and reps for each set
+5. Click **"Save Workout"**
 
-## License
+### Viewing Progress
 
-MIT
+- **History**: See all past workouts, edit or delete entries
+- **Progress**: View charts, PRs, volume trends, and analytics
+- **Settings**: Toggle units (kg/lbs)
 
-## Acknowledgments
+### Using Templates
 
-Built with [Next.js](https://nextjs.org/), [Supabase](https://supabase.com/), and [Recharts](https://recharts.org/).
+1. Create a workout with your favorite exercises
+2. Click **"Save as Template"**
+3. Load templates for future workouts with one click
+
+## 🔐 Security
+
+- **Row Level Security (RLS)**: Database enforces user data isolation
+- **Protected Routes**: Unauthenticated users can't access the app
+- **Secure Sessions**: Supabase handles authentication securely
+- **Environment Variables**: Sensitive keys stored in `.env.local` (not committed)
+
+## 🚢 Deployment
+
+### Deploy to Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Visit [vercel.com](https://vercel.com)
+3. Click **"New Project"**
+4. Import your GitHub repository
+5. Add environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+6. Click **"Deploy"**
+
+Your app will be live in minutes! 🎉
+
+### Other Platforms
+
+The app works on any platform that supports Next.js:
+- Netlify
+- Railway
+- Render
+- Self-hosted
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 💪 Built With
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Supabase](https://supabase.com/) - Backend as a service
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+
+## 🙏 Acknowledgments
+
+Built with assistance from Claude Code - Anthropic's official CLI for Claude.
+
+---
+
+**Start tracking your fitness journey today!** 🏋️‍♂️💪

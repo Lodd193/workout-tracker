@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useAuth } from '@/lib/contexts/AuthContext'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -11,20 +10,26 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { signIn } = useAuth()
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    const result = await signIn(email, password)
+    try {
+      const result = await signIn(email, password)
 
-    if (result.error) {
-      setError(result.error)
+      if (result.error) {
+        setError(result.error)
+        setLoading(false)
+      } else {
+        // Login successful - force hard redirect
+        window.location.href = '/'
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
-    } else {
-      router.push('/')
     }
   }
 
@@ -100,6 +105,13 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
+        </div>
+
+        {/* Already logged in notice */}
+        <div className="mt-4 text-center">
+          <Link href="/" className="text-slate-500 hover:text-slate-300 text-sm underline">
+            Already logged in? Go to home page
+          </Link>
         </div>
       </div>
     </div>
