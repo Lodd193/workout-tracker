@@ -28,7 +28,7 @@ export async function generatePRPredictions(): Promise<PRPrediction[]> {
 
           // Determine confidence based on data consistency
           let confidence: 'high' | 'medium' | 'low' = 'low'
-          if (pr.total_sessions >= 10 && progressMetrics.percentGain > 0) {
+          if (pr.total_sessions >= 10 && progressMetrics.percentage > 0) {
             confidence = 'high'
           } else if (pr.total_sessions >= 5) {
             confidence = 'medium'
