@@ -138,7 +138,7 @@ export default function VolumeLoadTrendChart({
                 borderRadius: '8px',
                 color: '#f1f5f9',
               }}
-              formatter={(value: number, name: string, props: any) => {
+              formatter={(value: number | undefined, name: string, props: any) => {
                 const point = props.payload
                 return [
                   <div key="tooltip" className="space-y-1">
