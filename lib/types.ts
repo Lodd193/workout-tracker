@@ -134,3 +134,32 @@ export interface GoalFormData {
   target_date: string | null
   notes: string | null
 }
+
+// ============ PREDICTIVE ANALYTICS ============
+
+export interface PRPrediction {
+  exercise_name: string
+  current_pr: number
+  predicted_pr: number              // Predicted max in next 30 days
+  predicted_date: string            // ISO date when prediction is expected
+  confidence: 'high' | 'medium' | 'low'  // Based on data consistency
+  weekly_gain: number               // Average kg/week gain
+}
+
+export interface PlateauAlert {
+  exercise_name: string
+  last_pr_date: string
+  days_since_progress: number
+  last_pr_weight: number
+  recommendation: string
+  severity: 'warning' | 'concern' | 'critical'
+}
+
+export interface MilestonePrediction {
+  exercise_name: string
+  milestone_weight: number          // e.g., 100kg
+  current_weight: number
+  estimated_date: string | null     // When you'll hit it (null if declining)
+  weeks_remaining: number | null
+  is_achievable: boolean
+}

@@ -18,6 +18,7 @@ import WeekComparisonCard from '@/app/components/charts/WeekComparisonCard'
 import WorkoutCalendar from '@/app/components/WorkoutCalendar'
 import WeeklyCardioTracker from '@/app/components/WeeklyCardioTracker'
 import GoalsDashboard from '@/app/components/GoalsDashboard'
+import PredictiveInsights from '@/app/components/PredictiveInsights'
 
 type TabType = 'overview' | 'analytics' | 'insights'
 
@@ -203,6 +204,9 @@ export default function ProgressPage() {
 
         {activeTab === 'insights' && (
           <div className="space-y-8">
+            {/* Predictive Insights */}
+            <PredictiveInsights />
+
             {/* Week-over-Week Comparison */}
             <WeekComparisonCard />
 
