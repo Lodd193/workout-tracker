@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Exercise } from '@/lib/types'
 import { saveTemplate, templateNameExists } from '@/lib/templates'
-import { EXERCISES, CATEGORY_COLORS } from '@/lib/exercises'
+import { EXERCISES, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/exercises'
 
 interface CreateTemplateModalProps {
   isOpen: boolean
@@ -30,6 +30,11 @@ export default function CreateTemplateModal({ isOpen, onClose, onSaved }: Create
   }, [isOpen])
 
   const categories = ['all', ...Array.from(new Set(EXERCISES.map((ex) => ex.category)))]
+
+  const getCategoryDisplayName = (category: string) => {
+    if (category === 'all') return 'All Categories'
+    return CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS] || category
+  }
 
   const filteredExercises = EXERCISES.filter((exercise) => {
     const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -199,7 +204,7 @@ export default function CreateTemplateModal({ isOpen, onClose, onSaved }: Create
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
-                    {cat === 'all' ? 'All Categories' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {getCategoryDisplayName(cat)}
                   </option>
                 ))}
               </select>
@@ -231,7 +236,7 @@ export default function CreateTemplateModal({ isOpen, onClose, onSaved }: Create
                           <div className="text-white font-medium">{exercise.name}</div>
                           <div className={`text-xs mt-1 inline-block px-2 py-0.5 rounded bg-gradient-to-r ${gradientColor}`}>
                             <span className="text-white font-medium">
-                              {exercise.category.charAt(0).toUpperCase() + exercise.category.slice(1)}
+                              {exercise.categoryLabel}
                             </span>
                           </div>
                         </div>
