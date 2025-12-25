@@ -3,18 +3,25 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useSettings } from '@/lib/contexts/SettingsContext'
+import { useAuth } from '@/lib/contexts/AuthContext'
 
 export default function WeeklyCardioTracker() {
+  const { user } = useAuth()
   const { weeklyCardioGoal } = useSettings()
   const [weeklyMinutes, setWeeklyMinutes] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadWeeklyCardio()
-  }, [])
+    if (user) {
+      loadWeeklyCardio()
+    } else {
+      setLoading(false)
+    }
+  }, [user])
 
   const loadWeeklyCardio = async () => {
     try {
+      setLoading(true)
       // Get the start of current week (Sunday)
       const now = new Date()
       const startOfWeek = new Date(now)
@@ -33,7 +40,10 @@ export default function WeeklyCardioTracker() {
         .gte('date', startOfWeek.toISOString().split('T')[0])
         .lte('date', endOfWeek.toISOString().split('T')[0])
 
-      if (error) throw error
+      if (error) {
+        console.error('Error loading weekly cardio:', error.message || error)
+        throw error
+      }
 
       // Sum up all cardio minutes (stored in reps field)
       const totalMinutes = data?.reduce((sum, log) => sum + log.reps, 0) || 0
