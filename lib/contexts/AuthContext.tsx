@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/logger'
@@ -15,9 +15,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// Inactivity timeout: 30 minutes (in milliseconds)
+const INACTIVITY_TIMEOUT = 30 * 60 * 1000
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     // Check active session on mount
@@ -39,6 +43,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  // Setup inactivity tracking when user logs in
+  useEffect(() => {
+    if (!user) {
+      // Clear timer when user logs out
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current)
+        inactivityTimerRef.current = null
+      }
+      return
+    }
+
+    // Define reset function inside useEffect to have access to current user
+    const resetInactivityTimer = () => {
+      // Clear existing timer
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current)
+      }
+
+      // Set new timer
+      inactivityTimerRef.current = setTimeout(() => {
+        logger.debug('[Auth] User inactive for 30 minutes, logging out...')
+        supabase.auth.signOut()
+      }, INACTIVITY_TIMEOUT)
+    }
+
+    // Start inactivity timer
+    resetInactivityTimer()
+
+    // Track user activity
+    const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click']
+
+    activityEvents.forEach(event => {
+      window.addEventListener(event, resetInactivityTimer)
+    })
+
+    // Cleanup
+    return () => {
+      activityEvents.forEach(event => {
+        window.removeEventListener(event, resetInactivityTimer)
+      })
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current)
+      }
+    }
+  }, [user])
 
   const signIn = async (email: string, password: string) => {
     logger.debug('[Auth] Attempting sign in for:', email)
