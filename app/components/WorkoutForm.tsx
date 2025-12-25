@@ -419,7 +419,7 @@ export default function WorkoutForm() {
             onChange={(e) => handleDateChange(e.target.value)}
             max={new Date().toISOString().split('T')[0]}
             title="Workout date (cannot be in the future or more than 1 year ago)"
-            className={`w-full bg-slate-800/50 border rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-200 [&::-webkit-calendar-picker-indicator]:cursor-pointer ${
+            className={`w-full bg-slate-800/50 border rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm ${
               dateError
                 ? 'border-red-500 focus:ring-red-500'
                 : 'border-slate-700 focus:ring-emerald-500'
