@@ -2,8 +2,22 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname
+
+  // Explicitly allow PWA assets - these should always be accessible
+  const publicAssets = [
+    '/manifest.json',
+    '/offline.html',
+    '/sw.js',
+    '/icon-192.png',
+    '/icon-512.png'
+  ]
+  if (publicAssets.includes(pathname)) {
+    return NextResponse.next()
+  }
+
   // Allow access to login and signup pages
-  if (req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/signup')) {
+  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
     return NextResponse.next()
   }
 

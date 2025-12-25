@@ -1,9 +1,10 @@
-const CACHE_NAME = 'workout-tracker-v1'
+const CACHE_NAME = 'workout-tracker-v3'
 const OFFLINE_URL = '/offline.html'
 
 // Resources to cache on install
+// NOTE: Only cache static assets. Never cache auth-required pages (/, /history, etc.)
+// because they need fresh session data on every load.
 const STATIC_CACHE = [
-  '/',
   '/offline.html',
   '/manifest.json',
   '/icon-192.png',
@@ -52,6 +53,19 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
+  const url = new URL(event.request.url)
+
+  // Auth-required pages must always fetch from network first
+  // These pages need fresh session data and cannot be served from cache
+  const authRequiredPaths = ['/', '/history', '/progress', '/settings']
+  if (authRequiredPaths.includes(url.pathname)) {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(OFFLINE_URL))
+    )
+    return
+  }
+
+  // For all other resources, use cache-first strategy
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       // Return cached response if found
