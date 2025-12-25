@@ -294,7 +294,9 @@ export default function GoalManagement() {
                 onChange={(e) => handleDateChange(e.target.value)}
                 title="Target date (must be in the future, max 3 years ahead)"
                 className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
-                         focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
+                         focus:outline-none focus:ring-2 focus:border-transparent transition-colors
+                         [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert
+                         [&::-webkit-calendar-picker-indicator]:brightness-200 [&::-webkit-calendar-picker-indicator]:cursor-pointer ${
                            formErrors.date
                              ? 'border-red-500 focus:ring-red-500'
                              : 'border-slate-600 focus:ring-emerald-500'
