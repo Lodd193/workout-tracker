@@ -65,7 +65,7 @@ export default function EditTemplateModal({ isOpen, onClose, onSaved, template }
     return selectedExercises.some((ex) => ex.id === exerciseId)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!template) return
 
     // Validation
@@ -74,7 +74,7 @@ export default function EditTemplateModal({ isOpen, onClose, onSaved, template }
       return
     }
 
-    if (templateNameExists(templateName.trim(), template.id)) {
+    if (await templateNameExists(templateName.trim(), template.id)) {
       setError('A template with this name already exists')
       return
     }
@@ -93,13 +93,17 @@ export default function EditTemplateModal({ isOpen, onClose, onSaved, template }
         category: ex.category,
       }))
 
-      updateTemplate(template.id, {
+      const result = await updateTemplate(template.id, {
         name: templateName.trim(),
         exercises: templateExercises,
       })
 
-      onSaved()
-      onClose()
+      if (result) {
+        onSaved()
+        onClose()
+      } else {
+        setError('Failed to update template')
+      }
     } catch (err) {
       console.error('Error updating template:', err)
       setError('Failed to update template')

@@ -57,14 +57,14 @@ export default function CreateTemplateModal({ isOpen, onClose, onSaved }: Create
     return selectedExercises.some((ex) => ex.id === exerciseId)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Validation
     if (!templateName.trim()) {
       setError('Please enter a template name')
       return
     }
 
-    if (templateNameExists(templateName.trim())) {
+    if (await templateNameExists(templateName.trim())) {
       setError('A template with this name already exists')
       return
     }
@@ -83,9 +83,13 @@ export default function CreateTemplateModal({ isOpen, onClose, onSaved }: Create
         category: ex.category,
       }))
 
-      saveTemplate(templateName.trim(), templateExercises)
-      onSaved()
-      onClose()
+      const result = await saveTemplate(templateName.trim(), templateExercises)
+      if (result) {
+        onSaved()
+        onClose()
+      } else {
+        setError('Failed to save template')
+      }
     } catch (err) {
       console.error('Error saving template:', err)
       setError('Failed to save template')

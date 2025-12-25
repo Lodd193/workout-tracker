@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode, useRef } fro
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/logger'
+import { migrateLocalStorageTemplates } from '@/lib/templates'
 
 interface AuthContextType {
   user: User | null
@@ -43,6 +44,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  // Migrate localStorage templates to Supabase when user logs in
+  useEffect(() => {
+    if (user) {
+      migrateLocalStorageTemplates()
+        .then((count) => {
+          if (count > 0) {
+            logger.debug(`[Auth] Migrated ${count} templates to Supabase`)
+          }
+        })
+        .catch((error) => {
+          logger.error('[Auth] Template migration error:', error)
+        })
+    }
+  }, [user])
 
   // Setup inactivity tracking when user logs in
   useEffect(() => {

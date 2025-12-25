@@ -27,15 +27,15 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
     }
   }, [isOpen])
 
-  const loadCustomTemplates = () => {
-    const allTemplates = getAllTemplates()
+  const loadCustomTemplates = async () => {
+    const allTemplates = await getAllTemplates()
     setCustomTemplates(allTemplates)
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirmDelete === id) {
-      deleteTemplate(id)
-      loadCustomTemplates()
+      await deleteTemplate(id)
+      await loadCustomTemplates()
       setConfirmDelete(null)
     } else {
       setConfirmDelete(id)
