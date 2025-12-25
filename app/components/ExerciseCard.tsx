@@ -4,6 +4,7 @@ import { CATEGORY_COLORS } from '@/lib/exercises'
 import SetInput from './SetInput'
 import CardioInput from './CardioInput'
 import { fetchLastPerformance, fetchPersonalRecords } from '@/lib/api/analytics'
+import { fetchProgressionSuggestion, ProgressionSuggestion } from '@/lib/api/progressionLogic'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 
 interface ExerciseCardProps {
@@ -21,38 +22,24 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
   const [bulkWeight, setBulkWeight] = useState('')
   const [bulkReps, setBulkReps] = useState('')
   const [showBulkFill, setShowBulkFill] = useState(false)
-  const [lastPerformance, setLastPerformance] = useState<{
-    date: string
-    bestSet: { weight_kg: number; reps: number }
-  } | null>(null)
-  const [loadingLast, setLoadingLast] = useState(false)
-  const [personalRecord, setPersonalRecord] = useState<{ max_weight: number; reps_at_max: number; date_achieved: string } | null>(null)
+  const [progressionSuggestion, setProgressionSuggestion] = useState<ProgressionSuggestion | null>(null)
+  const [loadingProgression, setLoadingProgression] = useState(false)
 
   useEffect(() => {
     if (!isCardio) {
-      loadLastPerformance()
+      loadProgressionSuggestion()
     }
   }, [exercise.name, isCardio])
 
-  const loadPersonalRecord = async () => {
+  const loadProgressionSuggestion = async () => {
+    setLoadingProgression(true)
     try {
-      const records = await fetchPersonalRecords()
-      const pr = records.find(r => r.exercise_name === exercise.name)
-      setPersonalRecord(pr || null)
+      const suggestion = await fetchProgressionSuggestion(exercise.name)
+      setProgressionSuggestion(suggestion)
     } catch (error) {
-      console.error('Error loading personal record:', error)
+      console.error('Error loading progression suggestion:', error)
     }
-  }
-
-  const loadLastPerformance = async () => {
-    setLoadingLast(true)
-    try {
-      const data = await fetchLastPerformance(exercise.name)
-      setLastPerformance(data)
-    } catch (error) {
-      console.error('Error loading last performance:', error)
-    }
-    setLoadingLast(false)
+    setLoadingProgression(false)
   }
 
   const fillAllSets = () => {
@@ -70,31 +57,6 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
     setBulkReps('')
     setShowBulkFill(false)
   }
-
-  const getSuggestion = () => {
-    if (!lastPerformance) return null
-    const { weight_kg, reps } = lastPerformance.bestSet
-
-    // Suggest weight increase if reps >= 8, otherwise suggest rep increase
-    const increment = weightUnit === 'lbs' ? 5 : 2.5 // 5 lbs ≈ 2.5 kg
-    if (reps >= 8) {
-      return {
-        weight: convertWeight(weight_kg + 2.5), // Convert suggested weight to display unit
-        reps,
-        type: 'weight',
-        increment: weightUnit === 'lbs' ? '5lbs' : '2.5kg',
-      }
-    } else {
-      return {
-        weight: convertWeight(weight_kg),
-        reps: reps + 1,
-        type: 'reps',
-        increment: '',
-      }
-    }
-  }
-
-  const suggestion = getSuggestion()
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr)
@@ -148,32 +110,49 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
       </div>
 
       {/* Progressive Overload Assistant - Only for strength exercises */}
-      {!isCardio && lastPerformance && (
-        <div className="mb-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3">
+      {!isCardio && progressionSuggestion && (
+        <div className="mb-4 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500/30 to-purple-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
               <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold text-cyan-400 mb-1">Last time ({formatDate(lastPerformance.date)})</div>
-              <div className="text-sm text-white mb-2">
-                Best set: {formatWeight(lastPerformance.bestSet.weight_kg)} × {lastPerformance.bestSet.reps} reps
-              </div>
-              {suggestion && (
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-slate-400">Try:</span>
-                  <span className="font-bold text-emerald-400">
-                    {suggestion.weight}{weightUnit} × {suggestion.reps} reps
+              <div className="text-sm font-semibold text-cyan-400 mb-2">Progressive Overload Guide</div>
+
+              {/* Last Performance */}
+              {progressionSuggestion.lastPerformance && (
+                <div className="text-xs text-slate-400 mb-2">
+                  Last time ({formatDate(progressionSuggestion.lastPerformance.date)}): {' '}
+                  <span className="text-white">
+                    {formatWeight(progressionSuggestion.lastPerformance.weight)} × {progressionSuggestion.lastPerformance.reps} reps × {progressionSuggestion.lastPerformance.sets} sets
                   </span>
-                  {suggestion.increment && (
-                    <span className="text-slate-500">
-                      ({suggestion.type === 'weight' ? `+${suggestion.increment}` : '+1 rep'})
-                    </span>
-                  )}
                 </div>
               )}
+
+              {/* Target Suggestion */}
+              <div className="bg-slate-900/50 rounded-lg p-3 mb-2">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="text-xs text-slate-400">Target:</span>
+                  <span className="font-bold text-emerald-400 text-sm">
+                    {formatWeight(progressionSuggestion.targetWeight)} × {progressionSuggestion.targetReps} reps × {progressionSuggestion.targetSets} sets
+                  </span>
+                </div>
+                {progressionSuggestion.volumeIncrease !== 0 && (
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs text-slate-400">Volume increase:</span>
+                    <span className={`text-xs font-semibold ${progressionSuggestion.volumeIncrease > 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                      {progressionSuggestion.volumeIncrease > 0 ? '+' : ''}{progressionSuggestion.volumeIncrease}%
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Reasoning */}
+              <div className="text-xs text-slate-300 italic">
+                {progressionSuggestion.reasoning}
+              </div>
             </div>
           </div>
         </div>
