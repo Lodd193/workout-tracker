@@ -73,9 +73,9 @@ export default function SignupPage() {
             </svg>
           </div>
           <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight mb-3">
-            IronInsights
+            Gym Bestie
           </h1>
-          <p className="text-slate-400 text-lg">Start your data-driven journey</p>
+          <p className="text-slate-400 text-lg">Start your fitness journey</p>
         </div>
 
         {/* Email Verification Success Message */}

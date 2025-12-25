@@ -1,8 +1,8 @@
 {
-  "name": "ironinsights",
+  "name": "gym-bestie",
   "version": "0.1.0",
   "private": true,
-  "description": "Data-driven strength training analytics",
+  "description": "Your personal workout tracking companion",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

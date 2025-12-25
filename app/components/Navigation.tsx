@@ -62,7 +62,7 @@ export default function Navigation() {
               </svg>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent hidden sm:block">
-              IronInsights
+              Gym Bestie
             </span>
           </Link>
 

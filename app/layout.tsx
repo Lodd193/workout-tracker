@@ -17,15 +17,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IronInsights - Data-Driven Strength Training",
-  description: "Leverage advanced analytics, predictive insights, and progressive overload tracking to optimize your strength training",
+  title: "Gym Bestie - Your Workout Tracking Companion",
+  description: "Track your workouts, monitor progress, and achieve your fitness goals with your personal gym companion",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "IronInsights",
+    title: "Gym Bestie",
   },
-  applicationName: "IronInsights",
+  applicationName: "Gym Bestie",
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },

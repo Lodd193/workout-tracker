@@ -1,10 +1,10 @@
-# 📊 IronInsights
+# 💪 Gym Bestie
 
-**Data-Driven Strength Training Analytics**
+**Your Workout Tracking Companion**
 
-A powerful, full-stack fitness analytics platform built with Next.js and Supabase. Leverage advanced analytics, predictive insights, and progressive overload tracking to optimize your strength training and achieve your fitness goals faster.
+A powerful, full-stack fitness tracking platform built with Next.js and Supabase. Track your workouts, monitor your progress, and achieve your fitness goals with your personal gym companion.
 
-![IronInsights](https://img.shields.io/badge/Next.js-16.1.0-black?style=for-the-badge&logo=next.js)
+![Gym Bestie](https://img.shields.io/badge/Next.js-16.1.0-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20Database-green?style=for-the-badge&logo=supabase)
 
