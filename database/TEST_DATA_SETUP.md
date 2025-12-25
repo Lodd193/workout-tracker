@@ -33,31 +33,47 @@ Follow these steps to create a test account with 3 months of realistic workout d
 
 ---
 
-## Step 3: Update SQL Script
+## Step 3: Clean Up Existing Data (Optional but Recommended)
 
-1. Open `database/seed_test_data.sql`
-2. Find line 13: `\set test_user_id 'YOUR_USER_ID_HERE'`
-3. Replace `YOUR_USER_ID_HERE` with your actual UUID:
-   ```sql
-   \set test_user_id 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
-   ```
-4. Save the file
+If you've already tried running the seed script or have existing workout data:
 
----
-
-## Step 4: Run SQL Script in Supabase
-
-1. Go to Supabase Dashboard
-2. Click **SQL Editor** in left sidebar
-3. Click **New Query**
-4. Copy entire contents of `database/seed_test_data.sql`
-5. Paste into SQL editor
-6. Click **Run** (or press Cmd/Ctrl + Enter)
-7. Wait for execution (should take 5-10 seconds)
+1. Open `database/cleanup_test_user.sql` in a text editor
+2. **Find & Replace**:
+   - Find: `YOUR_USER_ID_HERE`
+   - Replace with your actual UUID (e.g., `a1b2c3d4-e5f6-7890-abcd-ef1234567890`)
+3. Copy the entire contents
+4. Go to **Supabase Dashboard** → **SQL Editor** → **New Query**
+5. Paste and **Run**
+6. Should show: `remaining_logs: 0, remaining_templates: 0, remaining_goals: 0`
 
 ---
 
-## Step 5: Verify Data
+## Step 4: Fix Database Constraint
+
+The database needs to accept all valid exercise categories:
+
+1. Go to **Supabase Dashboard** → **SQL Editor** → **New Query**
+2. Copy the entire contents of `database/fix_workout_type_constraint.sql`
+3. Paste and **Run**
+4. You should see: `ALTER TABLE` and constraint definition
+
+---
+
+## Step 5: Load Test Data
+
+1. Open `database/seed_test_data.sql` in a text editor
+2. **Find & Replace**:
+   - Find: `YOUR_USER_ID_HERE`
+   - Replace with your actual UUID (e.g., `a1b2c3d4-e5f6-7890-abcd-ef1234567890`)
+   - Click "Replace All"
+3. Copy the entire updated contents
+4. Go to **Supabase Dashboard** → **SQL Editor** → **New Query**
+5. Paste and **Run**
+6. Wait for execution (should take 5-10 seconds)
+
+---
+
+## Step 6: Verify Data
 
 You should see output like:
 ```
@@ -73,7 +89,7 @@ And progression tables showing:
 
 ---
 
-## Step 6: Explore the App
+## Step 7: Explore the App
 
 Log in as the test user and explore:
 
