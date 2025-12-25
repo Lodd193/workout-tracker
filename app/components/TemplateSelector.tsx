@@ -5,6 +5,7 @@ import { WorkoutTemplate } from '@/lib/types'
 import { getAllTemplates, deleteTemplate } from '@/lib/templates'
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import { PREMADE_TEMPLATES } from '@/lib/premadeTemplates'
+import CreateTemplateModal from './CreateTemplateModal'
 
 interface TemplateSelectorProps {
   isOpen: boolean
@@ -16,6 +17,7 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
   const [customTemplates, setCustomTemplates] = useState<WorkoutTemplate[]>([])
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'premade' | 'custom'>('premade')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -43,6 +45,11 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
   const handleSelect = (template: WorkoutTemplate) => {
     onSelectTemplate(template)
     onClose()
+  }
+
+  const handleTemplateCreated = () => {
+    loadCustomTemplates()
+    setIsCreateModalOpen(false)
   }
 
   if (!isOpen) return null
@@ -133,12 +140,41 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
                 />
               </svg>
               <p className="text-slate-400 text-lg mb-2">No custom templates yet</p>
-              <p className="text-slate-500 text-sm">
-                Add exercises to a workout and click "Save as Template" to create your first routine
+              <p className="text-slate-500 text-sm mb-6">
+                Create a custom workout routine to use anytime
               </p>
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:from-purple-400 hover:to-pink-400 transition-all shadow-lg shadow-purple-500/30"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Create New Template
+              </button>
             </div>
           ) : (
             <div className="space-y-3">
+              {/* Create New Template Button - Only show in Custom tab */}
+              {activeTab === 'custom' && (
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-2 border-dashed border-purple-500/50 rounded-xl p-4 hover:from-purple-500/30 hover:to-pink-500/30 hover:border-purple-400 transition-all group"
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-white font-semibold text-lg">Create New Template</h3>
+                      <p className="text-purple-400 text-sm">Build a custom workout routine</p>
+                    </div>
+                  </div>
+                </button>
+              )}
+
               {displayedTemplates.map((template) => {
                 const isPremade = activeTab === 'premade'
                 return (
@@ -227,6 +263,13 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
           </button>
         </div>
       </div>
+
+      {/* Create Template Modal */}
+      <CreateTemplateModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSaved={handleTemplateCreated}
+      />
     </div>
   )
 }
