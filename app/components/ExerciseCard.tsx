@@ -69,6 +69,14 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
+  const formatCategory = (category: string) => {
+    return category
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  }
+
   return (
     <div
       className="bg-slate-800/60 border border-slate-700 rounded-2xl p-5
@@ -88,7 +96,7 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
           </span>
           <div>
             <h3 className="font-semibold text-white text-lg">{exercise.name}</h3>
-            <p className="text-xs text-slate-400 mt-0.5">{exercise.category.replace(/_/g, ' ')}</p>
+            <p className="text-xs text-slate-400 mt-0.5">{formatCategory(exercise.category)}</p>
           </div>
         </div>
         <button
