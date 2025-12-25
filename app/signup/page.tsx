@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useAuth } from '@/lib/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { validatePassword } from '@/lib/passwordValidation'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -11,6 +12,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false)
   const { signUp } = useAuth()
   const router = useRouter()
 
@@ -24,9 +26,11 @@ export default function SignupPage() {
       return
     }
 
-    // Validate password length
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+    // Validate password strength
+    const passwordValidation = validatePassword(password)
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.errors[0]) // Show first error
+      setShowPasswordRequirements(true)
       return
     }
 
@@ -101,13 +105,23 @@ export default function SignupPage() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    setShowPasswordRequirements(true)
+                  }}
+                  onFocus={() => setShowPasswordRequirements(true)}
                   required
-                  minLength={6}
+                  minLength={12}
                   className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
-                <p className="text-xs text-slate-500 mt-1">At least 6 characters</p>
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordRequirements(!showPasswordRequirements)}
+                  className="text-xs text-emerald-400 hover:text-emerald-300 mt-1 underline"
+                >
+                  {showPasswordRequirements ? 'Hide' : 'Show'} password requirements
+                </button>
               </div>
 
               {/* Confirm Password Input */}
@@ -121,12 +135,36 @@ export default function SignupPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  minLength={6}
+                  minLength={12}
                   className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
               </div>
             </div>
+
+            {/* Password Requirements */}
+            {showPasswordRequirements && (
+              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-slate-300 mb-2">Password must contain:</h3>
+                <ul className="text-xs text-slate-400 space-y-1">
+                  <li className={password.length >= 12 ? 'text-emerald-400' : ''}>
+                    ✓ At least 12 characters
+                  </li>
+                  <li className={/[A-Z]/.test(password) ? 'text-emerald-400' : ''}>
+                    ✓ At least one uppercase letter (A-Z)
+                  </li>
+                  <li className={/[a-z]/.test(password) ? 'text-emerald-400' : ''}>
+                    ✓ At least one lowercase letter (a-z)
+                  </li>
+                  <li className={/[0-9]/.test(password) ? 'text-emerald-400' : ''}>
+                    ✓ At least one number (0-9)
+                  </li>
+                  <li className={/[!@#$%^&*(),.?":{}|<>_\-+=[\]\\\/;'`~]/.test(password) ? 'text-emerald-400' : ''}>
+                    ✓ At least one special character (!@#$%^&*...)
+                  </li>
+                </ul>
+              </div>
+            )}
 
             {/* Error Message */}
             {error && (
