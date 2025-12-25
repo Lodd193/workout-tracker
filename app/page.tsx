@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/lib/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import WorkoutForm from './components/WorkoutForm'
+import { logger } from '@/lib/logger'
 
 export default function Home() {
   const { user, loading } = useAuth()
@@ -11,7 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading && !user) {
-      console.log('[Home] No user found, redirecting to login...')
+      logger.debug('[Home] No user found, redirecting to login...')
       router.push('/login')
     }
   }, [user, loading, router])

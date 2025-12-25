@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useAuth } from '@/lib/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
+import { logger } from '@/lib/logger'
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -10,7 +11,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   useEffect(() => {
     if (!loading && !user) {
-      console.log('[ProtectedRoute] No user found, redirecting to login...')
+      logger.debug('[ProtectedRoute] No user found, redirecting to login...')
       router.push('/login')
     }
   }, [user, loading, router])

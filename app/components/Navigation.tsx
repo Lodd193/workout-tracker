@@ -3,11 +3,12 @@
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/contexts/AuthContext'
+import { logger } from '@/lib/logger'
 
 export default function Navigation() {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
-  
+
   // Don't show navigation on login/signup pages
   if (pathname === '/login' || pathname === '/signup') {
     return null
@@ -37,7 +38,7 @@ export default function Navigation() {
   ]
 
   const handleLogout = async () => {
-    console.log('[Navigation] Logging out...')
+    logger.debug('[Navigation] Logging out...')
     await signOut()
     window.location.href = '/login'
   }
