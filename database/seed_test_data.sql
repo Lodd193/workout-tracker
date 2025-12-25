@@ -114,15 +114,15 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 80, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 80, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 80, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 80, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 77.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 75, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 72.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_upper', 'Incline Dumbbell Bench Press', 1, 30, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_upper', 'Incline Dumbbell Bench Press', 2, 30, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_upper', 'Incline Dumbbell Bench Press', 3, 30, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_upper', 'Incline Dumbbell Bench Press', 2, 28.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'chest_upper', 'Incline Dumbbell Bench Press', 3, 27.5, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Dumbbell Shoulder Press', 1, 25, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Dumbbell Shoulder Press', 2, 25, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Dumbbell Shoulder Press', 3, 25, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Dumbbell Shoulder Press', 2, 24, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Dumbbell Shoulder Press', 3, 22.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Lateral Raises', 1, 10, 15),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Lateral Raises', 2, 10, 14),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '168 days', 'shoulders', 'Lateral Raises', 3, 10, 13),
@@ -137,14 +137,14 @@ VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_vertical', 'Pull-Ups', 2, 0, 7),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_vertical', 'Pull-Ups', 3, 0, 6),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_horizontal', 'Barbell Row', 1, 70, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_horizontal', 'Barbell Row', 2, 70, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_horizontal', 'Barbell Row', 3, 70, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_horizontal', 'Barbell Row', 2, 67.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_horizontal', 'Barbell Row', 3, 65, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_vertical', 'Wide-Grip Lat Pulldown', 1, 50, 12),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_vertical', 'Wide-Grip Lat Pulldown', 2, 50, 11),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'back_vertical', 'Wide-Grip Lat Pulldown', 3, 50, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Barbell Curl', 1, 30, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Barbell Curl', 2, 30, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Barbell Curl', 3, 30, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Barbell Curl', 2, 29, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Barbell Curl', 3, 27.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Hammer Curl', 1, 15, 12),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Hammer Curl', 2, 15, 11),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '167 days', 'arms_biceps', 'Hammer Curl', 3, 15, 10);
@@ -153,32 +153,32 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 1, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 2, 100, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 3, 100, 8),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 4, 100, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 2, 97.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 3, 95, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Barbell Squat', 4, 92.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_hamstring', 'Romanian Deadlift', 1, 80, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_hamstring', 'Romanian Deadlift', 2, 80, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_hamstring', 'Romanian Deadlift', 3, 80, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_hamstring', 'Romanian Deadlift', 2, 77.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_hamstring', 'Romanian Deadlift', 3, 75, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Leg Press', 1, 150, 15),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Leg Press', 2, 150, 14),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Leg Press', 3, 150, 13),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Leg Press', 2, 145, 14),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_quad', 'Leg Press', 3, 140, 13),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_glutes', 'Hip Thrust', 1, 80, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_glutes', 'Hip Thrust', 2, 80, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_glutes', 'Hip Thrust', 3, 80, 10);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_glutes', 'Hip Thrust', 2, 77.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '166 days', 'legs_glutes', 'Hip Thrust', 3, 75, 10);
 
 -- Week 1 - Day 4 (Push)
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 82.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 82.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 82.5, 8),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 82.5, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 80, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 77.5, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 75, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_upper', 'Incline Dumbbell Bench Press', 1, 32.5, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_upper', 'Incline Dumbbell Bench Press', 2, 32.5, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_upper', 'Incline Dumbbell Bench Press', 3, 32.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_upper', 'Incline Dumbbell Bench Press', 2, 31, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'chest_upper', 'Incline Dumbbell Bench Press', 3, 30, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'shoulders', 'Dumbbell Shoulder Press', 1, 27.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'shoulders', 'Dumbbell Shoulder Press', 2, 27.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'shoulders', 'Dumbbell Shoulder Press', 3, 27.5, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'shoulders', 'Dumbbell Shoulder Press', 2, 26.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '165 days', 'shoulders', 'Dumbbell Shoulder Press', 3, 25, 8);
 
 -- Continue with Week 2-4... (I'll add more weeks with progressive overload)
 
@@ -186,34 +186,34 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 85, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 85, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 85, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 82.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 80, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 77.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_upper', 'Incline Dumbbell Bench Press', 1, 32.5, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_upper', 'Incline Dumbbell Bench Press', 2, 32.5, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_upper', 'Incline Dumbbell Bench Press', 3, 32.5, 11);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_upper', 'Incline Dumbbell Bench Press', 2, 31, 12),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '161 days', 'chest_upper', 'Incline Dumbbell Bench Press', 3, 30, 11);
 
 -- Week 3 - Progressive Overload
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 87.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 87.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 87.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 87.5, 8),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'legs_quad', 'Barbell Squat', 1, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 2, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 3, 110, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 4, 110, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 85, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 82.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '154 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 80, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 1, 110, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 2, 107.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 3, 105, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '152 days', 'legs_quad', 'Barbell Squat', 4, 102.5, 8);
 
--- Week 4 - Deload Week (lighter weight, maintain reps)
+-- Week 4 - Deload Week (lighter weight, maintain reps - less fatigue drop-off)
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '147 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 70, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '147 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 70, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '147 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 70, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '147 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 67.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '147 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 67.5, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '145 days', 'legs_quad', 'Barbell Squat', 1, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '145 days', 'legs_quad', 'Barbell Squat', 2, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '145 days', 'legs_quad', 'Barbell Squat', 3, 85, 10);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '145 days', 'legs_quad', 'Barbell Squat', 2, 82.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '145 days', 'legs_quad', 'Barbell Squat', 3, 82.5, 10);
 
 -- MONTH 2 (Weeks 5-8): Building Strength
 -- ============================================
@@ -222,47 +222,47 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 90, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 90, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 90, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 90, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 87.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 85, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '140 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 82.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 1, 120, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 2, 120, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 3, 120, 8),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 4, 120, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 2, 117.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 3, 115, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '138 days', 'legs_quad', 'Barbell Squat', 4, 112.5, 8);
 
 -- Week 6 - Continuing progression
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 92.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 92.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 92.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 92.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 90, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 87.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '133 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 85, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 1, 125, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 2, 125, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 3, 125, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 4, 125, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 2, 122.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 3, 120, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '131 days', 'legs_quad', 'Barbell Squat', 4, 117.5, 8);
 
 -- Week 7 - Hitting PRs
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 95, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 92.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 90, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '126 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 87.5, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 1, 130, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 2, 130, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 3, 130, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 4, 130, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 2, 127.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 3, 125, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '124 days', 'legs_quad', 'Barbell Squat', 4, 122.5, 8);
 
 -- Week 8 - Second Deload
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '119 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 75, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '119 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 75, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '119 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 75, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '119 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 72.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '119 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 72.5, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '117 days', 'legs_quad', 'Barbell Squat', 1, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '117 days', 'legs_quad', 'Barbell Squat', 2, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '117 days', 'legs_quad', 'Barbell Squat', 3, 100, 10);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '117 days', 'legs_quad', 'Barbell Squat', 2, 97.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '117 days', 'legs_quad', 'Barbell Squat', 3, 97.5, 10);
 
 -- MONTH 3 (Weeks 9-12): Peak Performance
 -- ============================================
@@ -271,47 +271,47 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 97.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 97.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 97.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 97.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 95, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 92.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '112 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 90, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 1, 135, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 2, 135, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 3, 135, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 4, 135, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 2, 132.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 3, 130, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '110 days', 'legs_quad', 'Barbell Squat', 4, 127.5, 9);
 
 -- Week 10 - Pushing limits
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 100, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 100, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 97.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 95, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '105 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 92.5, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 1, 140, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 2, 140, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 3, 140, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 4, 140, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 2, 137.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 3, 135, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '103 days', 'legs_quad', 'Barbell Squat', 4, 132.5, 8);
 
 -- Week 11 - Peak week
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 102.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 102.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 102.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 102.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 100, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 97.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '98 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 95, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 1, 145, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 2, 145, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 3, 145, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 4, 145, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 2, 142.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 3, 140, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '96 days', 'legs_quad', 'Barbell Squat', 4, 137.5, 9);
 
 -- Week 12 - Deload Week (Third deload)
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '91 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '91 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '91 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 85, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '91 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 82.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '91 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 82.5, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '89 days', 'legs_quad', 'Barbell Squat', 1, 115, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '89 days', 'legs_quad', 'Barbell Squat', 2, 115, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '89 days', 'legs_quad', 'Barbell Squat', 3, 115, 10);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '89 days', 'legs_quad', 'Barbell Squat', 2, 112.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '89 days', 'legs_quad', 'Barbell Squat', 3, 112.5, 10);
 
 -- MONTH 4 (Weeks 13-16): Intermediate Progression
 -- ============================================
@@ -320,47 +320,47 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 107.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 107.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 107.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 107.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 105, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 102.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '84 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 100, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 1, 150, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 2, 150, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 3, 150, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 4, 150, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 2, 147.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 3, 145, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_quad', 'Barbell Squat', 4, 142.5, 9);
 
 -- Week 14 - Steady progress
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 110, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 110, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 107.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 105, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '77 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 102.5, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 1, 155, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 2, 155, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 3, 155, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 4, 155, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 2, 152.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 3, 150, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '75 days', 'legs_quad', 'Barbell Squat', 4, 147.5, 8);
 
 -- Week 15 - Continuing gains
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 112.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 112.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 112.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 112.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 110, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 107.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '70 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 105, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 1, 160, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 2, 160, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 3, 160, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 4, 160, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 2, 157.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 3, 155, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_quad', 'Barbell Squat', 4, 152.5, 8);
 
 -- Week 16 - Fourth Deload
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '63 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 90, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '63 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 90, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '63 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 90, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '63 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 87.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '63 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 87.5, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '61 days', 'legs_quad', 'Barbell Squat', 1, 125, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '61 days', 'legs_quad', 'Barbell Squat', 2, 125, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '61 days', 'legs_quad', 'Barbell Squat', 3, 125, 10);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '61 days', 'legs_quad', 'Barbell Squat', 2, 122.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '61 days', 'legs_quad', 'Barbell Squat', 3, 122.5, 10);
 
 -- MONTH 5 (Weeks 17-20): Advanced Strength
 -- ============================================
@@ -369,47 +369,47 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 115, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 115, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 115, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 115, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 112.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 110, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '56 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 107.5, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 1, 162.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 2, 162.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 3, 162.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 4, 162.5, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 2, 160, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 3, 157.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_quad', 'Barbell Squat', 4, 155, 9);
 
 -- Week 18 - Grinding
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 117.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 117.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 117.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 117.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 115, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 112.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '49 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 110, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 1, 165, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 2, 165, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 3, 165, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 4, 165, 8);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 2, 162.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 3, 160, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '47 days', 'legs_quad', 'Barbell Squat', 4, 157.5, 8);
 
 -- Week 19 - Peak before deload
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 120, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 120, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 120, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 120, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 117.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 115, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '42 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 112.5, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 1, 167.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 2, 167.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 3, 167.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 4, 167.5, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 2, 165, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 3, 162.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_quad', 'Barbell Squat', 4, 160, 9);
 
 -- Week 20 - Fifth Deload
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '35 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '35 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '35 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 95, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '35 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 92.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '35 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 92.5, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '33 days', 'legs_quad', 'Barbell Squat', 1, 130, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '33 days', 'legs_quad', 'Barbell Squat', 2, 130, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '33 days', 'legs_quad', 'Barbell Squat', 3, 130, 10);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '33 days', 'legs_quad', 'Barbell Squat', 2, 127.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '33 days', 'legs_quad', 'Barbell Squat', 3, 127.5, 10);
 
 -- MONTH 6 (Weeks 21-24): Peak Performance
 -- ============================================
@@ -418,49 +418,49 @@ VALUES
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 122.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 122.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 122.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 122.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 120, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 117.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '28 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 115, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 1, 170, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 2, 170, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 3, 170, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 4, 170, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 2, 167.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 3, 165, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_quad', 'Barbell Squat', 4, 162.5, 9);
 
 -- Week 22 - Strength peaks
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 125, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 125, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 125, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 125, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 122.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 120, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '21 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 117.5, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 1, 172.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 2, 172.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 3, 172.5, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 4, 172.5, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 2, 170, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 3, 167.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '19 days', 'legs_quad', 'Barbell Squat', 4, 165, 9);
 
 -- Week 23 - Maintaining PRs
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 127.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 127.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 127.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 127.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 125, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 122.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '14 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 120, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 1, 175, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 2, 175, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 3, 175, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 4, 175, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 2, 172.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 3, 170, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_quad', 'Barbell Squat', 4, 167.5, 9);
 
 -- Week 24 - Current week (most recent workouts)
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
 VALUES
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 1, 127.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 127.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 127.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 127.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 2, 125, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 3, 122.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '7 days', 'chest_mid', 'Flat Barbell Bench Press', 4, 120, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 1, 177.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 2, 177.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 3, 177.5, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 4, 177.5, 9);
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 2, 175, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 3, 172.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_quad', 'Barbell Squat', 4, 170, 9);
 
 -- Add some recent cardio
 INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number, weight_kg, reps)
@@ -475,71 +475,71 @@ INSERT INTO workout_logs (user_id, date, workout_type, exercise_name, set_number
 VALUES
   -- Week 13 accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '83 days', 'back_horizontal', 'Barbell Row', 1, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '83 days', 'back_horizontal', 'Barbell Row', 2, 85, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '83 days', 'back_horizontal', 'Barbell Row', 3, 85, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '83 days', 'back_horizontal', 'Barbell Row', 2, 82.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '83 days', 'back_horizontal', 'Barbell Row', 3, 80, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_hamstring', 'Romanian Deadlift', 1, 105, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_hamstring', 'Romanian Deadlift', 2, 105, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_hamstring', 'Romanian Deadlift', 3, 105, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_hamstring', 'Romanian Deadlift', 2, 102.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '82 days', 'legs_hamstring', 'Romanian Deadlift', 3, 100, 10),
 
   -- Week 15 accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '69 days', 'back_horizontal', 'Barbell Row', 1, 90, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '69 days', 'back_horizontal', 'Barbell Row', 2, 90, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '69 days', 'back_horizontal', 'Barbell Row', 3, 90, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '69 days', 'back_horizontal', 'Barbell Row', 2, 87.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '69 days', 'back_horizontal', 'Barbell Row', 3, 85, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_hamstring', 'Romanian Deadlift', 1, 110, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_hamstring', 'Romanian Deadlift', 2, 110, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_hamstring', 'Romanian Deadlift', 3, 110, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_hamstring', 'Romanian Deadlift', 2, 107.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '68 days', 'legs_hamstring', 'Romanian Deadlift', 3, 105, 10),
 
   -- Week 17 accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '55 days', 'back_horizontal', 'Barbell Row', 1, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '55 days', 'back_horizontal', 'Barbell Row', 2, 95, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '55 days', 'back_horizontal', 'Barbell Row', 3, 95, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '55 days', 'back_horizontal', 'Barbell Row', 2, 92.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '55 days', 'back_horizontal', 'Barbell Row', 3, 90, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_hamstring', 'Romanian Deadlift', 1, 115, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_hamstring', 'Romanian Deadlift', 2, 115, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_hamstring', 'Romanian Deadlift', 3, 115, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_hamstring', 'Romanian Deadlift', 2, 112.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '54 days', 'legs_hamstring', 'Romanian Deadlift', 3, 110, 10),
 
   -- Week 19 accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '41 days', 'back_horizontal', 'Barbell Row', 1, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '41 days', 'back_horizontal', 'Barbell Row', 2, 100, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '41 days', 'back_horizontal', 'Barbell Row', 3, 100, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '41 days', 'back_horizontal', 'Barbell Row', 2, 97.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '41 days', 'back_horizontal', 'Barbell Row', 3, 95, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_hamstring', 'Romanian Deadlift', 1, 120, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_hamstring', 'Romanian Deadlift', 2, 120, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_hamstring', 'Romanian Deadlift', 3, 120, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_hamstring', 'Romanian Deadlift', 2, 117.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '40 days', 'legs_hamstring', 'Romanian Deadlift', 3, 115, 10),
 
   -- Week 21 accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '27 days', 'back_horizontal', 'Barbell Row', 1, 105, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '27 days', 'back_horizontal', 'Barbell Row', 2, 105, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '27 days', 'back_horizontal', 'Barbell Row', 3, 105, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '27 days', 'back_horizontal', 'Barbell Row', 2, 102.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '27 days', 'back_horizontal', 'Barbell Row', 3, 100, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_hamstring', 'Romanian Deadlift', 1, 125, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_hamstring', 'Romanian Deadlift', 2, 125, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_hamstring', 'Romanian Deadlift', 3, 125, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_hamstring', 'Romanian Deadlift', 2, 122.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '26 days', 'legs_hamstring', 'Romanian Deadlift', 3, 120, 10),
 
   -- Week 23 accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '13 days', 'back_horizontal', 'Barbell Row', 1, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '13 days', 'back_horizontal', 'Barbell Row', 2, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '13 days', 'back_horizontal', 'Barbell Row', 3, 110, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '13 days', 'back_horizontal', 'Barbell Row', 2, 107.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '13 days', 'back_horizontal', 'Barbell Row', 3, 105, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_hamstring', 'Romanian Deadlift', 1, 130, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_hamstring', 'Romanian Deadlift', 2, 130, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_hamstring', 'Romanian Deadlift', 3, 130, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_hamstring', 'Romanian Deadlift', 2, 127.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '12 days', 'legs_hamstring', 'Romanian Deadlift', 3, 125, 10),
 
   -- Most recent week accessories
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_horizontal', 'Barbell Row', 1, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_horizontal', 'Barbell Row', 2, 110, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_horizontal', 'Barbell Row', 3, 110, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_horizontal', 'Barbell Row', 2, 107.5, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_horizontal', 'Barbell Row', 3, 105, 9),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_vertical', 'Pull-Ups', 1, 0, 15),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_vertical', 'Pull-Ups', 2, 0, 14),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '6 days', 'back_vertical', 'Pull-Ups', 3, 0, 13),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_hamstring', 'Romanian Deadlift', 1, 130, 12),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_hamstring', 'Romanian Deadlift', 2, 130, 11),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_hamstring', 'Romanian Deadlift', 3, 130, 10),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_hamstring', 'Romanian Deadlift', 2, 127.5, 11),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '5 days', 'legs_hamstring', 'Romanian Deadlift', 3, 125, 10),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Dumbbell Shoulder Press', 1, 40, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Dumbbell Shoulder Press', 2, 40, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Dumbbell Shoulder Press', 3, 40, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Dumbbell Shoulder Press', 2, 38.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Dumbbell Shoulder Press', 3, 37, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Lateral Raises', 1, 17.5, 15),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Lateral Raises', 2, 17.5, 14),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '4 days', 'shoulders', 'Lateral Raises', 3, 17.5, 13),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_biceps', 'Barbell Curl', 1, 45, 10),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_biceps', 'Barbell Curl', 2, 45, 9),
-  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_biceps', 'Barbell Curl', 3, 45, 8),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_biceps', 'Barbell Curl', 2, 43.5, 9),
+  ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_biceps', 'Barbell Curl', 3, 42.5, 8),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_triceps', 'Tricep Pushdown', 1, 50, 12),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_triceps', 'Tricep Pushdown', 2, 50, 11),
   ('YOUR_USER_ID_HERE', CURRENT_DATE - INTERVAL '3 days', 'arms_triceps', 'Tricep Pushdown', 3, 50, 10);
