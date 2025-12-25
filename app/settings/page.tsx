@@ -3,17 +3,24 @@
 import { useState } from 'react'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 import GoalManagement from '@/app/components/GoalManagement'
+import { validateCardioGoal } from '@/lib/inputValidation'
 
 export default function SettingsPage() {
   const { weightUnit, toggleWeightUnit, weeklyCardioGoal, setWeeklyCardioGoal } = useSettings()
   const [goalInput, setGoalInput] = useState(weeklyCardioGoal.toString())
+  const [goalError, setGoalError] = useState('')
 
   const handleGoalChange = (value: string) => {
     setGoalInput(value)
-    const numValue = parseInt(value, 10)
-    if (!isNaN(numValue) && numValue > 0) {
-      setWeeklyCardioGoal(numValue)
+    setGoalError('')
+
+    const validation = validateCardioGoal(value)
+    if (!validation.isValid) {
+      setGoalError(validation.error || 'Invalid goal')
+      return
     }
+
+    setWeeklyCardioGoal(validation.sanitizedValue!)
   }
 
   return (
@@ -96,11 +103,22 @@ export default function SettingsPage() {
                   value={goalInput}
                   onChange={(e) => handleGoalChange(e.target.value)}
                   min="1"
-                  className="w-24 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-center font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                  max="4200"
+                  title="Weekly cardio goal (1-4,200 minutes, max 70 hours/week)"
+                  className={`w-24 px-4 py-2 bg-slate-700 border rounded-lg text-white text-center font-semibold focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
+                    goalError
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-slate-600 focus:ring-sky-500'
+                  }`}
                 />
                 <span className="text-slate-400 font-medium">min</span>
               </div>
             </div>
+            {goalError && (
+              <div className="mt-2 bg-red-500/10 border border-red-500/30 rounded-lg p-2">
+                <p className="text-sm text-red-400">{goalError}</p>
+              </div>
+            )}
             <div className="mt-4 bg-slate-700/30 rounded-lg p-3">
               <p className="text-sm text-slate-300">
                 <span className="font-semibold text-white">Current goal:</span>{' '}

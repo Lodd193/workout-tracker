@@ -5,6 +5,7 @@ import { UserGoal, GoalFormData, Exercise } from '@/lib/types'
 import { fetchUserGoals, createGoal, updateGoal, deleteGoal } from '@/lib/api/goals'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 import ExerciseSelector from './ExerciseSelector'
+import { validateWeight, validateDate, validateNotes } from '@/lib/inputValidation'
 
 export default function GoalManagement() {
   const { formatWeight, convertWeight, weightUnit } = useSettings()
@@ -20,6 +21,11 @@ export default function GoalManagement() {
     target_weight_kg: 0,
     target_date: null,
     notes: null,
+  })
+  const [formErrors, setFormErrors] = useState({
+    weight: '',
+    date: '',
+    notes: ''
   })
 
   useEffect(() => {
@@ -43,16 +49,52 @@ export default function GoalManagement() {
   }
 
   const handleSubmit = async () => {
-    if (!formData.exercise_name || formData.target_weight_kg <= 0) {
-      alert('Please select an exercise and enter a target weight')
+    // Validate exercise name
+    if (!formData.exercise_name) {
+      alert('Please select an exercise')
       return
+    }
+
+    // Validate weight
+    const weightValidation = validateWeight(formData.target_weight_kg)
+    if (!weightValidation.isValid) {
+      alert(weightValidation.error || 'Invalid weight')
+      return
+    }
+
+    if (formData.target_weight_kg <= 0) {
+      alert('Target weight must be greater than 0')
+      return
+    }
+
+    // Validate target date if provided
+    if (formData.target_date) {
+      const dateValidation = validateDate(formData.target_date, {
+        allowPast: false,
+        allowFuture: true,
+        maxDaysInFuture: 1095 // ~3 years
+      })
+
+      if (!dateValidation.isValid) {
+        alert(dateValidation.error || 'Invalid target date')
+        return
+      }
+    }
+
+    // Validate notes if provided
+    if (formData.notes) {
+      const notesValidation = validateNotes(formData.notes)
+      if (!notesValidation.isValid) {
+        alert(notesValidation.error || 'Invalid notes')
+        return
+      }
     }
 
     try {
       // Convert weight to kg if in lbs
       const targetWeightKg = weightUnit === 'lbs'
-        ? formData.target_weight_kg / 2.20462
-        : formData.target_weight_kg
+        ? weightValidation.sanitizedValue! / 2.20462
+        : weightValidation.sanitizedValue!
 
       const goalData = {
         ...formData,
@@ -98,10 +140,65 @@ export default function GoalManagement() {
     }
   }
 
+  const handleWeightChange = (value: string) => {
+    const num = parseFloat(value)
+    setFormData({ ...formData, target_weight_kg: num || 0 })
+
+    if (!value || num <= 0) {
+      setFormErrors({ ...formErrors, weight: '' })
+      return
+    }
+
+    const validation = validateWeight(value)
+    if (!validation.isValid) {
+      setFormErrors({ ...formErrors, weight: validation.error || '' })
+    } else {
+      setFormErrors({ ...formErrors, weight: '' })
+    }
+  }
+
+  const handleDateChange = (value: string) => {
+    setFormData({ ...formData, target_date: value || null })
+
+    if (!value) {
+      setFormErrors({ ...formErrors, date: '' })
+      return
+    }
+
+    const validation = validateDate(value, {
+      allowPast: false,
+      allowFuture: true,
+      maxDaysInFuture: 1095
+    })
+
+    if (!validation.isValid) {
+      setFormErrors({ ...formErrors, date: validation.error || '' })
+    } else {
+      setFormErrors({ ...formErrors, date: '' })
+    }
+  }
+
+  const handleNotesChange = (value: string) => {
+    setFormData({ ...formData, notes: value || null })
+
+    if (!value) {
+      setFormErrors({ ...formErrors, notes: '' })
+      return
+    }
+
+    const validation = validateNotes(value)
+    if (!validation.isValid) {
+      setFormErrors({ ...formErrors, notes: validation.error || '' })
+    } else {
+      setFormErrors({ ...formErrors, notes: '' })
+    }
+  }
+
   const cancelEdit = () => {
     setShowAddForm(false)
     setEditingGoal(null)
     setFormData({ exercise_name: '', target_weight_kg: 0, target_date: null, notes: null })
+    setFormErrors({ weight: '', date: '', notes: '' })
   }
 
   if (loading) {
@@ -167,12 +264,22 @@ export default function GoalManagement() {
               <input
                 type="number"
                 step="0.5"
+                min="0.5"
+                max={weightUnit === 'lbs' ? '2205' : '1000'}
                 value={formData.target_weight_kg || ''}
-                onChange={(e) => setFormData({ ...formData, target_weight_kg: parseFloat(e.target.value) || 0 })}
-                className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-white
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                onChange={(e) => handleWeightChange(e.target.value)}
+                title={`Target weight (0.5-${weightUnit === 'lbs' ? '2205' : '1000'}${weightUnit})`}
+                className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
+                         focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
+                           formErrors.weight
+                             ? 'border-red-500 focus:ring-red-500'
+                             : 'border-slate-600 focus:ring-emerald-500'
+                         }`}
                 placeholder="e.g., 100"
               />
+              {formErrors.weight && (
+                <div className="mt-1 text-sm text-red-400">{formErrors.weight}</div>
+              )}
             </div>
 
             {/* Target Date (Optional) */}
@@ -182,11 +289,20 @@ export default function GoalManagement() {
               </label>
               <input
                 type="date"
+                min={new Date().toISOString().split('T')[0]}
                 value={formData.target_date || ''}
-                onChange={(e) => setFormData({ ...formData, target_date: e.target.value || null })}
-                className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-white
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                onChange={(e) => handleDateChange(e.target.value)}
+                title="Target date (must be in the future, max 3 years ahead)"
+                className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
+                         focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
+                           formErrors.date
+                             ? 'border-red-500 focus:ring-red-500'
+                             : 'border-slate-600 focus:ring-emerald-500'
+                         }`}
               />
+              {formErrors.date && (
+                <div className="mt-1 text-sm text-red-400">{formErrors.date}</div>
+              )}
             </div>
 
             {/* Notes (Optional) */}
@@ -195,13 +311,25 @@ export default function GoalManagement() {
                 Notes (Optional)
               </label>
               <textarea
+                maxLength={500}
                 value={formData.notes || ''}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value || null })}
-                className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-white
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                onChange={(e) => handleNotesChange(e.target.value)}
+                title="Notes (max 500 characters)"
+                className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
+                         focus:outline-none focus:ring-2 focus:border-transparent resize-none transition-colors ${
+                           formErrors.notes
+                             ? 'border-red-500 focus:ring-red-500'
+                             : 'border-slate-600 focus:ring-emerald-500'
+                         }`}
                 rows={2}
                 placeholder="e.g., Focus on progressive overload"
               />
+              {formErrors.notes && (
+                <div className="mt-1 text-sm text-red-400">{formErrors.notes}</div>
+              )}
+              <div className="mt-1 text-xs text-slate-500 text-right">
+                {(formData.notes || '').length} / 500
+              </div>
             </div>
 
             {/* Form Actions */}
