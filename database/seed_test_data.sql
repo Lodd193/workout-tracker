@@ -16,33 +16,7 @@
 --   Find: YOUR_USER_ID_HERE
 --   Replace: 0eb7cd78-4cf9-47d1-9a6a-833ea4256515
 
--- ============================================
--- FIX: Remove restrictive workout_type constraint
--- ============================================
--- The database may have a CHECK constraint that doesn't allow all valid exercise categories
--- We'll drop it and recreate it with the correct values
-
--- Drop the old constraint if it exists
-ALTER TABLE workout_logs DROP CONSTRAINT IF EXISTS workout_logs_workout_type_check;
-
--- Add the correct constraint with all valid exercise categories
-ALTER TABLE workout_logs ADD CONSTRAINT workout_logs_workout_type_check
-  CHECK (workout_type IN (
-    'chest_upper',
-    'chest_mid',
-    'chest_lower',
-    'back_vertical',
-    'back_horizontal',
-    'shoulders',
-    'arms_biceps',
-    'arms_triceps',
-    'legs_quad',
-    'legs_hamstring',
-    'legs_glutes',
-    'legs_calves',
-    'core',
-    'cardio'
-  ));
+-- NOTE: If you get constraint errors, run fix_workout_type_constraint.sql FIRST
 
 -- ============================================
 -- WORKOUT TEMPLATES
