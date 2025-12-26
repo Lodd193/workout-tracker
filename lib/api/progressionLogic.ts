@@ -20,6 +20,27 @@ export interface ProgressionSuggestion {
   } | null
 }
 
+// Check if a set meets the progression target
+export function meetsProgressionTarget(
+  weightKg: number,
+  reps: number,
+  target: ProgressionSuggestion
+): boolean {
+  // Weight must be at least the target weight
+  if (weightKg < target.targetWeight) {
+    return false
+  }
+
+  // If weight equals target, reps must meet or exceed target
+  if (weightKg === target.targetWeight && reps < target.targetReps) {
+    return false
+  }
+
+  // If weight exceeds target, any reps count as meeting the target
+  // (user is pushing heavier than recommended)
+  return true
+}
+
 // Get weight increment based on exercise equipment type
 function getWeightIncrement(exerciseName: string): number {
   const nameLower = exerciseName.toLowerCase()

@@ -246,6 +246,7 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
               key={setIndex}
               setNumber={setIndex + 1}
               setData={set}
+              progressionSuggestion={progressionSuggestion}
               onWeightChange={(value) => onUpdateSet(setIndex, 'weight', value)}
               onRepsChange={(value) => onUpdateSet(setIndex, 'reps', value)}
             />

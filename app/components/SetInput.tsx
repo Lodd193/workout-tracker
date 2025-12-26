@@ -4,24 +4,40 @@ import { useState, useEffect } from 'react'
 import { SetData } from '@/lib/types'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 import { validateWeight, validateReps } from '@/lib/inputValidation'
+import { meetsProgressionTarget, ProgressionSuggestion } from '@/lib/api/progressionLogic'
 
 interface SetInputProps {
   setNumber: number
   setData: SetData
+  progressionSuggestion?: ProgressionSuggestion | null
   onWeightChange: (value: string) => void
   onRepsChange: (value: string) => void
 }
 
-export default function SetInput({ setNumber, setData, onWeightChange, onRepsChange }: SetInputProps) {
-  const { weightUnit, convertWeight } = useSettings()
+export default function SetInput({ setNumber, setData, progressionSuggestion, onWeightChange, onRepsChange }: SetInputProps) {
+  const { weightUnit, convertWeight, formatWeight } = useSettings()
   const [weightError, setWeightError] = useState('')
   const [repsError, setRepsError] = useState('')
+
+  // Check if current inputs meet progression target
+  const meetsTarget = progressionSuggestion && setData.weight && setData.reps
+    ? meetsProgressionTarget(
+        parseFloat(setData.weight),
+        parseInt(setData.reps),
+        progressionSuggestion
+      )
+    : true // If no suggestion or incomplete data, don't highlight
 
   // Convert kg value from state to display value
   const displayWeight = setData.weight
     ? weightUnit === 'lbs'
       ? Math.round(parseFloat(setData.weight) * 2.20462 * 10) / 10
       : parseFloat(setData.weight)
+    : ''
+
+  // Format target weight for tooltip
+  const targetWeightDisplay = progressionSuggestion
+    ? formatWeight(progressionSuggestion.targetWeight)
     : ''
 
   const handleWeightChange = (value: string) => {
@@ -69,8 +85,30 @@ export default function SetInput({ setNumber, setData, onWeightChange, onRepsCha
 
   return (
     <div className="space-y-2">
-      <div className="text-xs text-slate-500 font-medium text-center uppercase tracking-wide">
-        Set {setNumber}
+      <div className="flex items-center justify-center gap-1.5">
+        <div className="text-xs text-slate-500 font-medium text-center uppercase tracking-wide">
+          Set {setNumber}
+        </div>
+        {!meetsTarget && setData.weight && setData.reps && progressionSuggestion && (
+          <div
+            className="relative group"
+            title={`Below progression target! Aim for: ${targetWeightDisplay} × ${progressionSuggestion.targetReps} reps`}
+          >
+            <svg
+              className="w-3.5 h-3.5 text-red-400 cursor-help animate-pulse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+          </div>
+        )}
       </div>
       <div>
         <input
@@ -81,7 +119,7 @@ export default function SetInput({ setNumber, setData, onWeightChange, onRepsCha
           placeholder={weightUnit}
           value={displayWeight}
           onChange={(e) => handleWeightChange(e.target.value)}
-          title={`Weight (0-${weightLimitDisplay}${weightUnit})`}
+          title={`Weight (0-${weightLimitDisplay}${weightUnit})${!meetsTarget ? ' - Below progression target!' : ''}`}
           className={`w-full bg-slate-900/50 border rounded-lg px-2 py-2.5
                      text-white text-center text-sm font-medium
                      focus:outline-none focus:ring-2 focus:border-transparent
@@ -89,6 +127,8 @@ export default function SetInput({ setNumber, setData, onWeightChange, onRepsCha
                      hover:border-slate-500 focus:scale-105 ${
                        weightError
                          ? 'border-red-500 focus:ring-red-500'
+                         : !meetsTarget
+                         ? 'border-red-500 focus:ring-red-500/50'
                          : 'border-slate-600 focus:ring-emerald-500'
                      }`}
         />
@@ -105,7 +145,7 @@ export default function SetInput({ setNumber, setData, onWeightChange, onRepsCha
           placeholder="reps"
           value={setData.reps}
           onChange={(e) => handleRepsChange(e.target.value)}
-          title="Reps (1-999, whole numbers)"
+          title={`Reps (1-999, whole numbers)${!meetsTarget ? ' - Below progression target!' : ''}`}
           className={`w-full bg-slate-900/50 border rounded-lg px-2 py-2.5
                      text-white text-center text-sm font-medium
                      focus:outline-none focus:ring-2 focus:border-transparent
@@ -113,6 +153,8 @@ export default function SetInput({ setNumber, setData, onWeightChange, onRepsCha
                      hover:border-slate-500 focus:scale-105 ${
                        repsError
                          ? 'border-red-500 focus:ring-red-500'
+                         : !meetsTarget
+                         ? 'border-red-500 focus:ring-red-500/50'
                          : 'border-slate-600 focus:ring-emerald-500'
                      }`}
         />

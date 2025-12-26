@@ -37,6 +37,7 @@ A powerful, full-stack fitness tracking platform built with Next.js and Supabase
 - **Duration tracking for cardio** exercises in minutes
 - Quick data entry with bulk fill
 - Progressive overload tracking with smart suggestions
+- **Visual progression feedback** - Red highlighting and warning indicators when inputs don't meet progression targets
 - **Delete confirmations** to prevent accidental data loss
 - **Time-based personalized greetings** (Good morning/afternoon/evening)
 - Real-time workout timer
@@ -236,9 +237,10 @@ workout-tracker/
 2. Click **"Add Exercise"**
 3. Search or browse for an exercise
 4. See your **last performance** and **personal record** for that exercise
-5. Use **quick fill** to populate all sets with the same weight/reps
-6. Enter weight and reps for each set (or modify individually)
-7. Click **"Save Workout"**
+5. Input boxes show **red borders** and a warning icon if your inputs are below the progression target - hover for details
+6. Use **quick fill** to populate all sets with the same weight/reps
+7. Enter weight and reps for each set (or modify individually)
+8. Click **"Save Workout"**
 
 #### Cardio:
 1. Select a cardio exercise (Bike, Run, Walk, or Row)
