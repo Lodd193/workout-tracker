@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { SetData } from '@/lib/types'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 import { validateWeight, validateReps } from '@/lib/inputValidation'
-import { meetsProgressionTarget, ProgressionSuggestion } from '@/lib/api/progressionLogic'
+import { meetsProgressionTarget, exceedsProgressionTarget, ProgressionSuggestion } from '@/lib/api/progressionLogic'
 
 interface SetInputProps {
   setNumber: number
@@ -27,6 +27,14 @@ export default function SetInput({ setNumber, setData, progressionSuggestion, on
         progressionSuggestion
       )
     : true // If no suggestion or incomplete data, don't highlight
+  // Check if current inputs exceed progression target (for positive feedback)
+  const exceedsTarget = progressionSuggestion && setData.weight && setData.reps
+    ? exceedsProgressionTarget(
+        parseFloat(setData.weight),
+        parseInt(setData.reps),
+        progressionSuggestion
+      )
+    : false
 
   // Convert kg value from state to display value
   const displayWeight = setData.weight
@@ -127,6 +135,8 @@ export default function SetInput({ setNumber, setData, progressionSuggestion, on
                      hover:border-slate-500 focus:scale-105 ${
                        weightError
                          ? 'border-red-500 focus:ring-red-500'
+                         : exceedsTarget
+                         ? 'border-emerald-500 focus:ring-emerald-500'
                          : !meetsTarget
                          ? 'border-red-500 focus:ring-red-500/50'
                          : 'border-slate-600 focus:ring-emerald-500'
@@ -153,6 +163,8 @@ export default function SetInput({ setNumber, setData, progressionSuggestion, on
                      hover:border-slate-500 focus:scale-105 ${
                        repsError
                          ? 'border-red-500 focus:ring-red-500'
+                         : exceedsTarget
+                         ? 'border-emerald-500 focus:ring-emerald-500'
                          : !meetsTarget
                          ? 'border-red-500 focus:ring-red-500/50'
                          : 'border-slate-600 focus:ring-emerald-500'

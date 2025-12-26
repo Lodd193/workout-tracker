@@ -41,6 +41,26 @@ export function meetsProgressionTarget(
   return true
 }
 
+
+// Check if a set exceeds the progression target (for positive feedback)
+export function exceedsProgressionTarget(
+  weightKg: number,
+  reps: number,
+  target: ProgressionSuggestion
+): boolean {
+  // Weight exceeds target
+  if (weightKg > target.targetWeight) {
+    return true
+  }
+
+  // Weight equals target AND reps exceed target
+  if (weightKg === target.targetWeight && reps > target.targetReps) {
+    return true
+  }
+
+  return false
+}
+
 // Get weight increment based on exercise equipment type
 function getWeightIncrement(exerciseName: string): number {
   const nameLower = exerciseName.toLowerCase()
