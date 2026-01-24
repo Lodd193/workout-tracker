@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Exercise, ExerciseCategory } from '@/lib/types'
-import { EXERCISES, CATEGORY_COLORS } from '@/lib/exercises'
+import { EXERCISES, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/exercises'
+import { getAllCustomExercises } from '@/lib/customExercises'
 import CategoryFilter from './CategoryFilter'
+import CreateExerciseModal from './CreateExerciseModal'
 
 interface ExerciseSelectorProps {
   isOpen: boolean
@@ -14,9 +16,34 @@ interface ExerciseSelectorProps {
 export default function ExerciseSelector({ isOpen, onClose, onSelectExercise }: ExerciseSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<ExerciseCategory | 'all'>('all')
+  const [customExercises, setCustomExercises] = useState<Exercise[]>([])
+  const [showCreateModal, setShowCreateModal] = useState(false)
+
+  // Load custom exercises when modal opens
+  const loadCustomExercises = useCallback(async () => {
+    const exercises = await getAllCustomExercises()
+    setCustomExercises(
+      exercises.map((ex) => ({
+        id: `custom-${ex.id}`,
+        name: ex.name,
+        category: ex.category,
+        categoryLabel: CATEGORY_LABELS[ex.category],
+        isCustom: true,
+      }))
+    )
+  }, [])
+
+  useEffect(() => {
+    if (isOpen) {
+      loadCustomExercises()
+    }
+  }, [isOpen, loadCustomExercises])
+
+  // Combine built-in and custom exercises
+  const allExercises = [...EXERCISES, ...customExercises]
 
   // Filter exercises based on search and category
-  const filteredExercises = EXERCISES.filter((exercise) => {
+  const filteredExercises = allExercises.filter((exercise) => {
     const matchesSearch = exercise.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = selectedCategory === 'all' || exercise.category === selectedCategory
     return matchesSearch && matchesCategory
@@ -129,6 +156,26 @@ export default function ExerciseSelector({ isOpen, onClose, onSelectExercise }: 
 
         {/* Exercise List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-1.5 min-h-[40vh]">
+          {/* Create New Exercise Button */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="w-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20
+                       border border-purple-500/30 hover:border-purple-500/50 rounded-lg p-3 transition-all duration-200
+                       flex items-center gap-3 group mb-3"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-purple-300 font-medium group-hover:text-purple-200 transition-colors">
+                Create New Exercise
+              </p>
+              <p className="text-slate-500 text-sm">Add a custom exercise to your library</p>
+            </div>
+          </button>
+
           {filteredExercises.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-slate-400 text-lg">No exercises found</p>
@@ -150,9 +197,16 @@ export default function ExerciseSelector({ isOpen, onClose, onSelectExercise }: 
                                group-hover:scale-125 transition-transform shadow-lg`}
                   />
                   <div className="flex-1 text-left">
-                    <p className="text-white font-medium group-hover:text-emerald-400 transition-colors">
-                      {exercise.name}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-white font-medium group-hover:text-emerald-400 transition-colors">
+                        {exercise.name}
+                      </p>
+                      {exercise.isCustom && (
+                        <span className="px-1.5 py-0.5 text-xs font-medium bg-purple-500/20 text-purple-300 rounded">
+                          Custom
+                        </span>
+                      )}
+                    </div>
                     <p className="text-slate-500 text-sm">{exercise.categoryLabel}</p>
                   </div>
                   <svg
@@ -173,10 +227,20 @@ export default function ExerciseSelector({ isOpen, onClose, onSelectExercise }: 
         {/* Footer */}
         <div className="p-3 border-t border-slate-700 bg-slate-900/50">
           <p className="text-slate-400 text-xs text-center">
-            Showing {filteredExercises.length} of {EXERCISES.length} exercises
+            Showing {filteredExercises.length} of {allExercises.length} exercises
+            {customExercises.length > 0 && (
+              <span className="text-purple-400"> ({customExercises.length} custom)</span>
+            )}
           </p>
         </div>
       </div>
+
+      {/* Create Exercise Modal */}
+      <CreateExerciseModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreated={loadCustomExercises}
+      />
     </div>
   )
 }

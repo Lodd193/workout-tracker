@@ -19,6 +19,15 @@ export interface Exercise {
   name: string
   category: ExerciseCategory
   categoryLabel: string
+  isCustom?: boolean
+}
+
+export interface CustomExercise {
+  id: string
+  user_id: string
+  name: string
+  category: ExerciseCategory
+  created_at: string
 }
 
 export interface SetData {
