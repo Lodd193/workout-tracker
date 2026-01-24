@@ -90,6 +90,12 @@ export default function LoginPage() {
                   className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
+                <Link
+                  href="/reset-password"
+                  className="text-sm text-emerald-400 hover:text-emerald-300 mt-2 inline-block transition-colors"
+                >
+                  Forgot password?
+                </Link>
               </div>
             </div>
 

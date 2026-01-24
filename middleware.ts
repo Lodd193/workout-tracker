@@ -16,8 +16,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  // Allow access to login and signup pages
-  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+  // Allow access to login, signup, and reset-password pages
+  if (pathname.startsWith('/login') || pathname.startsWith('/signup') || pathname.startsWith('/reset-password')) {
     return NextResponse.next()
   }
 
