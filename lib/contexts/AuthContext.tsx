@@ -14,6 +14,7 @@ import {
   logPasswordResetRequest,
   logPasswordResetComplete,
 } from '@/lib/audit/auditLog'
+import { clearCSRFToken, regenerateCSRFToken } from '@/lib/csrf'
 
 interface AuthContextType {
   user: User | null
@@ -139,6 +140,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logLogin(data.user.id, email)
     }
 
+    // Regenerate CSRF token on successful login
+    regenerateCSRFToken()
+
     logger.debug('[Auth] Sign in successful!')
     return {}
   }
@@ -175,6 +179,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (user) {
       logLogout(user.id)
     }
+    // Clear CSRF token on logout
+    clearCSRFToken()
     await supabase.auth.signOut()
   }
 
