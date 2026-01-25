@@ -9,7 +9,7 @@ export type AuditAction =
   | 'password_reset_request'
   | 'password_reset_complete'
 
-export type AuditResource = 'auth' | 'workout' | 'template' | 'goal' | 'settings'
+export type AuditResource = 'auth' | 'workout' | 'template' | 'goal' | 'settings' | 'security'
 
 export interface AuditLogEntry {
   action: AuditAction

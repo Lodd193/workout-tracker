@@ -1,45 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportCSPViolation, type CSPViolationDetails } from '@/lib/security/monitor'
 
 /**
  * CSP Violation Reporting Endpoint
  *
  * Receives Content Security Policy violation reports from browsers.
- * Logs violations in development, can be extended to send to monitoring service in production.
+ * Logs violations to the security monitoring system.
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // In development, log the violation
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🚨 CSP Violation Report:', JSON.stringify(body, null, 2))
-    }
-
-    // In production, you could send to a monitoring service:
-    // - Sentry
-    // - LogRocket
-    // - Custom logging service
-    // Example:
-    // if (process.env.NODE_ENV === 'production') {
-    //   await sendToMonitoringService(body)
-    // }
-
-    // Extract useful violation details
+    // Extract useful violation details from the report
     const cspReport = body['csp-report'] || body
-    const violation = {
-      blockedUri: cspReport['blocked-uri'] || cspReport.blockedURL,
-      violatedDirective: cspReport['violated-directive'] || cspReport.effectiveDirective,
+    const violation: CSPViolationDetails = {
+      blockedUri: cspReport['blocked-uri'] || cspReport.blockedURL || 'unknown',
+      violatedDirective:
+        cspReport['violated-directive'] || cspReport.effectiveDirective || 'unknown',
       originalPolicy: cspReport['original-policy'],
-      documentUri: cspReport['document-uri'] || cspReport.documentURL,
+      documentUri: cspReport['document-uri'] || cspReport.documentURL || 'unknown',
       sourceFile: cspReport['source-file'],
       lineNumber: cspReport['line-number'],
       columnNumber: cspReport['column-number'],
-      timestamp: new Date().toISOString(),
     }
 
-    // Log clean violation summary
+    // Get request metadata
+    const ipAddress =
+      request.headers.get('x-forwarded-for')?.split(',')[0] ||
+      request.headers.get('x-real-ip') ||
+      'unknown'
+    const userAgent = request.headers.get('user-agent') || undefined
+
+    // Report to security monitoring system
+    await reportCSPViolation(violation, {
+      ipAddress,
+      userAgent,
+    })
+
+    // In development, also log to console for immediate visibility
     if (process.env.NODE_ENV === 'development') {
-      console.log('📋 CSP Violation Summary:')
+      console.log('📋 CSP Violation:')
       console.log(`  Blocked: ${violation.blockedUri}`)
       console.log(`  Violated: ${violation.violatedDirective}`)
       console.log(`  Page: ${violation.documentUri}`)
@@ -51,8 +51,8 @@ export async function POST(request: NextRequest) {
     // Return 204 No Content (standard response for reporting endpoints)
     return new NextResponse(null, { status: 204 })
   } catch (error) {
+    // Log the error but still return 204 to prevent browser retries
     console.error('Error processing CSP report:', error)
-    // Still return 204 to prevent browser retries
     return new NextResponse(null, { status: 204 })
   }
 }
