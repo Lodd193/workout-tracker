@@ -6,6 +6,7 @@ import {
   WorkoutDayData,
   AnalyticsSummary,
 } from '@/lib/types'
+import { formatDateForChart, daysBetween, toISODateString } from '@/lib/utils/dateFormat'
 
 // ============ FETCH ALL WORKOUT LOGS ============
 export async function fetchAllWorkoutLogs(): Promise<WorkoutLog[]> {
@@ -178,11 +179,6 @@ export async function fetchAnalyticsSummary(): Promise<AnalyticsSummary> {
 }
 
 // ============ UTILITY FUNCTIONS ============
-function formatDateForChart(isoDate: string): string {
-  const date = new Date(isoDate)
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
 function calculateStreaks(sortedDates: string[]): { current: number; longest: number } {
   if (sortedDates.length === 0) return { current: 0, longest: 0 }
 
@@ -210,12 +206,6 @@ function calculateStreaks(sortedDates: string[]): { current: number; longest: nu
   const currentStreak = daysSinceLastWorkout <= 1 ? tempStreak : 0
 
   return { current: currentStreak, longest: longestStreak }
-}
-
-function daysBetween(start: string, end: string): number {
-  const startDate = new Date(start)
-  const endDate = new Date(end)
-  return Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
 }
 
 // ============ GET UNIQUE EXERCISES (FOR DROPDOWN) ============
@@ -534,13 +524,13 @@ export async function fetchWeekComparison(weekOffset: number = 0): Promise<WeekC
 
   return {
     thisWeek: {
-      startDate: thisWeekStart.toISOString().split('T')[0],
-      endDate: thisWeekEnd.toISOString().split('T')[0],
+      startDate: toISODateString(thisWeekStart),
+      endDate: toISODateString(thisWeekEnd),
       ...thisWeekMetrics,
     },
     lastWeek: {
-      startDate: lastWeekStart.toISOString().split('T')[0],
-      endDate: lastWeekEnd.toISOString().split('T')[0],
+      startDate: toISODateString(lastWeekStart),
+      endDate: toISODateString(lastWeekEnd),
       ...lastWeekMetrics,
     },
     changes: {

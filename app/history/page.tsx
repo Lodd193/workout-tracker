@@ -10,6 +10,7 @@ import {
 } from '@/lib/api/analytics'
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import { useSettings } from '@/lib/contexts/SettingsContext'
+import { formatDateLong } from '@/lib/utils/dateFormat'
 
 export default function HistoryPage() {
   const { weightUnit, convertWeight, formatWeight } = useSettings()
@@ -95,16 +96,6 @@ export default function HistoryPage() {
         next.add(date)
       }
       return next
-    })
-  }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
     })
   }
 
@@ -211,7 +202,7 @@ export default function HistoryPage() {
                     </svg>
                     <div>
                       <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
-                        {formatDate(entry.date)}
+                        {formatDateLong(entry.date)}
                       </h3>
                       <p className="text-slate-400 text-sm mt-1">
                         {entry.exercises.length} exercise{entry.exercises.length !== 1 ? 's' : ''} •{' '}

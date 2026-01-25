@@ -11,6 +11,7 @@ import SaveTemplateModal from './SaveTemplateModal'
 import { EXERCISES } from '@/lib/exercises'
 import ConfirmDialog from './ConfirmDialog'
 import { validateDate, validateWeight, validateReps, validateDuration } from '@/lib/inputValidation'
+import { getTodayDate, formatDateShort, getDateRelativeToToday } from '@/lib/utils/dateFormat'
 
 export default function WorkoutForm() {
   const { user } = useAuth()
@@ -173,7 +174,7 @@ export default function WorkoutForm() {
 
       setSelectedExercises(exercises)
       setDate(getTodayDate())
-      setMessage(`Loaded workout from ${formatDate(lastDate)} (${exercises.length} exercises)`)
+      setMessage(`Loaded workout from ${formatDateShort(lastDate)} (${exercises.length} exercises)`)
     } catch (error) {
       console.error('Error loading last workout:', error)
       setMessage('Error loading last workout')
@@ -202,20 +203,9 @@ export default function WorkoutForm() {
     }
   }
 
-  const setPresetDate = (daysAgo: number) => {
-    const date = new Date()
-    date.setDate(date.getDate() + daysAgo)
-    const dateString = date.toISOString().split('T')[0]
+  const setPresetDate = (daysOffset: number) => {
+    const dateString = getDateRelativeToToday(daysOffset)
     handleDateChange(dateString)
-  }
-
-  const getTodayDate = () => {
-    return new Date().toISOString().split('T')[0]
-  }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   const handleLoadTemplate = (template: WorkoutTemplate) => {

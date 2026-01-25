@@ -6,6 +6,7 @@ import CardioInput from './CardioInput'
 import { fetchLastPerformance, fetchPersonalRecords } from '@/lib/api/analytics'
 import { fetchProgressionSuggestion, ProgressionSuggestion } from '@/lib/api/progressionLogic'
 import { useSettings } from '@/lib/contexts/SettingsContext'
+import { formatRelativeDate } from '@/lib/utils/dateFormat'
 
 interface ExerciseCardProps {
   exercise: SelectedExercise
@@ -56,17 +57,6 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
     setBulkWeight('')
     setBulkReps('')
     setShowBulkFill(false)
-  }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    const today = new Date()
-    const diffDays = Math.floor((today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
-
-    if (diffDays === 0) return 'earlier today'
-    if (diffDays === 1) return 'yesterday'
-    if (diffDays < 7) return `${diffDays} days ago`
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   const formatCategory = (category: string) => {
@@ -132,7 +122,7 @@ export default function ExerciseCard({ exercise, index, onRemove, onUpdateSet, o
               {/* Last Performance */}
               {progressionSuggestion.lastPerformance && (
                 <div className="text-xs text-slate-400 mb-2">
-                  Last time ({formatDate(progressionSuggestion.lastPerformance.date)}): {' '}
+                  Last time ({formatRelativeDate(progressionSuggestion.lastPerformance.date)}): {' '}
                   <span className="text-white">
                     {formatWeight(progressionSuggestion.lastPerformance.weight)} × {progressionSuggestion.lastPerformance.reps} reps × {progressionSuggestion.lastPerformance.sets} sets
                   </span>

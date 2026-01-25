@@ -1,6 +1,7 @@
 'use client'
 
 import { WorkoutDayData } from '@/lib/types'
+import { toISODateString, isToday, formatDateForTooltip } from '@/lib/utils/dateFormat'
 
 interface WorkoutFrequencyHeatmapProps {
   data: WorkoutDayData[]
@@ -23,7 +24,7 @@ export default function WorkoutFrequencyHeatmap({ data }: WorkoutFrequencyHeatma
     current.setDate(current.getDate() - current.getDay())
 
     while (current <= today) {
-      const dateStr = current.toISOString().split('T')[0]
+      const dateStr = toISODateString(current)
       const dayData = dateMap.get(dateStr) || null
 
       currentWeek.push({
@@ -97,15 +98,15 @@ export default function WorkoutFrequencyHeatmap({ data }: WorkoutFrequencyHeatma
                 <div key={weekIdx} className="flex flex-col gap-1">
                   {week.map((day, dayIdx) => {
                     const intensity = day.data?.intensity ?? null
-                    const isToday = day.date.toDateString() === new Date().toDateString()
+                    const isTodayDate = isToday(day.date)
 
                     return (
                       <div
                         key={dayIdx}
                         className={`w-3 h-3 rounded-sm ${getIntensityColor(intensity)}
                                    hover:ring-2 hover:ring-emerald-400 transition-all cursor-pointer
-                                   ${isToday ? 'ring-2 ring-cyan-400' : ''}`}
-                        title={`${day.date.toLocaleDateString()}: ${day.data?.exerciseCount || 0} exercises, ${day.data?.totalSets || 0} sets`}
+                                   ${isTodayDate ? 'ring-2 ring-cyan-400' : ''}`}
+                        title={`${formatDateForTooltip(day.date)}: ${day.data?.exerciseCount || 0} exercises, ${day.data?.totalSets || 0} sets`}
                       />
                     )
                   })}
