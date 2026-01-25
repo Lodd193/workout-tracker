@@ -403,6 +403,142 @@ function calculateSlope(points: Array<{ x: number; y: number }>): number {
   return slope
 }
 
+// ============ BATCH PROGRESS CALCULATIONS (N+1 FIX) ============
+
+/**
+ * Calculate 1RM history for all exercises from pre-fetched logs
+ * Processes in memory instead of making multiple DB queries
+ */
+export function calculate1RMHistoryFromLogs(
+  logs: WorkoutLog[],
+  exerciseName: string
+): OneRMDataPoint[] {
+  const exerciseLogs = logs.filter((l) => l.exercise_name === exerciseName)
+
+  if (exerciseLogs.length === 0) return []
+
+  // Sort by date ascending
+  const sortedLogs = [...exerciseLogs].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
+
+  // Group by date
+  const groupedByDate = sortedLogs.reduce(
+    (acc, log) => {
+      if (!acc[log.date]) {
+        acc[log.date] = []
+      }
+      acc[log.date].push(log)
+      return acc
+    },
+    {} as Record<string, WorkoutLog[]>
+  )
+
+  return Object.entries(groupedByDate).map(([date, dayLogs]) => {
+    // Find the set with highest estimated 1RM
+    const bestSet = dayLogs.reduce((best, log) => {
+      const current1RM = calculate1RM(log.weight_kg, log.reps)
+      const best1RM = calculate1RM(best.weight_kg, best.reps)
+      return current1RM > best1RM ? log : best
+    })
+
+    return {
+      date,
+      estimated1RM: Math.round(calculate1RM(bestSet.weight_kg, bestSet.reps) * 10) / 10,
+      actualWeight: bestSet.weight_kg,
+      actualReps: bestSet.reps,
+      displayDate: formatDateForChart(date),
+    }
+  })
+}
+
+/**
+ * Calculate progress rate for an exercise from pre-computed 1RM history
+ * No additional DB queries needed
+ */
+export function calculateProgressRateFromHistory(
+  history: OneRMDataPoint[],
+  days: number
+): ProgressMetrics {
+  if (history.length < 2) {
+    return { absolute: 0, percentage: 0, trend: 'Plateau', weeklyRate: 0 }
+  }
+
+  const now = new Date()
+  const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
+
+  const recentData = history.filter((d) => new Date(d.date) >= startDate)
+
+  if (recentData.length < 2) {
+    return { absolute: 0, percentage: 0, trend: 'Plateau', weeklyRate: 0 }
+  }
+
+  const first1RM = recentData[0].estimated1RM
+  const last1RM = recentData[recentData.length - 1].estimated1RM
+
+  const absolute = last1RM - first1RM
+  const percentage = (absolute / first1RM) * 100
+
+  // Calculate trend using linear regression slope
+  const slope = calculateSlope(recentData.map((d, idx) => ({ x: idx, y: d.estimated1RM })))
+  const trend = slope > 0.1 ? 'Gaining' : slope < -0.1 ? 'Declining' : 'Plateau'
+
+  // Weekly rate
+  const weeklyRate = (absolute / days) * 7
+
+  return {
+    absolute: Math.round(absolute * 10) / 10,
+    percentage: Math.round(percentage * 10) / 10,
+    trend,
+    weeklyRate: Math.round(weeklyRate * 10) / 10,
+  }
+}
+
+/**
+ * Batch calculate progress for multiple exercises
+ * Single DB query, all processing in memory
+ */
+export async function fetchBatchProgressData(
+  exerciseNames: string[],
+  days: number = 30
+): Promise<Map<string, { history: OneRMDataPoint[]; progress: ProgressMetrics }>> {
+  const logs = await fetchAllWorkoutLogs()
+  const result = new Map<string, { history: OneRMDataPoint[]; progress: ProgressMetrics }>()
+
+  for (const exerciseName of exerciseNames) {
+    const history = calculate1RMHistoryFromLogs(logs, exerciseName)
+    const progress = calculateProgressRateFromHistory(history, days)
+    result.set(exerciseName, { history, progress })
+  }
+
+  return result
+}
+
+/**
+ * Batch calculate progress for ALL exercises
+ * Single DB query, returns map of exercise -> progress data
+ */
+export async function fetchAllExercisesProgressData(
+  days: number = 30
+): Promise<Map<string, { history: OneRMDataPoint[]; progress: ProgressMetrics; maxWeight: number }>> {
+  const logs = await fetchAllWorkoutLogs()
+  const result = new Map<string, { history: OneRMDataPoint[]; progress: ProgressMetrics; maxWeight: number }>()
+
+  // Get unique exercise names
+  const exerciseNames = Array.from(new Set(logs.map((l) => l.exercise_name)))
+
+  for (const exerciseName of exerciseNames) {
+    const exerciseLogs = logs.filter((l) => l.exercise_name === exerciseName)
+    const history = calculate1RMHistoryFromLogs(logs, exerciseName)
+    const progress = calculateProgressRateFromHistory(history, days)
+    const maxWeight = exerciseLogs.length > 0 ? Math.max(...exerciseLogs.map((l) => l.weight_kg)) : 0
+
+    result.set(exerciseName, { history, progress, maxWeight })
+  }
+
+  return result
+}
+
 // ============ MUSCLE GROUP AGGREGATION ============
 export interface MuscleGroupProgress {
   category: string
@@ -424,26 +560,27 @@ export async function fetchMuscleGroupProgress(categoryPrefix: string, days: num
   // Get unique exercises
   const exercises = Array.from(new Set(categoryLogs.map((l) => l.exercise_name)))
 
-  // Calculate progress for each exercise
-  const exerciseProgress = await Promise.all(
-    exercises.map(async (exerciseName) => {
-      const progress = await fetchProgressRate(exerciseName, days)
-      const exerciseLogs = categoryLogs.filter((l) => l.exercise_name === exerciseName)
-      const currentWeight = exerciseLogs.length > 0 ? Math.max(...exerciseLogs.map((l) => l.weight_kg)) : 0
+  // Calculate progress for each exercise IN MEMORY (no N+1 queries)
+  const exerciseProgress = exercises.map((exerciseName) => {
+    const history = calculate1RMHistoryFromLogs(logs, exerciseName)
+    const progress = calculateProgressRateFromHistory(history, days)
+    const exerciseLogs = categoryLogs.filter((l) => l.exercise_name === exerciseName)
+    const currentWeight = exerciseLogs.length > 0 ? Math.max(...exerciseLogs.map((l) => l.weight_kg)) : 0
 
-      return {
-        name: exerciseName,
-        progress,
-        currentWeight,
-      }
-    })
-  )
+    return {
+      name: exerciseName,
+      progress,
+      currentWeight,
+    }
+  })
 
   // Calculate total volume
   const totalVolume = categoryLogs.reduce((sum, log) => sum + log.weight_kg * log.reps, 0)
 
   // Calculate overall rating (0-10) based on average progress percentage
-  const avgProgress = exerciseProgress.reduce((sum, ex) => sum + ex.progress.percentage, 0) / exerciseProgress.length
+  const avgProgress = exerciseProgress.length > 0
+    ? exerciseProgress.reduce((sum, ex) => sum + ex.progress.percentage, 0) / exerciseProgress.length
+    : 0
   const overallRating = Math.min(10, Math.max(0, 5 + avgProgress / 2))
 
   return {

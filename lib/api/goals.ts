@@ -1,6 +1,12 @@
 import { supabase } from '@/lib/supabase'
 import { UserGoal, GoalProgress, GoalFormData } from '@/lib/types'
-import { fetchPersonalRecords, fetchProgressRate } from '@/lib/api/analytics'
+import {
+  fetchPersonalRecords,
+  fetchProgressRate,
+  fetchAllExercisesProgressData,
+  ProgressMetrics,
+  OneRMDataPoint,
+} from '@/lib/api/analytics'
 
 // ============ CRUD OPERATIONS ============
 
@@ -125,12 +131,22 @@ export async function markGoalAchieved(goalId: number): Promise<UserGoal> {
 
 // ============ PROGRESS CALCULATIONS ============
 
+// Type for preloaded data to avoid N+1 queries
+interface PreloadedGoalData {
+  personalRecords: Awaited<ReturnType<typeof fetchPersonalRecords>>
+  progressData: Map<string, { history: OneRMDataPoint[]; progress: ProgressMetrics; maxWeight: number }>
+}
+
 /**
  * Calculate progress for a single goal
+ * Accepts optional preloaded data to avoid N+1 queries in batch operations
  */
-export async function calculateGoalProgress(goal: UserGoal): Promise<GoalProgress> {
-  // Get current PR for this exercise
-  const personalRecords = await fetchPersonalRecords()
+export async function calculateGoalProgress(
+  goal: UserGoal,
+  preloadedData?: PreloadedGoalData
+): Promise<GoalProgress> {
+  // Use preloaded data or fetch individually
+  const personalRecords = preloadedData?.personalRecords || await fetchPersonalRecords()
   const exercisePR = personalRecords.find(pr => pr.exercise_name === goal.exercise_name)
 
   const currentWeight = exercisePR?.max_weight || 0
@@ -154,7 +170,9 @@ export async function calculateGoalProgress(goal: UserGoal): Promise<GoalProgres
   let recentTrend: 'improving' | 'plateau' | 'declining' = 'plateau'
 
   try {
-    const progressMetrics = await fetchProgressRate(goal.exercise_name, 30)
+    // Use preloaded progress data if available
+    const exerciseProgressData = preloadedData?.progressData.get(goal.exercise_name)
+    const progressMetrics = exerciseProgressData?.progress || await fetchProgressRate(goal.exercise_name, 30)
     progressRate = progressMetrics.weeklyRate
 
     // Determine recent trend
@@ -243,13 +261,27 @@ export async function calculateGoalProgress(goal: UserGoal): Promise<GoalProgres
 
 /**
  * Calculate progress for all active goals
+ * OPTIMIZED: Fetches all data once, then processes each goal in memory
  */
 export async function fetchAllGoalsProgress(): Promise<GoalProgress[]> {
   const goals = await fetchUserGoals()
-  const progressData = await Promise.all(
-    goals.map(goal => calculateGoalProgress(goal))
+
+  if (goals.length === 0) return []
+
+  // Batch fetch all required data (2 DB queries total instead of N+1)
+  const [personalRecords, progressData] = await Promise.all([
+    fetchPersonalRecords(),
+    fetchAllExercisesProgressData(30),
+  ])
+
+  const preloadedData: PreloadedGoalData = { personalRecords, progressData }
+
+  // Calculate progress for each goal using preloaded data (no additional DB queries)
+  const progressResults = await Promise.all(
+    goals.map(goal => calculateGoalProgress(goal, preloadedData))
   )
-  return progressData
+
+  return progressResults
 }
 
 /**

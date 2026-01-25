@@ -1,51 +1,61 @@
 import { PRPrediction, PlateauAlert, MilestonePrediction } from '@/lib/types'
-import { fetchPersonalRecords, fetchProgressRate, fetchWeightProgression } from '@/lib/api/analytics'
+import {
+  fetchPersonalRecords,
+  fetchProgressRate,
+  fetchWeightProgression,
+  fetchAllExercisesProgressData,
+  fetchAllWorkoutLogs,
+  calculate1RMHistoryFromLogs,
+  calculateProgressRateFromHistory,
+} from '@/lib/api/analytics'
 
 // ============ PR PREDICTIONS ============
 
 /**
  * Generate PR predictions for exercises showing positive progress
+ * OPTIMIZED: Single DB query, all processing in memory
  */
 export async function generatePRPredictions(): Promise<PRPrediction[]> {
   try {
     const personalRecords = await fetchPersonalRecords()
     const predictions: PRPrediction[] = []
 
+    // Batch fetch progress data for all exercises (single DB query)
+    const exerciseNames = personalRecords.map((pr) => pr.exercise_name)
+    const progressData = await fetchAllExercisesProgressData(60)
+
     for (const pr of personalRecords) {
-      // Get progress rate for this exercise (last 60 days for better accuracy)
-      try {
-        const progressMetrics = await fetchProgressRate(pr.exercise_name, 60)
+      const exerciseData = progressData.get(pr.exercise_name)
+      if (!exerciseData) continue
 
-        // Only generate predictions for exercises showing improvement
-        if (progressMetrics.weeklyRate > 0 && progressMetrics.trend === 'Gaining') {
-          // Predict PR in next 30 days (4.3 weeks)
-          const predictedGain = progressMetrics.weeklyRate * 4.3
-          const predicted_pr = pr.max_weight + predictedGain
+      const progressMetrics = exerciseData.progress
 
-          // Calculate prediction date
-          const predicted_date = new Date()
-          predicted_date.setDate(predicted_date.getDate() + 30)
+      // Only generate predictions for exercises showing improvement
+      if (progressMetrics.weeklyRate > 0 && progressMetrics.trend === 'Gaining') {
+        // Predict PR in next 30 days (4.3 weeks)
+        const predictedGain = progressMetrics.weeklyRate * 4.3
+        const predicted_pr = pr.max_weight + predictedGain
 
-          // Determine confidence based on data consistency
-          let confidence: 'high' | 'medium' | 'low' = 'low'
-          if (pr.total_sessions >= 10 && progressMetrics.percentage > 0) {
-            confidence = 'high'
-          } else if (pr.total_sessions >= 5) {
-            confidence = 'medium'
-          }
+        // Calculate prediction date
+        const predicted_date = new Date()
+        predicted_date.setDate(predicted_date.getDate() + 30)
 
-          predictions.push({
-            exercise_name: pr.exercise_name,
-            current_pr: pr.max_weight,
-            predicted_pr: Math.round(predicted_pr * 10) / 10,
-            predicted_date: predicted_date.toISOString().split('T')[0],
-            confidence,
-            weekly_gain: Math.round(progressMetrics.weeklyRate * 10) / 10,
-          })
+        // Determine confidence based on data consistency
+        let confidence: 'high' | 'medium' | 'low' = 'low'
+        if (pr.total_sessions >= 10 && progressMetrics.percentage > 0) {
+          confidence = 'high'
+        } else if (pr.total_sessions >= 5) {
+          confidence = 'medium'
         }
-      } catch (error) {
-        // Skip exercises with insufficient data
-        continue
+
+        predictions.push({
+          exercise_name: pr.exercise_name,
+          current_pr: pr.max_weight,
+          predicted_pr: Math.round(predicted_pr * 10) / 10,
+          predicted_date: predicted_date.toISOString().split('T')[0],
+          confidence,
+          weekly_gain: Math.round(progressMetrics.weeklyRate * 10) / 10,
+        })
       }
     }
 
@@ -63,6 +73,7 @@ export async function generatePRPredictions(): Promise<PRPrediction[]> {
 
 /**
  * Detect exercises that have plateaued (no progress in 2+ weeks)
+ * OPTIMIZED: Single DB query, all processing in memory
  */
 export async function detectPlateaus(): Promise<PlateauAlert[]> {
   try {
@@ -70,54 +81,49 @@ export async function detectPlateaus(): Promise<PlateauAlert[]> {
     const alerts: PlateauAlert[] = []
     const today = new Date()
 
+    // Batch fetch progress data for all exercises (single DB query)
+    const progressData = await fetchAllExercisesProgressData(30)
+
     for (const pr of personalRecords) {
       // Only check exercises with recent activity (at least 3 sessions)
       if (pr.total_sessions < 3) continue
 
-      try {
-        // Get weight progression to check recent progress
-        const progression = await fetchWeightProgression(pr.exercise_name)
+      const exerciseData = progressData.get(pr.exercise_name)
+      if (!exerciseData || exerciseData.history.length === 0) continue
 
-        if (progression.length === 0) continue
+      // Find the date of the last PR
+      const lastPRDate = new Date(pr.date_achieved)
+      const daysSincePR = Math.floor((today.getTime() - lastPRDate.getTime()) / (1000 * 60 * 60 * 24))
 
-        // Find the date of the last PR
-        const lastPRDate = new Date(pr.date_achieved)
-        const daysSincePR = Math.floor((today.getTime() - lastPRDate.getTime()) / (1000 * 60 * 60 * 24))
+      const progressMetrics = exerciseData.progress
 
-        // Get progress rate to check trend
-        const progressMetrics = await fetchProgressRate(pr.exercise_name, 30)
+      // Plateau criteria:
+      // 1. No PR in 14+ days AND
+      // 2. At least 3 recent sessions AND
+      // 3. Weekly rate is 0 or negative
+      if (daysSincePR >= 14 && progressMetrics.weeklyRate <= 0) {
+        let severity: 'warning' | 'concern' | 'critical' = 'warning'
+        let recommendation = ''
 
-        // Plateau criteria:
-        // 1. No PR in 14+ days AND
-        // 2. At least 3 recent sessions AND
-        // 3. Weekly rate is 0 or negative
-        if (daysSincePR >= 14 && progressMetrics.weeklyRate <= 0) {
-          let severity: 'warning' | 'concern' | 'critical' = 'warning'
-          let recommendation = ''
-
-          if (daysSincePR >= 42) {
-            severity = 'critical'
-            recommendation = 'Consider a deload week or switching to a variation exercise. Plateau for 6+ weeks.'
-          } else if (daysSincePR >= 28) {
-            severity = 'concern'
-            recommendation = 'Try increasing training volume or changing rep ranges. 4+ weeks without progress.'
-          } else {
-            severity = 'warning'
-            recommendation = 'Monitor closely. Consider progressive overload techniques or form check.'
-          }
-
-          alerts.push({
-            exercise_name: pr.exercise_name,
-            last_pr_date: pr.date_achieved,
-            days_since_progress: daysSincePR,
-            last_pr_weight: pr.max_weight,
-            recommendation,
-            severity,
-          })
+        if (daysSincePR >= 42) {
+          severity = 'critical'
+          recommendation = 'Consider a deload week or switching to a variation exercise. Plateau for 6+ weeks.'
+        } else if (daysSincePR >= 28) {
+          severity = 'concern'
+          recommendation = 'Try increasing training volume or changing rep ranges. 4+ weeks without progress.'
+        } else {
+          severity = 'warning'
+          recommendation = 'Monitor closely. Consider progressive overload techniques or form check.'
         }
-      } catch (error) {
-        // Skip exercises with insufficient data
-        continue
+
+        alerts.push({
+          exercise_name: pr.exercise_name,
+          last_pr_date: pr.date_achieved,
+          days_since_progress: daysSincePR,
+          last_pr_weight: pr.max_weight,
+          recommendation,
+          severity,
+        })
       }
     }
 
@@ -139,21 +145,32 @@ export async function detectPlateaus(): Promise<PlateauAlert[]> {
 
 /**
  * Predict when you'll hit major milestones (e.g., 100kg bench, 140kg squat)
+ * Uses pre-fetched progress data if provided for batch efficiency
  */
 export async function predictMilestones(
   exerciseName: string,
-  milestoneWeights: number[]
+  milestoneWeights: number[],
+  preloadedData?: Map<string, { history: import('@/lib/api/analytics').OneRMDataPoint[]; progress: import('@/lib/api/analytics').ProgressMetrics; maxWeight: number }>
 ): Promise<MilestonePrediction[]> {
   try {
-    const personalRecords = await fetchPersonalRecords()
-    const exercisePR = personalRecords.find(pr => pr.exercise_name === exerciseName)
+    let currentWeight: number
+    let progressMetrics: import('@/lib/api/analytics').ProgressMetrics
 
-    if (!exercisePR) {
-      return []
+    if (preloadedData) {
+      // Use pre-fetched data (batch mode)
+      const exerciseData = preloadedData.get(exerciseName)
+      if (!exerciseData) return []
+      currentWeight = exerciseData.maxWeight
+      progressMetrics = exerciseData.progress
+    } else {
+      // Fallback to individual fetch
+      const personalRecords = await fetchPersonalRecords()
+      const exercisePR = personalRecords.find(pr => pr.exercise_name === exerciseName)
+      if (!exercisePR) return []
+      currentWeight = exercisePR.max_weight
+      progressMetrics = await fetchProgressRate(exerciseName, 60)
     }
 
-    const currentWeight = exercisePR.max_weight
-    const progressMetrics = await fetchProgressRate(exerciseName, 60)
     const predictions: MilestonePrediction[] = []
 
     for (const milestoneWeight of milestoneWeights) {
@@ -197,6 +214,7 @@ export async function predictMilestones(
 
 /**
  * Generate common milestone predictions for popular exercises
+ * OPTIMIZED: Single DB query for all exercises
  */
 export async function generateCommonMilestones(): Promise<MilestonePrediction[]> {
   const commonMilestones: Record<string, number[]> = {
@@ -206,10 +224,14 @@ export async function generateCommonMilestones(): Promise<MilestonePrediction[]>
     'Overhead Press (Barbell)': [40, 50, 60, 70, 80],
   }
 
+  // Batch fetch progress data for all exercises (single DB query)
+  const progressData = await fetchAllExercisesProgressData(60)
+
   const allPredictions: MilestonePrediction[] = []
 
   for (const [exercise, milestones] of Object.entries(commonMilestones)) {
-    const predictions = await predictMilestones(exercise, milestones)
+    // Pass preloaded data to avoid additional DB queries
+    const predictions = await predictMilestones(exercise, milestones, progressData)
     allPredictions.push(...predictions)
   }
 
