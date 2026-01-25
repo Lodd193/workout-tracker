@@ -5,6 +5,15 @@ import { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/logger'
 import { migrateLocalStorageTemplates } from '@/lib/templates'
+import {
+  logLogin,
+  logLogout,
+  logLoginFailed,
+  logSignup,
+  logSignupFailed,
+  logPasswordResetRequest,
+  logPasswordResetComplete,
+} from '@/lib/audit/auditLog'
 
 interface AuthContextType {
   user: User | null
@@ -120,7 +129,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       logger.error('[Auth] Sign in error:', error.message)
+      // Log failed login attempt (don't await to avoid blocking)
+      logLoginFailed(email, error.message)
       return { error: error.message }
+    }
+
+    // Log successful login
+    if (data.user) {
+      logLogin(data.user.id, email)
     }
 
     logger.debug('[Auth] Sign in successful!')
@@ -139,7 +155,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       logger.error('[Auth] Sign up error:', error.message)
+      // Log failed signup attempt
+      logSignupFailed(email, error.message)
       return { error: error.message }
+    }
+
+    // Log successful signup
+    if (data.user) {
+      logSignup(data.user.id, email)
     }
 
     logger.debug('[Auth] Sign up successful!')
@@ -148,6 +171,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     logger.debug('[Auth] Signing out...')
+    // Log logout before signing out (while we still have user context)
+    if (user) {
+      logLogout(user.id)
+    }
     await supabase.auth.signOut()
   }
 
@@ -167,6 +194,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: error.message }
     }
 
+    // Log password reset request
+    logPasswordResetRequest(email)
+
     logger.debug('[Auth] Password reset email sent successfully')
     return {}
   }
@@ -179,6 +209,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) {
       logger.error('[Auth] Password update error:', error.message)
       return { error: error.message }
+    }
+
+    // Log successful password update
+    if (user) {
+      logPasswordResetComplete(user.id)
     }
 
     logger.debug('[Auth] Password updated successfully')
