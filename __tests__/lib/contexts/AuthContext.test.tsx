@@ -35,6 +35,9 @@ const mockResetPasswordForEmail = vi.fn()
 const mockUpdateUser = vi.fn()
 const mockFromInsert = vi.fn().mockResolvedValue({ data: null, error: null })
 
+// Mock RPC function for account lockout
+const mockRpc = vi.fn()
+
 // Mock the supabase module - must use inline factory
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -53,6 +56,7 @@ vi.mock('@/lib/supabase', () => ({
     from: () => ({
       insert: mockFromInsert,
     }),
+    rpc: (name: string, params: Record<string, unknown>) => mockRpc(name, params),
   },
 }))
 
@@ -130,6 +134,8 @@ function setupDefaultMocks() {
     }
   })
   mockSignOut.mockResolvedValue({ error: null })
+  // Default: account is not locked
+  mockRpc.mockResolvedValue({ data: [], error: null })
 }
 
 function mockSuccessfulSignIn() {

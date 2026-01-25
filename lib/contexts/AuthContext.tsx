@@ -15,6 +15,13 @@ import {
   logPasswordResetComplete,
 } from '@/lib/audit/auditLog'
 import { clearCSRFToken, regenerateCSRFToken } from '@/lib/csrf'
+import {
+  checkAccountLockout,
+  recordFailedLogin,
+  clearAccountLockout,
+  getLockoutMessage,
+  getWarningMessage,
+} from '@/lib/accountLockout'
 
 interface AuthContextType {
   user: User | null
@@ -121,6 +128,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     logger.debug('[Auth] Attempting sign in for:', email)
 
+    // Check if account is locked before attempting login
+    const lockoutStatus = await checkAccountLockout(email)
+    if (lockoutStatus.isLocked) {
+      logger.debug('[Auth] Account is locked:', email)
+      return { error: getLockoutMessage(lockoutStatus) }
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -132,13 +146,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error('[Auth] Sign in error:', error.message)
       // Log failed login attempt (don't await to avoid blocking)
       logLoginFailed(email, error.message)
-      return { error: error.message }
+
+      // Record failed attempt for lockout tracking
+      const lockoutResult = await recordFailedLogin(email)
+
+      // Build error message with lockout warning if applicable
+      let errorMessage = error.message
+      if (lockoutResult.isLocked) {
+        errorMessage = getLockoutMessage({
+          ...lockoutResult,
+          minutesRemaining: 60, // Default to 60 mins for fresh lockout
+        })
+      } else {
+        const warning = getWarningMessage(lockoutResult.attempts)
+        if (warning) {
+          errorMessage = `${error.message}. ${warning}`
+        }
+      }
+
+      return { error: errorMessage }
     }
 
     // Log successful login
     if (data.user) {
       logLogin(data.user.id, email)
     }
+
+    // Clear any lockout status on successful login
+    await clearAccountLockout(email)
 
     // Regenerate CSRF token on successful login
     regenerateCSRFToken()
