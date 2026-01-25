@@ -11,6 +11,8 @@ import {
 import { CATEGORY_COLORS } from '@/lib/exercises'
 import { useSettings } from '@/lib/contexts/SettingsContext'
 import { formatDateLong } from '@/lib/utils/dateFormat'
+import ConfirmDialog from '@/app/components/ConfirmDialog'
+import AlertDialog from '@/app/components/AlertDialog'
 
 export default function HistoryPage() {
   const { weightUnit, convertWeight, formatWeight } = useSettings()
@@ -22,6 +24,15 @@ export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [expandedWorkouts, setExpandedWorkouts] = useState<Set<string>>(new Set())
+  const [alertDialog, setAlertDialog] = useState<{ isOpen: boolean; title: string; message: string }>({
+    isOpen: false,
+    title: '',
+    message: '',
+  })
+  const [deleteSetConfirm, setDeleteSetConfirm] = useState<{ isOpen: boolean; setId: number | null }>({
+    isOpen: false,
+    setId: null,
+  })
 
   useEffect(() => {
     loadHistory()
@@ -51,7 +62,11 @@ export default function HistoryPage() {
     const reps = parseInt(editReps)
 
     if (isNaN(displayWeight) || isNaN(reps)) {
-      alert('Please enter valid numbers')
+      setAlertDialog({
+        isOpen: true,
+        title: 'Invalid Input',
+        message: 'Please enter valid numbers for weight and reps.',
+      })
       return
     }
 
@@ -65,13 +80,22 @@ export default function HistoryPage() {
     }
   }
 
-  const handleDeleteSet = async (setId: number) => {
-    if (!confirm('Delete this set?')) return
+  const handleDeleteSet = (setId: number) => {
+    setDeleteSetConfirm({ isOpen: true, setId })
+  }
 
-    const success = await deleteWorkoutSet(setId)
+  const confirmDeleteSet = async () => {
+    if (deleteSetConfirm.setId === null) return
+
+    const success = await deleteWorkoutSet(deleteSetConfirm.setId)
     if (success) {
       loadHistory()
     }
+    setDeleteSetConfirm({ isOpen: false, setId: null })
+  }
+
+  const cancelDeleteSet = () => {
+    setDeleteSetConfirm({ isOpen: false, setId: null })
   }
 
   const handleDeleteWorkout = async (date: string) => {
@@ -322,6 +346,27 @@ export default function HistoryPage() {
           </div>
         )}
       </div>
+
+      {/* Alert Dialog */}
+      <AlertDialog
+        isOpen={alertDialog.isOpen}
+        title={alertDialog.title}
+        message={alertDialog.message}
+        variant="warning"
+        onClose={() => setAlertDialog({ isOpen: false, title: '', message: '' })}
+      />
+
+      {/* Delete Set Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteSetConfirm.isOpen}
+        title="Delete Set?"
+        message="Are you sure you want to delete this set? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={confirmDeleteSet}
+        onCancel={cancelDeleteSet}
+      />
     </div>
   )
 }
