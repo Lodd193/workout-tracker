@@ -1,77 +1,50 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/contexts/AuthContext'
-import { supabase } from '@/lib/supabase'
 import { Exercise, SelectedExercise, WorkoutTemplate } from '@/lib/types'
 import ExerciseCard from './ExerciseCard'
 import ExerciseSelector from './ExerciseSelector'
 import TemplateSelector from './TemplateSelector'
 import SaveTemplateModal from './SaveTemplateModal'
-import { EXERCISES } from '@/lib/exercises'
 import ConfirmDialog from './ConfirmDialog'
-import { validateDate, validateWeight, validateReps, validateDuration } from '@/lib/inputValidation'
-import { getTodayDate, formatDateShort, getDateRelativeToToday } from '@/lib/utils/dateFormat'
+import DateSelector from './DateSelector'
+import { useWorkoutTimer } from '@/lib/hooks/useWorkoutTimer'
+import { useWorkoutPersistence } from '@/lib/hooks/useWorkoutPersistence'
 
 export default function WorkoutForm() {
   const { user } = useAuth()
   const [date, setDate] = useState('')
-  const [dateError, setDateError] = useState('')
   const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
-  const [loadingLastWorkout, setLoadingLastWorkout] = useState(false)
-  const [lastWorkoutDate, setLastWorkoutDate] = useState<string | null>(null)
   const [isTemplateSelectorOpen, setIsTemplateSelectorOpen] = useState(false)
   const [isSaveTemplateOpen, setIsSaveTemplateOpen] = useState(false)
-  const [workoutStartTime, setWorkoutStartTime] = useState<number | null>(null)
-  const [elapsedTime, setElapsedTime] = useState(0)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; exerciseId: string | null }>({
     isOpen: false,
     exerciseId: null,
   })
 
+  // Use extracted hooks
+  const timer = useWorkoutTimer()
+  const persistence = useWorkoutPersistence({
+    onMessage: setMessage,
+    onExercisesLoaded: setSelectedExercises,
+    onDateSet: setDate,
+  })
+
   // Start timer when exercises are added
   useEffect(() => {
-    if (selectedExercises.length > 0 && !workoutStartTime) {
-      setWorkoutStartTime(Date.now())
+    if (selectedExercises.length > 0 && !timer.isRunning) {
+      timer.start()
     }
-  }, [selectedExercises.length])
-
-  // Update elapsed time every second
-  useEffect(() => {
-    if (workoutStartTime) {
-      timerRef.current = setInterval(() => {
-        setElapsedTime(Math.floor((Date.now() - workoutStartTime) / 1000))
-      }, 1000)
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-        timerRef.current = null
-      }
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-      }
-    }
-  }, [workoutStartTime])
+  }, [selectedExercises.length, timer.isRunning])
 
   const getGreeting = () => {
     const hour = new Date().getHours()
     if (hour < 12) return 'Good morning'
     if (hour < 18) return 'Good afternoon'
     return 'Good evening'
-  }
-
-    const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    if (mins === 0) return `${secs}s`
-    return `${mins}m ${secs}s`
   }
 
   const addExercise = (exercise: Exercise) => {
@@ -126,237 +99,31 @@ export default function WorkoutForm() {
     )
   }
 
-  const loadLastWorkout = async () => {
-    setLoadingLastWorkout(true)
-    try {
-      const { data, error } = await supabase
-        .from('workout_logs')
-        .select('date, exercise_name, workout_type, set_number, weight_kg, reps')
-        .order('date', { ascending: false })
-        .limit(100)
-
-      if (error) throw error
-      if (!data || data.length === 0) {
-        setMessage('No previous workouts found')
-        setLoadingLastWorkout(false)
-        return
-      }
-
-      const lastDate = data[0].date
-      setLastWorkoutDate(lastDate)
-
-      const lastWorkoutLogs = data.filter((log) => log.date === lastDate)
-
-      const exerciseMap = new Map<string, { name: string; category: string; sets: Array<{ weight: string; reps: string }> }>()
-
-      lastWorkoutLogs.forEach((log) => {
-        if (!exerciseMap.has(log.exercise_name)) {
-          exerciseMap.set(log.exercise_name, {
-            name: log.exercise_name,
-            category: log.workout_type,
-            sets: [],
-          })
-        }
-        const exercise = exerciseMap.get(log.exercise_name)!
-        exercise.sets[log.set_number - 1] = {
-          weight: log.weight_kg.toString(),
-          reps: log.reps.toString(),
-        }
-      })
-
-      const exercises: SelectedExercise[] = Array.from(exerciseMap.values()).map((ex) => ({
-        id: crypto.randomUUID(),
-        exerciseId: ex.name.toLowerCase().replace(/\s+/g, '-'),
-        name: ex.name,
-        category: ex.category as any,
-        sets: ex.sets.length === 4 ? ex.sets : [...ex.sets, ...Array(4 - ex.sets.length).fill({ weight: '', reps: '' })],
-      }))
-
-      setSelectedExercises(exercises)
-      setDate(getTodayDate())
-      setMessage(`Loaded workout from ${formatDateShort(lastDate)} (${exercises.length} exercises)`)
-    } catch (error) {
-      console.error('Error loading last workout:', error)
-      setMessage('Error loading last workout')
-    }
-    setLoadingLastWorkout(false)
-  }
-
-  const handleDateChange = (value: string) => {
-    setDate(value)
-
-    if (!value) {
-      setDateError('')
-      return
-    }
-
-    const validation = validateDate(value, {
-      allowPast: true,
-      allowFuture: false,
-      maxDaysInPast: 365
-    })
-
-    if (!validation.isValid) {
-      setDateError(validation.error || 'Invalid date')
-    } else {
-      setDateError('')
-    }
-  }
-
-  const setPresetDate = (daysOffset: number) => {
-    const dateString = getDateRelativeToToday(daysOffset)
-    handleDateChange(dateString)
-  }
-
   const handleLoadTemplate = (template: WorkoutTemplate) => {
-    // Convert template exercises to selected exercises with empty sets
-    const exercises: SelectedExercise[] = template.exercises.map((ex) => {
-      // Find the full exercise from EXERCISES to get all details
-      const fullExercise = EXERCISES.find((e) => e.id === ex.exerciseId || e.name === ex.name)
-
-      return {
-        id: crypto.randomUUID(),
-        exerciseId: fullExercise?.id || ex.exerciseId,
-        name: ex.name,
-        category: ex.category,
-        sets: Array(4)
-          .fill(null)
-          .map(() => ({ weight: '', reps: '' })),
-      }
-    })
-
-    setSelectedExercises(exercises)
-    setDate(getTodayDate())
-    setMessage(`Loaded template "${template.name}" (${template.exercises.length} exercises)`)
+    persistence.loadTemplate(template)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setMessage('')
-
-    // Validate date
-    if (!date) {
-      setMessage('Please select a date.')
-      setSaving(false)
-      return
-    }
-
-    const dateValidation = validateDate(date, {
-      allowPast: true,
-      allowFuture: false,
-      maxDaysInPast: 365
-    })
-
-    if (!dateValidation.isValid) {
-      setMessage(dateValidation.error || 'Invalid date')
-      setSaving(false)
-      return
-    }
-
-    if (selectedExercises.length === 0) {
-      setMessage('Please add at least one exercise.')
-      setSaving(false)
-      return
-    }
 
     if (!user) {
       setMessage('You must be logged in to save workouts.')
-      setSaving(false)
       return
     }
 
-    // Validate and build rows
-    const validatedRows: any[] = []
-    let validationError: string | null = null
+    const success = await persistence.saveWorkout({
+      userId: user.id,
+      date,
+      exercises: selectedExercises,
+      durationMinutes: timer.getDurationMinutes(),
+    })
 
-    for (const exercise of selectedExercises) {
-      // Handle cardio exercises
-      if (exercise.category === 'cardio') {
-        if (!exercise.duration || exercise.duration <= 0) {
-          continue // Skip empty cardio exercises
-        }
-
-        const durationValidation = validateDuration(exercise.duration)
-        if (!durationValidation.isValid) {
-          validationError = `${exercise.name}: ${durationValidation.error}`
-          break
-        }
-
-        validatedRows.push({
-          user_id: user.id,
-          date,
-          workout_type: exercise.category,
-          exercise_name: exercise.name,
-          set_number: 1,
-          weight_kg: 0,
-          reps: durationValidation.sanitizedValue,
-        })
-      } else {
-        // Handle strength exercises
-        for (let i = 0; i < exercise.sets.length; i++) {
-          const set = exercise.sets[i]
-
-          // Skip empty sets
-          if (!set.weight || !set.reps) {
-            continue
-          }
-
-          // Validate weight
-          const weightValidation = validateWeight(set.weight)
-          if (!weightValidation.isValid) {
-            validationError = `${exercise.name} Set ${i + 1}: ${weightValidation.error}`
-            break
-          }
-
-          // Validate reps
-          const repsValidation = validateReps(set.reps)
-          if (!repsValidation.isValid) {
-            validationError = `${exercise.name} Set ${i + 1}: ${repsValidation.error}`
-            break
-          }
-
-          validatedRows.push({
-            user_id: user.id,
-            date,
-            workout_type: exercise.category,
-            exercise_name: exercise.name,
-            set_number: i + 1,
-            weight_kg: weightValidation.sanitizedValue,
-            reps: repsValidation.sanitizedValue,
-          })
-        }
-
-        if (validationError) break
-      }
-    }
-
-    if (validationError) {
-      setMessage(validationError)
-      setSaving(false)
-      return
-    }
-
-    if (validatedRows.length === 0) {
-      setMessage('No sets to save. Enter at least one set.')
-      setSaving(false)
-      return
-    }
-
-    const { error } = await supabase.from('workout_logs').insert(validatedRows)
-
-    if (error) {
-      setMessage('Error saving: ' + error.message)
-    } else {
-      const duration = workoutStartTime ? Math.floor((Date.now() - workoutStartTime) / 60000) : 0
-      setMessage(`Saved ${validatedRows.length} sets!${duration > 0 ? ` Duration: ${duration}min` : ''}`)
+    if (success) {
       setDate('')
       setSelectedExercises([])
-      setWorkoutStartTime(null)
-      setElapsedTime(0)
+      timer.reset()
     }
-
-    setSaving(false)
   }
 
   return (
@@ -376,59 +143,17 @@ export default function WorkoutForm() {
         </div>
 
         {/* Date Input */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-300 uppercase tracking-wide">
-            Date
-          </label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            <button
-              type="button"
-              onClick={() => setPresetDate(0)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all"
-            >
-              Today
-            </button>
-            <button
-              type="button"
-              onClick={() => setPresetDate(-1)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all"
-            >
-              Yesterday
-            </button>
-            <button
-              type="button"
-              onClick={() => setPresetDate(-2)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all"
-            >
-              2 Days Ago
-            </button>
-          </div>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => handleDateChange(e.target.value)}
-            max={new Date().toISOString().split('T')[0]}
-            title="Workout date (cannot be in the future or more than 1 year ago)"
-            className={`w-full bg-slate-800/50 border rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm ${
-              dateError
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-slate-700 focus:ring-emerald-500'
-            }`}
-          />
-          {dateError && (
-            <div className="text-sm text-red-400">{dateError}</div>
-          )}
-        </div>
+        <DateSelector value={date} onChange={setDate} />
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
           <button
             type="button"
-            onClick={loadLastWorkout}
-            disabled={loadingLastWorkout}
+            onClick={persistence.loadLastWorkout}
+            disabled={persistence.loadingLastWorkout}
             className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-4 rounded-xl font-semibold shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loadingLastWorkout ? (
+            {persistence.loadingLastWorkout ? (
               <>
                 <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
@@ -478,12 +203,12 @@ export default function WorkoutForm() {
                 <h2 className="text-xl font-semibold text-white">
                   Your Workout ({selectedExercises.length} exercise{selectedExercises.length !== 1 ? 's' : ''})
                 </h2>
-                {workoutStartTime && elapsedTime > 0 && (
+                {timer.isRunning && timer.elapsedTime > 0 && (
                   <div className="flex items-center gap-2 mt-1">
                     <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-sm text-cyan-400 font-medium">{formatDuration(elapsedTime)}</span>
+                    <span className="text-sm text-cyan-400 font-medium">{timer.formatDuration()}</span>
                   </div>
                 )}
               </div>
@@ -541,10 +266,10 @@ export default function WorkoutForm() {
         {selectedExercises.length > 0 && (
           <button
             type="submit"
-            disabled={saving}
+            disabled={persistence.saving}
             className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/25 hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
-            {saving ? (
+            {persistence.saving ? (
               <span className="flex items-center justify-center gap-2">
                 <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                   <circle
