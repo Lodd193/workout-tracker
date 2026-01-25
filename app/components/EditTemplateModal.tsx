@@ -137,6 +137,7 @@ export default function EditTemplateModal({ isOpen, onClose, onSaved, template }
           </div>
           <button
             onClick={onClose}
+            aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all flex items-center justify-center"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,6 +190,7 @@ export default function EditTemplateModal({ isOpen, onClose, onSaved, template }
                       <span className="text-xs text-white font-medium">{ex.name}</span>
                       <button
                         onClick={() => toggleExercise(ex)}
+                        aria-label={`Remove ${ex.name}`}
                         className="ml-1 text-white/60 hover:text-white transition-colors"
                       >
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

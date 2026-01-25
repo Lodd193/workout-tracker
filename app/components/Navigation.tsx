@@ -94,6 +94,7 @@ export default function Navigation() {
                 onClick={handleLogout}
                 className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800"
                 title="Sign out"
+                aria-label="Sign out"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

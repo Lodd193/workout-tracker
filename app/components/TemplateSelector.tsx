@@ -95,6 +95,7 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
           </div>
           <button
             onClick={onClose}
+            aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all flex items-center justify-center"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,6 +214,7 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
                               onClick={() => handleEdit(template)}
                               className="px-3 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 text-sm font-semibold transition-all"
                               title="Edit template"
+                              aria-label="Edit template"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -231,6 +233,7 @@ export default function TemplateSelector({ isOpen, onClose, onSelectTemplate }: 
                                   : 'bg-slate-700 text-slate-400 hover:bg-red-500/20 hover:text-red-400'
                               }`}
                               title="Delete template"
+                              aria-label="Delete template"
                             >
                               {confirmDelete === template.id ? 'Confirm?' : (
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

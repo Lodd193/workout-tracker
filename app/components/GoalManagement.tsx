@@ -390,6 +390,7 @@ export default function GoalManagement() {
                       onClick={() => handleEdit(goal)}
                       className="p-2 text-slate-400 hover:text-emerald-400 transition-colors"
                       title="Edit"
+                      aria-label="Edit goal"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -400,6 +401,7 @@ export default function GoalManagement() {
                       onClick={() => handleDelete(goal.id)}
                       className="p-2 text-slate-400 hover:text-red-400 transition-colors"
                       title="Delete"
+                      aria-label="Delete goal"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
