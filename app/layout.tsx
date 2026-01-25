@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navigation from "./components/Navigation";
-import { SettingsProvider } from "@/lib/contexts/SettingsContext";
-import { AuthProvider } from "@/lib/contexts/AuthContext";
 import PWAInstaller from "./components/PWAInstaller";
+import ClientProviders from "./components/ClientProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,12 +55,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950`}
       >
         <PWAInstaller />
-        <AuthProvider>
-          <SettingsProvider>
-            <Navigation />
-            {children}
-          </SettingsProvider>
-        </AuthProvider>
+        <ClientProviders>
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );
