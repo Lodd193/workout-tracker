@@ -128,7 +128,8 @@ export function validateDate(dateString: string, options?: {
     return { isValid: false, error: 'Please enter a valid date' }
   }
 
-  const date = new Date(dateString)
+  // Parse as local midnight to avoid UTC offset making today appear as "future"
+  const date = new Date(dateString + 'T00:00:00')
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
