@@ -7,6 +7,6 @@
   <rect x="64" y="192" width="64" height="128" rx="10" fill="#a3e635"/>
   <!-- Right weight plate -->
   <rect x="384" y="192" width="64" height="128" rx="10" fill="#a3e635"/>
-  <!-- Upward trending graph line (lighter, as overlay) -->
+  <!-- Upward trending graph line -->
   <polyline points="149,341 213,277 277,299 341,213 405,171" stroke="#a3e635" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
 </svg>
