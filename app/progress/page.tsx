@@ -4,71 +4,52 @@ import { useState, useEffect } from 'react'
 import {
   fetchAnalyticsSummary,
   fetchPersonalRecords,
-  fetchWorkoutFrequency,
   fetchUniqueExercises,
 } from '@/lib/api/analytics'
-import { AnalyticsSummary, PersonalRecord, WorkoutDayData } from '@/lib/types'
+import { AnalyticsSummary, PersonalRecord } from '@/lib/types'
+import { useSettings } from '@/lib/contexts/SettingsContext'
 import WeightProgressionChart from '@/app/components/charts/WeightProgressionChart'
 import PersonalRecordsGrid from '@/app/components/charts/PersonalRecordsGrid'
-import WorkoutFrequencyHeatmap from '@/app/components/charts/WorkoutFrequencyHeatmap'
 import ChartSkeleton from '@/app/components/charts/ChartSkeleton'
 import VolumeProgressionChart from '@/app/components/charts/VolumeProgressionChart'
-import AdvancedMetricsPanel from '@/app/components/charts/AdvancedMetricsPanel'
-import WeekComparisonCard from '@/app/components/charts/WeekComparisonCard'
 import WorkoutCalendar from '@/app/components/WorkoutCalendar'
 import WeeklyCardioTracker from '@/app/components/WeeklyCardioTracker'
-import GoalsDashboard from '@/app/components/GoalsDashboard'
-import PredictiveInsights from '@/app/components/PredictiveInsights'
-import WeeklyProgressionChart from '@/app/components/charts/WeeklyProgressionChart'
-import VolumeLoadTrendChart from '@/app/components/charts/VolumeLoadTrendChart'
 import ProgressiveOverloadPanel from '@/app/components/ProgressiveOverloadPanel'
-import SetConsistencyAnalysis from '@/app/components/SetConsistencyAnalysis'
-
-type TabType = 'overview' | 'analytics' | 'insights'
 
 export default function ProgressPage() {
+  const { formatWeight } = useSettings()
   const [loading, setLoading] = useState(true)
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null)
   const [personalRecords, setPersonalRecords] = useState<PersonalRecord[]>([])
-  const [frequencyData, setFrequencyData] = useState<WorkoutDayData[]>([])
   const [exercises, setExercises] = useState<string[]>([])
   const [selectedExercise, setSelectedExercise] = useState<string>('')
-  const [activeTab, setActiveTab] = useState<TabType>('overview')
 
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true)
-        const [summaryData, prData, freqData, exerciseList] = await Promise.all([
+        const [summaryData, prData, exerciseList] = await Promise.all([
           fetchAnalyticsSummary(),
           fetchPersonalRecords(),
-          fetchWorkoutFrequency(),
           fetchUniqueExercises(),
         ])
-
         setSummary(summaryData)
         setPersonalRecords(prData)
-        setFrequencyData(freqData)
         setExercises(exerciseList)
-
-        // Auto-select first exercise if available
-        if (exerciseList.length > 0) {
-          setSelectedExercise(exerciseList[0])
-        }
+        if (exerciseList.length > 0) setSelectedExercise(exerciseList[0])
       } catch (error) {
         console.error('Error loading analytics:', error)
       } finally {
         setLoading(false)
       }
     }
-
     loadData()
   }, [])
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="min-h-screen bg-black py-8 px-4">
+        <div className="max-w-5xl mx-auto space-y-6">
           <ChartSkeleton />
           <ChartSkeleton />
           <ChartSkeleton />
@@ -79,248 +60,105 @@ export default function ProgressPage() {
 
   if (!summary || exercises.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center py-20">
-            <svg className="w-20 h-20 mx-auto text-slate-700 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
-            </svg>
-            <h2 className="text-2xl font-bold text-slate-300 mb-3">No Workout Data Yet</h2>
-            <p className="text-slate-500">Start logging workouts to see your progress analytics</p>
-          </div>
+      <div className="min-h-screen bg-black py-8 px-4">
+        <div className="max-w-5xl mx-auto text-center py-24">
+          <div className="text-7xl font-black text-white mb-4">0</div>
+          <p className="text-zinc-500 text-lg">No workouts logged yet.</p>
+          <p className="text-zinc-600 text-sm mt-2">Start training to see your progress.</p>
         </div>
       </div>
     )
   }
 
+  const topPR = [...personalRecords].sort((a, b) => b.max_weight - a.max_weight)[0]
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Page Header */}
-        <div className="text-center">
-          <h1
-            className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400
-                       bg-clip-text text-transparent tracking-tight"
-          >
-            Your Progress
-          </h1>
-          <p className="text-slate-400 mt-2">Track your strength gains and consistency</p>
+    <div className="min-h-screen bg-black py-8 px-4">
+      <div className="max-w-5xl mx-auto space-y-6">
+
+        {/* Hero Stats */}
+        <div className="grid grid-cols-3 divide-x divide-[#222222] border border-[#222222] rounded-xl overflow-hidden">
+          <HeroStat
+            value={`${summary.currentStreak}`}
+            label="DAY STREAK"
+            accent
+          />
+          <HeroStat
+            value={topPR ? formatWeight(topPR.max_weight) : '—'}
+            label={topPR ? `${topPR.exercise_name.slice(0, 14).toUpperCase()} PR` : 'NO PR YET'}
+          />
+          <HeroStat
+            value={String(summary.avgWorkoutsPerWeek)}
+            label="AVG / WEEK"
+          />
         </div>
 
-        {/* Tabs Navigation */}
-        <div className="flex justify-center">
-          <div className="inline-flex bg-slate-800/60 border border-slate-700 rounded-xl p-1 backdrop-blur-md">
-            <TabButton
-              active={activeTab === 'overview'}
-              onClick={() => setActiveTab('overview')}
-              icon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-              }
+        {/* Page-level Exercise Selector */}
+        <div className="flex items-center gap-3">
+          <span className="text-zinc-600 text-xs uppercase tracking-widest font-semibold">Viewing</span>
+          <div className="relative">
+            <select
+              value={selectedExercise}
+              onChange={(e) => setSelectedExercise(e.target.value)}
+              className="appearance-none bg-[#111111] border border-[#222222] rounded-lg
+                         px-4 py-2 pr-9 text-white font-medium text-sm
+                         focus:outline-none focus:border-lime-400 transition-colors cursor-pointer"
             >
-              Overview
-            </TabButton>
-            <TabButton
-              active={activeTab === 'analytics'}
-              onClick={() => setActiveTab('analytics')}
-              icon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              }
+              {exercises.map((exercise) => (
+                <option key={exercise} value={exercise}>{exercise}</option>
+              ))}
+            </select>
+            <svg
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
-              Exercise Analytics
-            </TabButton>
-            <TabButton
-              active={activeTab === 'insights'}
-              onClick={() => setActiveTab('insights')}
-              icon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              }
-            >
-              Insights & Trends
-            </TabButton>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
         </div>
 
-        {/* Tab Content */}
-        {activeTab === 'overview' && (
-          <div className="space-y-8">
-            {/* Summary Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              <StatCard label="Total Workouts" value={summary.totalWorkouts} icon="calendar" />
-              <StatCard label="Total Sets" value={summary.totalSets} icon="layers" />
-              <StatCard label="Exercises" value={summary.totalExercises} icon="activity" />
-              <StatCard label="Current Streak" value={`${summary.currentStreak}d`} icon="flame" highlight />
-              <StatCard label="Longest Streak" value={`${summary.longestStreak}d`} icon="trophy" />
-              <StatCard label="Avg/Week" value={summary.avgWorkoutsPerWeek} icon="trending" />
-            </div>
+        {/* Weight Progression */}
+        <WeightProgressionChart
+          selectedExercise={selectedExercise}
+          exercises={exercises}
+          onExerciseChange={setSelectedExercise}
+        />
 
-            {/* Goals Dashboard */}
-            <GoalsDashboard />
+        {/* Volume Progression */}
+        <VolumeProgressionChart
+          selectedExercise={selectedExercise}
+          exercises={exercises}
+          onExerciseChange={setSelectedExercise}
+        />
 
-            {/* Workout Calendar with Streaks */}
-            <WorkoutCalendar />
+        {/* Progressive Overload Recommendation */}
+        <ProgressiveOverloadPanel
+          selectedExercise={selectedExercise}
+          exercises={exercises}
+          onExerciseChange={setSelectedExercise}
+        />
 
-            {/* Weekly Cardio Tracker */}
-            <WeeklyCardioTracker />
-          </div>
-        )}
+        {/* Calendar + Cardio side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <WorkoutCalendar />
+          <WeeklyCardioTracker />
+        </div>
 
-        {activeTab === 'analytics' && (
-          <div className="space-y-8">
-            {/* Progressive Overload Recommendations */}
-            <ProgressiveOverloadPanel
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
+        {/* Personal Records */}
+        <PersonalRecordsGrid records={personalRecords} />
 
-            {/* Week-over-Week Progression */}
-            <WeeklyProgressionChart
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
-
-            {/* Volume Load Trends */}
-            <VolumeLoadTrendChart
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
-
-            {/* Set Consistency Analysis */}
-            <SetConsistencyAnalysis
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
-
-            {/* Weight Progression Chart */}
-            <WeightProgressionChart
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
-
-            {/* Volume Progression Chart */}
-            <VolumeProgressionChart
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
-
-            {/* Advanced Metrics Panel (1RM & Progress Rates) */}
-            <AdvancedMetricsPanel
-              selectedExercise={selectedExercise}
-              exercises={exercises}
-              onExerciseChange={setSelectedExercise}
-            />
-
-            {/* Personal Records Grid */}
-            <PersonalRecordsGrid records={personalRecords} />
-          </div>
-        )}
-
-        {activeTab === 'insights' && (
-          <div className="space-y-8">
-            {/* Predictive Insights */}
-            <PredictiveInsights />
-
-            {/* Week-over-Week Comparison */}
-            <WeekComparisonCard />
-
-            {/* Workout Frequency Heatmap */}
-            <WorkoutFrequencyHeatmap data={frequencyData} />
-          </div>
-        )}
       </div>
     </div>
   )
 }
 
-// Stat Card Component
-function StatCard({
-  label,
-  value,
-  icon,
-  highlight = false,
-}: {
-  label: string
-  value: string | number
-  icon: string
-  highlight?: boolean
-}) {
-  const iconPaths: Record<string, string> = {
-    calendar: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
-    layers: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z',
-    activity: 'M13 10V3L4 14h7v7l9-11h-7z',
-    flame:
-      'M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z',
-    trophy: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-    trending: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
-  }
-
+function HeroStat({ value, label, accent = false }: { value: string; label: string; accent?: boolean }) {
   return (
-    <div
-      className={`bg-slate-800/60 border rounded-xl p-4 backdrop-blur-md
-                    transition-all duration-300 hover:border-slate-600 ${
-                      highlight ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/20' : 'border-slate-700'
-                    }`}
-    >
-      <div className="flex items-center gap-3 mb-2">
-        <div
-          className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-            highlight ? 'bg-gradient-to-br from-emerald-500 to-cyan-500' : 'bg-slate-700'
-          }`}
-        >
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={iconPaths[icon]} />
-          </svg>
-        </div>
+    <div className="bg-black px-4 py-8 text-center">
+      <div className={`text-5xl font-black tracking-tight tabular-nums ${accent ? 'text-lime-400' : 'text-white'}`}>
+        {value}
       </div>
-      <div className="text-2xl font-bold text-white mb-1">{value}</div>
-      <div className="text-xs text-slate-400 uppercase tracking-wide">{label}</div>
+      <div className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 mt-2 uppercase">{label}</div>
     </div>
-  )
-}
-
-// Tab Button Component
-function TabButton({
-  active,
-  onClick,
-  icon,
-  children,
-}: {
-  active: boolean
-  onClick: () => void
-  icon: React.ReactNode
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200
-                ${
-                  active
-                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-                }`}
-    >
-      {icon}
-      <span className="hidden sm:inline">{children}</span>
-    </button>
   )
 }

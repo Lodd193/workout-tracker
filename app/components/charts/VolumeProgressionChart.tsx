@@ -10,11 +10,7 @@ interface VolumeProgressionChartProps {
   onExerciseChange: (exercise: string) => void
 }
 
-export default function VolumeProgressionChart({
-  selectedExercise,
-  exercises,
-  onExerciseChange,
-}: VolumeProgressionChartProps) {
+export default function VolumeProgressionChart({ selectedExercise }: VolumeProgressionChartProps) {
   const [data, setData] = useState<VolumeDataPoint[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'exercise' | 'total'>('total')
@@ -42,110 +38,90 @@ export default function VolumeProgressionChart({
 
   if (loading) {
     return (
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md h-96 animate-pulse">
-        <div className="h-full bg-slate-700/30 rounded-lg"></div>
+      <div className="bg-[#111111] border border-[#222222] rounded-xl p-6 h-96 animate-pulse">
+        <div className="h-full bg-[#1A1A1A] rounded-lg" />
       </div>
     )
   }
 
   return (
-    <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div className="bg-[#111111] border border-[#222222] rounded-xl p-6">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold text-white">Training Volume Progression</h2>
-          <p className="text-slate-400 text-sm mt-1">Total work done (Weight × Reps)</p>
+          <h2 className="text-lg font-bold text-white">Volume Progression</h2>
+          <p className="text-zinc-600 text-sm mt-0.5">Total work done (weight × reps)</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
-          {/* View Mode Toggle */}
-          <div className="flex bg-slate-700/50 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('total')}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                viewMode === 'total'
-                  ? 'bg-emerald-500 text-white'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Total Volume
-            </button>
-            <button
-              onClick={() => setViewMode('exercise')}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                viewMode === 'exercise'
-                  ? 'bg-emerald-500 text-white'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Per Exercise
-            </button>
-          </div>
-
-          {/* Exercise Selector (only show when per-exercise view) */}
-          {viewMode === 'exercise' && (
-            <select
-              value={selectedExercise}
-              onChange={(e) => onExerciseChange(e.target.value)}
-              className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            >
-              {exercises.map((exercise) => (
-                <option key={exercise} value={exercise}>
-                  {exercise}
-                </option>
-              ))}
-            </select>
-          )}
+        <div className="flex bg-[#1A1A1A] rounded-lg p-1">
+          <button
+            onClick={() => setViewMode('total')}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+              viewMode === 'total' ? 'bg-lime-400 text-black' : 'text-zinc-500 hover:text-white'
+            }`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setViewMode('exercise')}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+              viewMode === 'exercise' ? 'bg-lime-400 text-black' : 'text-zinc-500 hover:text-white'
+            }`}
+          >
+            This exercise
+          </button>
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-slate-700/30 rounded-lg p-3">
-          <div className="text-slate-400 text-xs uppercase tracking-wide mb-1">Total Volume</div>
+        <div className="bg-[#1A1A1A] rounded-lg p-3">
+          <div className="text-zinc-600 text-xs uppercase tracking-wide mb-1">Total</div>
           <div className="text-white text-lg font-bold">{Math.round(totalVolume).toLocaleString()} kg</div>
         </div>
-        <div className="bg-slate-700/30 rounded-lg p-3">
-          <div className="text-slate-400 text-xs uppercase tracking-wide mb-1">Avg Volume/Day</div>
+        <div className="bg-[#1A1A1A] rounded-lg p-3">
+          <div className="text-zinc-600 text-xs uppercase tracking-wide mb-1">Avg / day</div>
           <div className="text-white text-lg font-bold">{Math.round(avgVolume).toLocaleString()} kg</div>
         </div>
-        <div className="bg-slate-700/30 rounded-lg p-3">
-          <div className="text-slate-400 text-xs uppercase tracking-wide mb-1">Peak Volume</div>
+        <div className="bg-[#1A1A1A] rounded-lg p-3">
+          <div className="text-zinc-600 text-xs uppercase tracking-wide mb-1">Peak</div>
           <div className="text-white text-lg font-bold">{Math.round(peakVolume).toLocaleString()} kg</div>
         </div>
       </div>
 
-      {/* Chart */}
       {data.length > 0 ? (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={280}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
-            <XAxis dataKey="displayDate" stroke="#94a3b8" style={{ fontSize: '12px' }} />
-            <YAxis stroke="#94a3b8" label={{ value: 'Volume (kg)', angle: -90, position: 'insideLeft', style: { fill: '#94a3b8' } }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1f1f1f" opacity={0.8} />
+            <XAxis dataKey="displayDate" stroke="#3f3f46" style={{ fontSize: '11px' }} tickLine={false} />
+            <YAxis
+              stroke="#3f3f46"
+              style={{ fontSize: '11px' }}
+              tickLine={false}
+              label={{ value: 'Volume (kg)', angle: -90, position: 'insideLeft', style: { fill: '#52525b' } }}
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1e293b',
-                border: '1px solid #475569',
+                backgroundColor: '#0a0a0a',
+                border: '1px solid #222222',
                 borderRadius: '8px',
                 color: '#fff',
               }}
-              labelStyle={{ color: '#94a3b8' }}
+              labelStyle={{ color: '#52525b' }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ paddingTop: '16px' }} iconType="line" />
             <Line
               type="monotone"
               dataKey="totalVolume"
-              stroke="#10b981"
-              strokeWidth={3}
-              dot={{ fill: '#10b981', r: 4 }}
-              activeDot={{ r: 6 }}
+              stroke="#a3e635"
+              strokeWidth={2}
+              dot={{ fill: '#a3e635', strokeWidth: 0, r: 3 }}
+              activeDot={{ r: 5 }}
               name="Volume (kg)"
             />
           </LineChart>
         </ResponsiveContainer>
       ) : (
-        <div className="text-center py-12 text-slate-500">
-          <p>No volume data available for this selection</p>
+        <div className="text-center py-12 text-zinc-600">
+          No volume data for this selection
         </div>
       )}
     </div>

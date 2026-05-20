@@ -12,11 +12,7 @@ interface ProgressiveOverloadPanelProps {
   onExerciseChange: (exercise: string) => void
 }
 
-export default function ProgressiveOverloadPanel({
-  selectedExercise,
-  exercises,
-  onExerciseChange,
-}: ProgressiveOverloadPanelProps) {
+export default function ProgressiveOverloadPanel({ selectedExercise }: ProgressiveOverloadPanelProps) {
   const { formatWeight } = useSettings()
   const [recommendation, setRecommendation] = useState<ProgressiveOverloadRecommendation | null>(null)
   const [loading, setLoading] = useState(true)
@@ -43,113 +39,80 @@ export default function ProgressiveOverloadPanel({
 
   if (!recommendation) {
     return (
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 backdrop-blur-md text-center">
-        <div className="w-16 h-16 mx-auto mb-4 bg-slate-700/50 rounded-full flex items-center justify-center">
-          <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M13 10V3L4 14h7v7l9-11h-7z" />
+      <div className="bg-[#111111] border border-[#222222] rounded-xl p-8 text-center">
+        <div className="w-12 h-12 mx-auto mb-4 bg-[#1A1A1A] rounded-full flex items-center justify-center">
+          <svg className="w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </div>
-        <h3 className="text-white font-semibold mb-2">Progressive Overload Recommendations</h3>
-        <p className="text-slate-400 text-sm">
-          Need at least 6 sets of data to generate recommendations
-        </p>
+        <h3 className="text-white font-semibold mb-2">Progressive Overload</h3>
+        <p className="text-zinc-600 text-sm">Need at least 6 sets of data to generate recommendations</p>
       </div>
     )
   }
 
   const confidenceColors = {
-    high: 'from-emerald-500 to-green-500',
-    medium: 'from-yellow-500 to-orange-500',
-    low: 'from-slate-500 to-slate-600',
+    high: 'from-lime-400 to-lime-500',
+    medium: 'from-yellow-400 to-amber-500',
+    low: 'from-zinc-500 to-zinc-600',
   }
 
   const confidenceBorderColors = {
-    high: 'border-emerald-500/50',
-    medium: 'border-yellow-500/50',
-    low: 'border-slate-500/50',
+    high: 'border-lime-400/25',
+    medium: 'border-yellow-400/25',
+    low: 'border-[#333333]',
   }
 
   return (
-    <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-xl flex items-center justify-center">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-white">Progressive Overload</h2>
-            <p className="text-slate-400 text-sm">Smart weight progression recommendations</p>
-          </div>
+    <div className="bg-[#111111] border border-[#222222] rounded-xl p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-8 h-8 bg-lime-400 rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
         </div>
-
-        {/* Exercise Selector */}
-        <select
-          value={selectedExercise}
-          onChange={(e) => onExerciseChange(e.target.value)}
-          className="bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
-        >
-          {exercises.map((exercise) => (
-            <option key={exercise} value={exercise}>
-              {exercise}
-            </option>
-          ))}
-        </select>
+        <div>
+          <h2 className="text-lg font-bold text-white">Progressive Overload</h2>
+          <p className="text-zinc-600 text-sm">Weight progression recommendation</p>
+        </div>
       </div>
 
-      {/* Main Recommendation Card */}
-      <div className={`border-2 ${confidenceBorderColors[recommendation.confidence]} rounded-xl p-6 mb-6 bg-slate-700/30`}>
-        {/* Status Badge */}
+      <div className={`border ${confidenceBorderColors[recommendation.confidence]} rounded-xl p-5 mb-5 bg-[#0D0D0D]`}>
         <div className="flex items-center justify-between mb-4">
-          <span className={`px-3 py-1 rounded-full bg-gradient-to-r ${confidenceColors[recommendation.confidence]} text-white text-sm font-semibold`}>
-            {recommendation.confidence.charAt(0).toUpperCase() + recommendation.confidence.slice(1)} Confidence
+          <span className={`px-2.5 py-1 rounded-full bg-gradient-to-r ${confidenceColors[recommendation.confidence]} text-black text-xs font-bold uppercase tracking-wide`}>
+            {recommendation.confidence} confidence
           </span>
           {recommendation.ready_to_progress && (
-            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-semibold border border-emerald-500/30">
-              ✓ Ready to Progress
+            <span className="px-2.5 py-1 rounded-full bg-lime-400/10 text-lime-400 text-xs font-bold border border-lime-400/20">
+              Ready to progress
             </span>
           )}
         </div>
 
-        {/* Recommendation Text */}
-        <div className="mb-6">
-          <p className="text-white text-lg leading-relaxed">
-            {recommendation.reasoning}
-          </p>
-        </div>
+        <p className="text-white text-base leading-relaxed mb-5">{recommendation.reasoning}</p>
 
-        {/* Weight Progression */}
-        <div className="flex items-center gap-4 justify-center mb-6">
+        <div className="flex items-center gap-6 justify-center mb-5">
           <div className="text-center">
-            <div className="text-slate-400 text-sm mb-1">Current Weight</div>
-            <div className="text-3xl font-bold text-white">
-              {formatWeight(recommendation.current_working_weight)}
-            </div>
+            <div className="text-zinc-600 text-xs uppercase tracking-wide mb-1">Current</div>
+            <div className="text-3xl font-black text-white">{formatWeight(recommendation.current_working_weight)}</div>
           </div>
-
-          <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
-
           <div className="text-center">
-            <div className="text-slate-400 text-sm mb-1">Suggested Next</div>
-            <div className={`text-3xl font-bold bg-gradient-to-r ${confidenceColors[recommendation.confidence]} bg-clip-text text-transparent`}>
+            <div className="text-zinc-600 text-xs uppercase tracking-wide mb-1">Target</div>
+            <div className={`text-3xl font-black bg-gradient-to-r ${confidenceColors[recommendation.confidence]} bg-clip-text text-transparent`}>
               {formatWeight(recommendation.suggested_next_weight)}
             </div>
           </div>
         </div>
 
-        {/* Consistency Score */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-slate-400 text-sm">Performance Consistency</span>
-            <span className="text-white font-semibold">{recommendation.consistency_score}%</span>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-zinc-600 text-xs uppercase tracking-wide">Consistency</span>
+            <span className="text-white text-sm font-bold">{recommendation.consistency_score}%</span>
           </div>
-          <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[#1A1A1A] rounded-full overflow-hidden">
             <div
               className={`h-full bg-gradient-to-r ${confidenceColors[recommendation.confidence]} transition-all duration-500`}
               style={{ width: `${recommendation.consistency_score}%` }}
@@ -158,47 +121,26 @@ export default function ProgressiveOverloadPanel({
         </div>
       </div>
 
-      {/* Tips Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <TipCard
-          icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
+          icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
           title="When to Increase"
-          description="Hit 10+ reps consistently for 2-3 sessions before adding weight"
+          description="Hit 10+ reps consistently for 2–3 sessions before adding weight"
         />
         <TipCard
-          icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
+          icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
           title="Rest Between Sets"
-          description="2-3 minutes for heavy compounds, 60-90s for accessories"
+          description="2–3 min for heavy compounds, 60–90s for accessories"
         />
         <TipCard
-          icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-          }
+          icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>}
           title="Deload Weeks"
-          description="Every 4-6 weeks, reduce weight by 40% to recover"
+          description="Every 4–6 weeks, reduce weight by 40% to recover"
         />
         <TipCard
-          icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-          }
+          icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>}
           title="Track Everything"
-          description="Log every set to identify patterns and optimize progression"
+          description="Log every set to identify patterns and optimise progression"
         />
       </div>
     </div>
@@ -207,14 +149,14 @@ export default function ProgressiveOverloadPanel({
 
 function TipCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="bg-slate-700/30 rounded-lg p-4 border border-slate-600/50 hover:border-orange-500/50 transition-all">
+    <div className="bg-[#0D0D0D] rounded-lg p-4 border border-[#222222] hover:border-lime-400/20 transition-colors">
       <div className="flex items-start gap-3">
-        <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center text-orange-400 flex-shrink-0">
+        <div className="w-7 h-7 bg-lime-400/10 rounded-lg flex items-center justify-center text-lime-400 flex-shrink-0">
           {icon}
         </div>
         <div>
           <h4 className="text-white font-semibold text-sm mb-1">{title}</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">{description}</p>
+          <p className="text-zinc-600 text-xs leading-relaxed">{description}</p>
         </div>
       </div>
     </div>
