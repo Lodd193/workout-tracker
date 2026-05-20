@@ -203,34 +203,33 @@ export default function GoalManagement() {
 
   if (loading) {
     return (
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 animate-pulse">
-        <div className="h-8 bg-slate-700 rounded w-48 mb-4"></div>
-        <div className="h-32 bg-slate-700 rounded"></div>
+      <div className="bg-[#111111] border border-[#222222] rounded-2xl p-6 animate-pulse">
+        <div className="h-8 bg-[#1A1A1A] rounded w-48 mb-4"></div>
+        <div className="h-32 bg-[#1A1A1A] rounded"></div>
       </div>
     )
   }
 
   return (
     <>
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md hover:border-slate-600 transition-all">
+      <div className="bg-[#111111] border border-[#222222] rounded-2xl p-6 hover:border-[#333333] transition-all">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-lime-400 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white">Weight Goals</h3>
-              <p className="text-sm text-slate-400 mt-0.5">Set and track exercise-specific weight targets</p>
+              <p className="text-sm text-zinc-500 mt-0.5">Set and track exercise-specific weight targets</p>
             </div>
           </div>
           {!showAddForm && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold rounded-lg
-                       hover:from-emerald-600 hover:to-cyan-600 transition-all shadow-lg"
+              className="px-4 py-2 bg-lime-400 text-black font-semibold rounded-lg hover:bg-lime-300 transition-all"
             >
               + Add Goal
             </button>
@@ -239,18 +238,18 @@ export default function GoalManagement() {
 
         {/* Add/Edit Form */}
         {showAddForm && (
-          <div className="mb-6 bg-slate-700/30 rounded-xl p-4 border border-slate-600">
+          <div className="mb-6 bg-[#1A1A1A] rounded-xl p-4 border border-[#222222]">
             <h4 className="text-white font-semibold mb-4">
               {editingGoal ? 'Edit Goal' : 'New Goal'}
             </h4>
 
             {/* Exercise Selection */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-slate-300 mb-2">Exercise</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">Exercise</label>
               <button
                 onClick={() => setShowExerciseSelector(true)}
-                className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-left
-                         text-white hover:border-slate-500 transition-colors"
+                className="w-full bg-[#111111] border border-[#222222] rounded-lg px-4 py-2.5 text-left
+                         text-white hover:border-[#333333] transition-colors"
               >
                 {formData.exercise_name || 'Select an exercise...'}
               </button>
@@ -258,7 +257,7 @@ export default function GoalManagement() {
 
             {/* Target Weight */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-zinc-300 mb-2">
                 Target Weight ({weightUnit})
               </label>
               <input
@@ -269,11 +268,11 @@ export default function GoalManagement() {
                 value={formData.target_weight_kg || ''}
                 onChange={(e) => handleWeightChange(e.target.value)}
                 title={`Target weight (0.5-${weightUnit === 'lbs' ? '2205' : '1000'}${weightUnit})`}
-                className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
+                className={`w-full bg-[#111111] border rounded-lg px-4 py-2.5 text-white
                          focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
                            formErrors.weight
                              ? 'border-red-500 focus:ring-red-500'
-                             : 'border-slate-600 focus:ring-emerald-500'
+                             : 'border-[#222222] focus:ring-lime-400'
                          }`}
                 placeholder="e.g., 100"
               />
@@ -284,7 +283,7 @@ export default function GoalManagement() {
 
             {/* Target Date (Optional) */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-zinc-300 mb-2">
                 Target Date (Optional)
               </label>
               <input
@@ -293,11 +292,11 @@ export default function GoalManagement() {
                 value={formData.target_date || ''}
                 onChange={(e) => handleDateChange(e.target.value)}
                 title="Target date (must be in the future, max 3 years ahead)"
-                className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
+                className={`w-full bg-[#111111] border rounded-lg px-4 py-2.5 text-white
                          focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
                            formErrors.date
                              ? 'border-red-500 focus:ring-red-500'
-                             : 'border-slate-600 focus:ring-emerald-500'
+                             : 'border-[#222222] focus:ring-lime-400'
                          }`}
               />
               {formErrors.date && (
@@ -307,7 +306,7 @@ export default function GoalManagement() {
 
             {/* Notes (Optional) */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-zinc-300 mb-2">
                 Notes (Optional)
               </label>
               <textarea
@@ -315,11 +314,11 @@ export default function GoalManagement() {
                 value={formData.notes || ''}
                 onChange={(e) => handleNotesChange(e.target.value)}
                 title="Notes (max 500 characters)"
-                className={`w-full bg-slate-800 border rounded-lg px-4 py-2.5 text-white
+                className={`w-full bg-[#111111] border rounded-lg px-4 py-2.5 text-white
                          focus:outline-none focus:ring-2 focus:border-transparent resize-none transition-colors ${
                            formErrors.notes
                              ? 'border-red-500 focus:ring-red-500'
-                             : 'border-slate-600 focus:ring-emerald-500'
+                             : 'border-[#222222] focus:ring-lime-400'
                          }`}
                 rows={2}
                 placeholder="e.g., Focus on progressive overload"
@@ -327,7 +326,7 @@ export default function GoalManagement() {
               {formErrors.notes && (
                 <div className="mt-1 text-sm text-red-400">{formErrors.notes}</div>
               )}
-              <div className="mt-1 text-xs text-slate-500 text-right">
+              <div className="mt-1 text-xs text-zinc-600 text-right">
                 {(formData.notes || '').length} / 500
               </div>
             </div>
@@ -336,15 +335,13 @@ export default function GoalManagement() {
             <div className="flex gap-3">
               <button
                 onClick={handleSubmit}
-                className="flex-1 bg-emerald-500 text-white font-semibold py-2 rounded-lg
-                         hover:bg-emerald-600 transition-colors"
+                className="flex-1 bg-lime-400 text-black font-semibold py-2 rounded-lg hover:bg-lime-300 transition-colors"
               >
                 {editingGoal ? 'Update Goal' : 'Create Goal'}
               </button>
               <button
                 onClick={cancelEdit}
-                className="px-6 bg-slate-600 text-white font-semibold py-2 rounded-lg
-                         hover:bg-slate-500 transition-colors"
+                className="px-6 bg-[#1A1A1A] text-zinc-300 font-semibold py-2 rounded-lg hover:bg-[#222222] hover:text-white transition-colors border border-[#333333]"
               >
                 Cancel
               </button>
@@ -355,25 +352,24 @@ export default function GoalManagement() {
         {/* Goals List */}
         {goals.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-slate-400">No active goals yet</p>
-            <p className="text-slate-500 text-sm mt-1">Create your first weight goal to start tracking progress</p>
+            <p className="text-zinc-500">No active goals yet</p>
+            <p className="text-zinc-600 text-sm mt-1">Create your first weight goal to start tracking progress</p>
           </div>
         ) : (
           <div className="space-y-3">
             {goals.map((goal) => (
               <div
                 key={goal.id}
-                className="bg-slate-700/40 border border-slate-600 rounded-lg p-4
-                         hover:border-slate-500 transition-all"
+                className="bg-[#1A1A1A] border border-[#222222] rounded-lg p-4 hover:border-[#333333] transition-all"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h4 className="text-white font-semibold">{goal.exercise_name}</h4>
-                    <p className="text-emerald-400 text-lg font-bold mt-1">
+                    <p className="text-lime-400 text-lg font-bold mt-1">
                       Target: {formatWeight(goal.target_weight_kg)}
                     </p>
                     {goal.target_date && (
-                      <p className="text-slate-400 text-sm mt-1">
+                      <p className="text-zinc-500 text-sm mt-1">
                         By {new Date(goal.target_date).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -382,13 +378,13 @@ export default function GoalManagement() {
                       </p>
                     )}
                     {goal.notes && (
-                      <p className="text-slate-500 text-sm mt-2 italic">{goal.notes}</p>
+                      <p className="text-zinc-600 text-sm mt-2 italic">{goal.notes}</p>
                     )}
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(goal)}
-                      className="p-2 text-slate-400 hover:text-emerald-400 transition-colors"
+                      className="p-2 text-zinc-500 hover:text-lime-400 transition-colors"
                       title="Edit"
                       aria-label="Edit goal"
                     >
@@ -399,7 +395,7 @@ export default function GoalManagement() {
                     </button>
                     <button
                       onClick={() => handleDelete(goal.id)}
-                      className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+                      className="p-2 text-zinc-500 hover:text-red-400 transition-colors"
                       title="Delete"
                       aria-label="Delete goal"
                     >
@@ -416,9 +412,9 @@ export default function GoalManagement() {
         )}
 
         {/* Info Box */}
-        <div className="mt-4 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
-          <p className="text-sm text-slate-300">
-            <span className="font-semibold text-amber-400">Tip:</span> Goals are synced across all your devices.
+        <div className="mt-4 bg-lime-400/5 border border-lime-400/20 rounded-lg p-3">
+          <p className="text-sm text-zinc-300">
+            <span className="font-semibold text-lime-400">Tip:</span> Goals are synced across all your devices.
             Track your progress on the Progress page.
           </p>
         </div>
