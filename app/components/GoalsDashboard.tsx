@@ -39,7 +39,7 @@ export default function GoalsDashboard() {
   const activeGoals = goalsProgress.filter(gp => !gp.isAchieved)
 
   return (
-    <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md shadow-lg">
+    <div className="bg-[#111111] border border-[#222222] rounded-2xl p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -50,11 +50,11 @@ export default function GoalsDashboard() {
             </svg>
             Weight Goals
           </h2>
-          <p className="text-slate-400 text-sm mt-1">Track progress toward your targets</p>
+          <p className="text-zinc-500 text-sm mt-1">Track progress toward your targets</p>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-white">{activeGoals.length}</div>
-          <div className="text-xs text-slate-400">Active Goals</div>
+          <div className="text-xs text-zinc-500">Active Goals</div>
         </div>
       </div>
 
@@ -67,8 +67,8 @@ export default function GoalsDashboard() {
 
       {/* Achieved Goals Section */}
       {achievedGoals.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-slate-700">
-          <h3 className="text-lg font-semibold text-emerald-400 mb-4 flex items-center gap-2">
+        <div className="mt-6 pt-6 border-t border-[#222222]">
+          <h3 className="text-lg font-semibold text-lime-400 mb-4 flex items-center gap-2">
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -140,13 +140,13 @@ function GoalProgressCard({
   }
 
   return (
-    <div className="bg-slate-700/40 border border-slate-600 rounded-xl p-5 hover:border-slate-500 transition-all">
+    <div className="bg-[#1A1A1A] border border-[#222222] rounded-xl p-5 hover:border-[#333333] transition-all">
       {/* Exercise Name and Status */}
       <div className="flex items-start justify-between mb-4">
         <div>
           <h4 className="text-white font-semibold text-lg">{goal.exercise_name}</h4>
           {goal.target_date && daysRemaining !== null && (
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-zinc-500 text-sm mt-1">
               {daysRemaining > 0 ? `${daysRemaining} days remaining` : 'Deadline passed'}
             </p>
           )}
@@ -160,7 +160,7 @@ function GoalProgressCard({
 
       {/* Progress Bar */}
       <div className="relative mb-4">
-        <div className="h-8 bg-slate-700/50 rounded-lg overflow-hidden">
+        <div className="h-8 bg-[#222222] rounded-lg overflow-hidden">
           <div
             className={`h-full transition-all duration-500 bg-gradient-to-r ${statusColors[onTrackStatus]}`}
             style={{ width: `${Math.min(progressPercentage, 100)}%` }}
@@ -175,23 +175,23 @@ function GoalProgressCard({
 
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+        <div className="bg-[#111111] rounded-lg p-3 text-center">
           <div className="text-xl font-bold text-white">{formatWeight(currentWeight)}</div>
-          <div className="text-xs text-slate-400">Current</div>
+          <div className="text-xs text-zinc-500">Current</div>
         </div>
-        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-          <div className="text-xl font-bold text-emerald-400">{formatWeight(goal.target_weight_kg)}</div>
-          <div className="text-xs text-slate-400">Target</div>
+        <div className="bg-[#111111] rounded-lg p-3 text-center">
+          <div className="text-xl font-bold text-lime-400">{formatWeight(goal.target_weight_kg)}</div>
+          <div className="text-xs text-zinc-500">Target</div>
         </div>
-        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+        <div className="bg-[#111111] rounded-lg p-3 text-center">
           <div className="text-xl font-bold text-orange-400">{formatWeight(weightRemaining)}</div>
-          <div className="text-xs text-slate-400">Remaining</div>
+          <div className="text-xs text-zinc-500">Remaining</div>
         </div>
       </div>
 
       {/* Progress Rate Info */}
       {progress.progressRate > 0 && (
-        <div className="mt-3 text-sm text-slate-400 text-center">
+        <div className="mt-3 text-sm text-zinc-500 text-center">
           Progressing at <span className="text-white font-semibold">{formatWeight(progress.progressRate)}/week</span>
           {progress.estimatedCompletion && (
             <span className="ml-2">
@@ -222,22 +222,22 @@ function AchievedGoalCard({
   const { goal, currentWeight } = progress
 
   return (
-    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
+    <div className="bg-lime-400/10 border border-lime-400/20 rounded-lg p-4">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h4 className="text-white font-semibold flex items-center gap-2">
             <span className="text-2xl">🏆</span>
             {goal.exercise_name}
           </h4>
-          <p className="text-emerald-400 font-bold mt-1">
+          <p className="text-lime-400 font-bold mt-1">
             Target: {formatWeight(goal.target_weight_kg)} - Achieved!
           </p>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-zinc-500 text-sm mt-1">
             Current PR: {formatWeight(currentWeight)}
           </p>
         </div>
         {goal.achieved_at && (
-          <div className="text-right text-sm text-slate-400">
+          <div className="text-right text-sm text-zinc-500">
             Achieved on<br />
             {new Date(goal.achieved_at).toLocaleDateString('en-US', {
               month: 'short',

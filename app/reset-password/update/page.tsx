@@ -19,7 +19,6 @@ export default function UpdatePasswordPage() {
 
   // Wait for auth to be ready (user should be set from the magic link)
   useEffect(() => {
-    // Give Supabase a moment to process the auth token from the URL
     const timer = setTimeout(() => {
       setIsReady(true)
     }, 1000)
@@ -30,13 +29,11 @@ export default function UpdatePasswordPage() {
     e.preventDefault()
     setError('')
 
-    // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
     }
 
-    // Validate password strength
     const passwordValidation = validatePassword(password)
     if (!passwordValidation.isValid) {
       setError(passwordValidation.errors[0])
@@ -55,7 +52,6 @@ export default function UpdatePasswordPage() {
       } else {
         setSuccess(true)
         setLoading(false)
-        // Redirect to login after 3 seconds
         setTimeout(() => {
           router.push('/login')
         }, 3000)
@@ -68,48 +64,43 @@ export default function UpdatePasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Header with Icon */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              {/* Barbell bar */}
+          <div className="w-16 h-16 bg-lime-400 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <svg className="w-9 h-9 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <line x1="4" y1="12" x2="20" y2="12" strokeWidth={2.5} strokeLinecap="round" />
-              {/* Left weight plate */}
               <rect x="3" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
-              {/* Right weight plate */}
               <rect x="18" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
-              {/* Upward trending graph line */}
               <polyline points="7,16 10,13 13,14 16,10 19,8" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7" />
             </svg>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight mb-3">
+          <h1 className="text-4xl font-bold text-white tracking-tight mb-3">
             Set New Password
           </h1>
-          <p className="text-slate-400 text-lg">Choose a strong password for your account</p>
+          <p className="text-zinc-500 text-lg">Choose a strong password for your account</p>
         </div>
 
         {/* Success Message */}
         {success ? (
-          <div className="bg-slate-800/60 border border-emerald-500/50 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
+          <div className="bg-[#111111] border border-lime-400/50 rounded-2xl p-8 shadow-2xl">
             <div className="text-center">
-              {/* Success Icon */}
-              <div className="w-20 h-20 bg-emerald-500/20 border-2 border-emerald-500 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 bg-lime-400/20 border-2 border-lime-400 rounded-full mx-auto mb-6 flex items-center justify-center">
+                <svg className="w-10 h-10 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
 
               <h2 className="text-2xl font-bold text-white mb-4">Password Updated!</h2>
 
-              <p className="text-slate-300 mb-6">
+              <p className="text-zinc-300 mb-6">
                 Your password has been successfully updated. You will be redirected to the login page shortly.
               </p>
 
               <Link
                 href="/login"
-                className="inline-block bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold py-3 px-8 rounded-lg hover:from-emerald-600 hover:to-cyan-600 transition-all shadow-lg shadow-emerald-500/20"
+                className="inline-block bg-lime-400 text-black font-semibold py-3 px-8 rounded-lg hover:bg-lime-300 transition-all"
               >
                 Go to Login
               </Link>
@@ -117,19 +108,19 @@ export default function UpdatePasswordPage() {
           </div>
         ) : !isReady ? (
           /* Loading State */
-          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
+          <div className="bg-[#111111] border border-[#222222] rounded-2xl p-8 shadow-2xl">
             <div className="text-center">
-              <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-slate-300">Verifying your reset link...</p>
+              <div className="w-12 h-12 border-4 border-lime-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-zinc-300">Verifying your reset link...</p>
             </div>
           </div>
         ) : (
           /* Update Password Form Card */
-          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
+          <div className="bg-[#111111] border border-[#222222] rounded-2xl p-8 shadow-2xl">
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* New Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-zinc-300 mb-2">
                   New Password
                 </label>
                 <input
@@ -143,13 +134,13 @@ export default function UpdatePasswordPage() {
                   onFocus={() => setShowPasswordRequirements(true)}
                   required
                   minLength={12}
-                  className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPasswordRequirements(!showPasswordRequirements)}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 mt-1 underline"
+                  className="text-xs text-lime-400 hover:text-lime-300 mt-1 underline"
                 >
                   {showPasswordRequirements ? 'Hide' : 'Show'} password requirements
                 </button>
@@ -157,7 +148,7 @@ export default function UpdatePasswordPage() {
 
               {/* Confirm Password Input */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-300 mb-2">
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-zinc-300 mb-2">
                   Confirm New Password
                 </label>
                 <input
@@ -167,29 +158,29 @@ export default function UpdatePasswordPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={12}
-                  className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
               </div>
 
               {/* Password Requirements */}
               {showPasswordRequirements && (
-                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-slate-300 mb-2">Password must contain:</h3>
-                  <ul className="text-xs text-slate-400 space-y-1">
-                    <li className={password.length >= 12 ? 'text-emerald-400' : ''}>
+                <div className="bg-[#1A1A1A] border border-[#222222] rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-zinc-300 mb-2">Password must contain:</h3>
+                  <ul className="text-xs text-zinc-500 space-y-1">
+                    <li className={password.length >= 12 ? 'text-lime-400' : ''}>
                       {password.length >= 12 ? '✓' : '○'} At least 12 characters
                     </li>
-                    <li className={/[A-Z]/.test(password) ? 'text-emerald-400' : ''}>
+                    <li className={/[A-Z]/.test(password) ? 'text-lime-400' : ''}>
                       {/[A-Z]/.test(password) ? '✓' : '○'} At least one uppercase letter (A-Z)
                     </li>
-                    <li className={/[a-z]/.test(password) ? 'text-emerald-400' : ''}>
+                    <li className={/[a-z]/.test(password) ? 'text-lime-400' : ''}>
                       {/[a-z]/.test(password) ? '✓' : '○'} At least one lowercase letter (a-z)
                     </li>
-                    <li className={/[0-9]/.test(password) ? 'text-emerald-400' : ''}>
+                    <li className={/[0-9]/.test(password) ? 'text-lime-400' : ''}>
                       {/[0-9]/.test(password) ? '✓' : '○'} At least one number (0-9)
                     </li>
-                    <li className={/[!@#$%^&*(),.?":{}|<>_\-+=[\]\\\/;'`~]/.test(password) ? 'text-emerald-400' : ''}>
+                    <li className={/[!@#$%^&*(),.?":{}|<>_\-+=[\]\\\/;'`~]/.test(password) ? 'text-lime-400' : ''}>
                       {/[!@#$%^&*(),.?":{}|<>_\-+=[\]\\\/;'`~]/.test(password) ? '✓' : '○'} At least one special character (!@#$%^&*...)
                     </li>
                   </ul>
@@ -207,7 +198,7 @@ export default function UpdatePasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                className="w-full bg-lime-400 text-black font-semibold py-3 px-6 rounded-lg hover:bg-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2 focus:ring-offset-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Updating...' : 'Update Password'}
               </button>
@@ -216,7 +207,7 @@ export default function UpdatePasswordPage() {
               <div className="text-center">
                 <Link
                   href="/login"
-                  className="text-emerald-400 hover:text-emerald-300 text-sm transition-colors"
+                  className="text-lime-400 hover:text-lime-300 text-sm transition-colors"
                 >
                   Back to Login
                 </Link>

@@ -21,16 +21,14 @@ export default function SignupPage() {
     e.preventDefault()
     setError('')
 
-    // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
     }
 
-    // Validate password strength
     const passwordValidation = validatePassword(password)
     if (!passwordValidation.isValid) {
-      setError(passwordValidation.errors[0]) // Show first error
+      setError(passwordValidation.errors[0])
       setShowPasswordRequirements(true)
       return
     }
@@ -44,7 +42,6 @@ export default function SignupPage() {
         setError(result.error)
         setLoading(false)
       } else {
-        // Success! Show email verification message
         setEmailSent(true)
         setLoading(false)
       }
@@ -56,58 +53,53 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-4xl">
         {/* Header with Icon */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              {/* Barbell bar */}
+          <div className="w-16 h-16 bg-lime-400 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <svg className="w-9 h-9 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <line x1="4" y1="12" x2="20" y2="12" strokeWidth={2.5} strokeLinecap="round" />
-              {/* Left weight plate */}
               <rect x="3" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
-              {/* Right weight plate */}
               <rect x="18" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
-              {/* Upward trending graph line */}
               <polyline points="7,16 10,13 13,14 16,10 19,8" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7" />
             </svg>
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight mb-3">
+          <h1 className="text-5xl font-bold text-white tracking-tight mb-3">
             Gym Bestie
           </h1>
-          <p className="text-slate-400 text-lg">Start your fitness journey</p>
+          <p className="text-zinc-500 text-lg">Start your fitness journey</p>
         </div>
 
         {/* Email Verification Success Message */}
         {emailSent ? (
-          <div className="bg-slate-800/60 border border-emerald-500/50 rounded-2xl p-8 backdrop-blur-md shadow-2xl mb-8">
+          <div className="bg-[#111111] border border-lime-400/50 rounded-2xl p-8 shadow-2xl mb-8">
             <div className="text-center">
-              {/* Success Icon */}
-              <div className="w-20 h-20 bg-emerald-500/20 border-2 border-emerald-500 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 bg-lime-400/20 border-2 border-lime-400 rounded-full mx-auto mb-6 flex items-center justify-center">
+                <svg className="w-10 h-10 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
 
               <h2 className="text-3xl font-bold text-white mb-4">Check your email!</h2>
 
-              <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-6 mb-6">
-                <p className="text-slate-300 text-lg mb-2">
+              <div className="bg-[#1A1A1A] border border-[#222222] rounded-lg p-6 mb-6">
+                <p className="text-zinc-300 text-lg mb-2">
                   We've sent a confirmation email to:
                 </p>
-                <p className="text-emerald-400 font-semibold text-xl mb-4">
+                <p className="text-lime-400 font-semibold text-xl mb-4">
                   {email}
                 </p>
-                <p className="text-slate-400 text-sm">
+                <p className="text-zinc-500 text-sm">
                   Click the link in the email to activate your account.
                 </p>
               </div>
 
-              <div className="bg-slate-900/30 border border-slate-700/50 rounded-lg p-4 mb-6">
-                <p className="text-slate-400 text-sm mb-2">
-                  <strong className="text-slate-300">Didn't receive the email?</strong>
+              <div className="bg-[#0D0D0D] border border-[#1A1A1A] rounded-lg p-4 mb-6">
+                <p className="text-zinc-500 text-sm mb-2">
+                  <strong className="text-zinc-300">Didn't receive the email?</strong>
                 </p>
-                <ul className="text-slate-500 text-xs space-y-1 text-left max-w-md mx-auto">
+                <ul className="text-zinc-600 text-xs space-y-1 text-left max-w-md mx-auto">
                   <li>• Check your spam/junk folder</li>
                   <li>• Make sure {email} is correct</li>
                   <li>• Wait a few minutes and check again</li>
@@ -116,7 +108,7 @@ export default function SignupPage() {
 
               <Link
                 href="/login"
-                className="inline-block bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold py-3 px-8 rounded-lg hover:from-emerald-600 hover:to-cyan-600 transition-all shadow-lg shadow-emerald-500/20"
+                className="inline-block bg-lime-400 text-black font-semibold py-3 px-8 rounded-lg hover:bg-lime-300 transition-all"
               >
                 Go to Login
               </Link>
@@ -124,11 +116,11 @@ export default function SignupPage() {
           </div>
         ) : (
           /* Signup Form Card */
-          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl mb-8">
+          <div className="bg-[#111111] border border-[#222222] rounded-2xl p-8 shadow-2xl mb-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-zinc-300 mb-2">
                 Email
               </label>
               <input
@@ -137,7 +129,7 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                 placeholder="you@example.com"
               />
             </div>
@@ -145,7 +137,7 @@ export default function SignupPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-zinc-300 mb-2">
                   Password
                 </label>
                 <input
@@ -159,13 +151,13 @@ export default function SignupPage() {
                   onFocus={() => setShowPasswordRequirements(true)}
                   required
                   minLength={12}
-                  className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPasswordRequirements(!showPasswordRequirements)}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 mt-1 underline"
+                  className="text-xs text-lime-400 hover:text-lime-300 mt-1 underline"
                 >
                   {showPasswordRequirements ? 'Hide' : 'Show'} password requirements
                 </button>
@@ -173,7 +165,7 @@ export default function SignupPage() {
 
               {/* Confirm Password Input */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-300 mb-2">
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-zinc-300 mb-2">
                   Confirm Password
                 </label>
                 <input
@@ -183,7 +175,7 @@ export default function SignupPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={12}
-                  className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -191,22 +183,22 @@ export default function SignupPage() {
 
             {/* Password Requirements */}
             {showPasswordRequirements && (
-              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-slate-300 mb-2">Password must contain:</h3>
-                <ul className="text-xs text-slate-400 space-y-1">
-                  <li className={password.length >= 12 ? 'text-emerald-400' : ''}>
+              <div className="bg-[#1A1A1A] border border-[#222222] rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-zinc-300 mb-2">Password must contain:</h3>
+                <ul className="text-xs text-zinc-500 space-y-1">
+                  <li className={password.length >= 12 ? 'text-lime-400' : ''}>
                     ✓ At least 12 characters
                   </li>
-                  <li className={/[A-Z]/.test(password) ? 'text-emerald-400' : ''}>
+                  <li className={/[A-Z]/.test(password) ? 'text-lime-400' : ''}>
                     ✓ At least one uppercase letter (A-Z)
                   </li>
-                  <li className={/[a-z]/.test(password) ? 'text-emerald-400' : ''}>
+                  <li className={/[a-z]/.test(password) ? 'text-lime-400' : ''}>
                     ✓ At least one lowercase letter (a-z)
                   </li>
-                  <li className={/[0-9]/.test(password) ? 'text-emerald-400' : ''}>
+                  <li className={/[0-9]/.test(password) ? 'text-lime-400' : ''}>
                     ✓ At least one number (0-9)
                   </li>
-                  <li className={/[!@#$%^&*(),.?":{}|<>_\-+=[\]\\\/;'`~]/.test(password) ? 'text-emerald-400' : ''}>
+                  <li className={/[!@#$%^&*(),.?":{}|<>_\-+=[\]\\\/;'`~]/.test(password) ? 'text-lime-400' : ''}>
                     ✓ At least one special character (!@#$%^&*...)
                   </li>
                 </ul>
@@ -225,14 +217,14 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                className="w-full sm:flex-1 bg-lime-400 text-black font-semibold py-3 px-6 rounded-lg hover:bg-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2 focus:ring-offset-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating account...' : 'Create Account'}
               </button>
-              <div className="text-slate-400 text-sm sm:mx-4">or</div>
+              <div className="text-zinc-600 text-sm sm:mx-4">or</div>
               <Link
                 href="/login"
-                className="w-full sm:flex-1 text-center bg-slate-700/50 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-lg border border-slate-600 hover:border-slate-500 transition-all"
+                className="w-full sm:flex-1 text-center bg-[#1A1A1A] hover:bg-[#222222] text-white font-semibold py-3 px-6 rounded-lg border border-[#333333] hover:border-[#444444] transition-all"
               >
                 Sign In
               </Link>
@@ -303,14 +295,14 @@ function FeatureCard({
 }) {
   return (
     <div
-      className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-5 backdrop-blur-sm hover:border-emerald-500/50 hover:bg-slate-800/60 transition-all duration-300 animate-fade-in-up"
+      className="bg-[#111111] border border-[#222222] rounded-xl p-5 hover:border-lime-400/30 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center mb-3 border border-emerald-500/30">
-        <div className="text-emerald-400">{icon}</div>
+      <div className="w-12 h-12 bg-lime-400/10 rounded-lg flex items-center justify-center mb-3 border border-lime-400/20">
+        <div className="text-lime-400">{icon}</div>
       </div>
       <h3 className="text-white font-semibold mb-1">{title}</h3>
-      <p className="text-slate-400 text-sm">{description}</p>
+      <p className="text-zinc-500 text-sm">{description}</p>
     </div>
   )
 }

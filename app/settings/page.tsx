@@ -24,24 +24,24 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
+    <div className="min-h-screen bg-black py-8 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-4xl font-bold text-white tracking-tight">
             Settings
           </h1>
-          <p className="text-slate-400 mt-2">Customize your workout tracking experience</p>
+          <p className="text-zinc-500 mt-2">Customize your workout tracking experience</p>
         </div>
 
         {/* Settings Cards */}
         <div className="space-y-4">
           {/* Weight Unit Toggle */}
-          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md hover:border-slate-600 transition-all">
+          <div className="bg-[#111111] border border-[#222222] rounded-2xl p-6 hover:border-[#333333] transition-all">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-lime-400 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -52,49 +52,47 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Weight Unit</h3>
-                  <p className="text-sm text-slate-400 mt-0.5">Choose between kilograms and pounds</p>
+                  <p className="text-sm text-zinc-500 mt-0.5">Choose between kilograms and pounds</p>
                 </div>
               </div>
               <button
                 onClick={toggleWeightUnit}
-                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
-                  weightUnit === 'kg' ? 'bg-emerald-500' : 'bg-cyan-500'
-                }`}
+                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2 focus:ring-offset-black bg-lime-400`}
               >
                 <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                  className={`inline-block h-6 w-6 transform rounded-full bg-black transition-transform ${
                     weightUnit === 'kg' ? 'translate-x-1' : 'translate-x-9'
                   }`}
                 />
-                <span className="absolute inset-0 flex items-center justify-between px-2 text-xs font-bold text-white pointer-events-none">
+                <span className="absolute inset-0 flex items-center justify-between px-2 text-xs font-bold text-black pointer-events-none">
                   <span className={weightUnit === 'kg' ? 'opacity-100' : 'opacity-0'}>kg</span>
                   <span className={weightUnit === 'lbs' ? 'opacity-100' : 'opacity-0'}>lbs</span>
                 </span>
               </button>
             </div>
-            <div className="mt-4 bg-slate-700/30 rounded-lg p-3">
-              <p className="text-sm text-slate-300">
+            <div className="mt-4 bg-[#1A1A1A] rounded-lg p-3">
+              <p className="text-sm text-zinc-300">
                 <span className="font-semibold text-white">Current setting:</span>{' '}
                 {weightUnit === 'kg' ? 'Kilograms (kg)' : 'Pounds (lbs)'}
               </p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-zinc-500 mt-1">
                 Example: 100kg = {weightUnit === 'kg' ? '100kg' : '220.5lbs'}
               </p>
             </div>
           </div>
 
           {/* Weekly Cardio Goal */}
-          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md hover:border-slate-600 transition-all">
+          <div className="bg-[#111111] border border-[#222222] rounded-2xl p-6 hover:border-[#333333] transition-all">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-indigo-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-lime-400/10 border border-lime-400/20 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Weekly Cardio Goal</h3>
-                  <p className="text-sm text-slate-400 mt-0.5">Set your target cardio minutes per week</p>
+                  <p className="text-sm text-zinc-500 mt-0.5">Set your target cardio minutes per week</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -105,13 +103,13 @@ export default function SettingsPage() {
                   min="1"
                   max="4200"
                   title="Weekly cardio goal (1-4,200 minutes, max 70 hours/week)"
-                  className={`w-24 px-4 py-2 bg-slate-700 border rounded-lg text-white text-center font-semibold focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
+                  className={`w-24 px-4 py-2 bg-[#1A1A1A] border rounded-lg text-white text-center font-semibold focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${
                     goalError
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-slate-600 focus:ring-sky-500'
+                      : 'border-[#222222] focus:ring-lime-400'
                   }`}
                 />
-                <span className="text-slate-400 font-medium">min</span>
+                <span className="text-zinc-500 font-medium">min</span>
               </div>
             </div>
             {goalError && (
@@ -119,12 +117,12 @@ export default function SettingsPage() {
                 <p className="text-sm text-red-400">{goalError}</p>
               </div>
             )}
-            <div className="mt-4 bg-slate-700/30 rounded-lg p-3">
-              <p className="text-sm text-slate-300">
+            <div className="mt-4 bg-[#1A1A1A] rounded-lg p-3">
+              <p className="text-sm text-zinc-300">
                 <span className="font-semibold text-white">Current goal:</span>{' '}
                 {weeklyCardioGoal} minutes per week
               </p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-zinc-500 mt-1">
                 WHO recommends at least 150 minutes of moderate cardio per week
               </p>
             </div>
@@ -134,10 +132,10 @@ export default function SettingsPage() {
           <GoalManagement />
 
           {/* Info Card */}
-          <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-2xl p-5">
+          <div className="bg-lime-400/5 border border-lime-400/20 rounded-2xl p-5">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-lime-400/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -147,8 +145,8 @@ export default function SettingsPage() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h4 className="text-sm font-semibold text-cyan-400 mb-1">Settings are saved automatically</h4>
-                <p className="text-sm text-slate-300">
+                <h4 className="text-sm font-semibold text-lime-400 mb-1">Settings are saved automatically</h4>
+                <p className="text-sm text-zinc-300">
                   Your preferences are stored in your browser and will be remembered on your next visit. These settings
                   apply to all your workouts and analytics.
                 </p>

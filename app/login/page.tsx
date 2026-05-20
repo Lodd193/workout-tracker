@@ -34,35 +34,31 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-4xl">
         {/* Header with Icon */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              {/* Barbell bar */}
+          <div className="w-16 h-16 bg-lime-400 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <svg className="w-9 h-9 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <line x1="4" y1="12" x2="20" y2="12" strokeWidth={2.5} strokeLinecap="round" />
-              {/* Left weight plate */}
               <rect x="3" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
-              {/* Right weight plate */}
               <rect x="18" y="9" width="3" height="6" rx="0.5" fill="currentColor" />
-              {/* Upward trending graph line */}
               <polyline points="7,16 10,13 13,14 16,10 19,8" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7" />
             </svg>
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight mb-3">
+          <h1 className="text-5xl font-bold text-white tracking-tight mb-3">
             Gym Bestie
           </h1>
-          <p className="text-slate-400 text-lg">Your workout tracking companion</p>
+          <p className="text-zinc-500 text-lg">Your workout tracking companion</p>
         </div>
 
         {/* Login Form Card */}
-        <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl mb-8">
+        <div className="bg-[#111111] border border-[#222222] rounded-2xl p-8 shadow-2xl mb-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-zinc-300 mb-2">
                   Email
                 </label>
                 <input
@@ -71,14 +67,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                   placeholder="you@example.com"
                 />
               </div>
 
               {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-zinc-300 mb-2">
                   Password
                 </label>
                 <input
@@ -87,12 +83,12 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1A1A] border border-[#222222] rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
                 <Link
                   href="/reset-password"
-                  className="text-sm text-emerald-400 hover:text-emerald-300 mt-2 inline-block transition-colors"
+                  className="text-sm text-lime-400 hover:text-lime-300 mt-2 inline-block transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -111,14 +107,14 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                className="w-full sm:flex-1 bg-lime-400 text-black font-semibold py-3 px-6 rounded-lg hover:bg-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2 focus:ring-offset-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
-              <div className="text-slate-400 text-sm sm:mx-4">or</div>
+              <div className="text-zinc-600 text-sm sm:mx-4">or</div>
               <Link
                 href="/signup"
-                className="w-full sm:flex-1 text-center bg-slate-700/50 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-lg border border-slate-600 hover:border-slate-500 transition-all"
+                className="w-full sm:flex-1 text-center bg-[#1A1A1A] hover:bg-[#222222] text-white font-semibold py-3 px-6 rounded-lg border border-[#333333] hover:border-[#444444] transition-all"
               >
                 Create Account
               </Link>
@@ -172,7 +168,7 @@ export default function LoginPage() {
 
         {/* Already logged in notice */}
         <div className="mt-6 text-center">
-          <Link href="/" className="text-slate-500 hover:text-slate-300 text-sm underline">
+          <Link href="/" className="text-zinc-600 hover:text-zinc-400 text-sm underline">
             Already logged in? Go to home page
           </Link>
         </div>
@@ -195,14 +191,14 @@ function FeatureCard({
 }) {
   return (
     <div
-      className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-5 backdrop-blur-sm hover:border-emerald-500/50 hover:bg-slate-800/60 transition-all duration-300 animate-fade-in-up"
+      className="bg-[#111111] border border-[#222222] rounded-xl p-5 hover:border-lime-400/30 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center mb-3 border border-emerald-500/30">
-        <div className="text-emerald-400">{icon}</div>
+      <div className="w-12 h-12 bg-lime-400/10 rounded-lg flex items-center justify-center mb-3 border border-lime-400/20">
+        <div className="text-lime-400">{icon}</div>
       </div>
       <h3 className="text-white font-semibold mb-1">{title}</h3>
-      <p className="text-slate-400 text-sm">{description}</p>
+      <p className="text-zinc-500 text-sm">{description}</p>
     </div>
   )
 }

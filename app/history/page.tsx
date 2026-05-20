@@ -51,7 +51,6 @@ export default function HistoryPage() {
 
   const handleEditSet = (setId: number, currentWeight: number, currentReps: number) => {
     setEditingSet(setId)
-    // Convert to display unit
     const displayWeight = convertWeight(currentWeight)
     setEditWeight(displayWeight.toString())
     setEditReps(currentReps.toString())
@@ -70,13 +69,12 @@ export default function HistoryPage() {
       return
     }
 
-    // Convert back to kg for storage
     const weightInKg = weightUnit === 'lbs' ? displayWeight / 2.20462 : displayWeight
 
     const success = await updateWorkoutSet(setId, { weight_kg: weightInKg, reps })
     if (success) {
       setEditingSet(null)
-      loadHistory() // Refresh data
+      loadHistory()
     }
   }
 
@@ -134,11 +132,11 @@ export default function HistoryPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
+      <div className="min-h-screen bg-black py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="animate-pulse space-y-4">
-            <div className="h-12 bg-slate-700/30 rounded"></div>
-            <div className="h-64 bg-slate-700/30 rounded"></div>
+            <div className="h-12 bg-[#111111] rounded"></div>
+            <div className="h-64 bg-[#111111] rounded"></div>
           </div>
         </div>
       </div>
@@ -146,21 +144,21 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
+    <div className="min-h-screen bg-black py-8 px-4">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-4xl font-bold text-white tracking-tight">
             Workout History
           </h1>
-          <p className="text-slate-400 mt-2">View, edit, and manage your past workouts</p>
+          <p className="text-zinc-500 mt-2">View, edit, and manage your past workouts</p>
         </div>
 
         {/* Search Bar */}
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
             <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -177,18 +175,18 @@ export default function HistoryPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by date or exercise..."
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+              className="w-full bg-[#111111] border border-[#222222] rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-lime-400 transition-all"
             />
           </div>
-          <div className="text-slate-400 text-sm whitespace-nowrap">
+          <div className="text-zinc-500 text-sm whitespace-nowrap">
             {filteredHistory.length} workout{filteredHistory.length !== 1 ? 's' : ''}
           </div>
         </div>
 
         {/* Workout List */}
         {filteredHistory.length === 0 ? (
-          <div className="text-center py-20 bg-slate-800/30 rounded-2xl border border-slate-700/50">
-            <svg className="w-16 h-16 mx-auto text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center py-20 bg-[#111111] rounded-2xl border border-[#222222]">
+            <svg className="w-16 h-16 mx-auto text-zinc-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -196,8 +194,8 @@ export default function HistoryPage() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <p className="text-slate-400 text-lg">No workout history found</p>
-            <p className="text-slate-500 text-sm mt-2">
+            <p className="text-zinc-500 text-lg">No workout history found</p>
+            <p className="text-zinc-600 text-sm mt-2">
               {searchTerm ? 'Try a different search term' : 'Start logging workouts to build your history'}
             </p>
           </div>
@@ -206,7 +204,7 @@ export default function HistoryPage() {
             {filteredHistory.map((entry) => (
               <div
                 key={entry.date}
-                className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-md hover:border-slate-600 transition-all"
+                className="bg-[#111111] border border-[#222222] rounded-2xl p-6 hover:border-[#333333] transition-all"
               >
                 {/* Workout Header */}
                 <div className="flex items-center justify-between mb-4">
@@ -215,7 +213,7 @@ export default function HistoryPage() {
                     className="flex items-center gap-3 flex-1 text-left group"
                   >
                     <svg
-                      className={`w-6 h-6 text-slate-400 group-hover:text-emerald-400 transition-all ${
+                      className={`w-6 h-6 text-zinc-500 group-hover:text-lime-400 transition-all ${
                         expandedWorkouts.has(entry.date) ? 'rotate-90' : ''
                       }`}
                       fill="none"
@@ -225,10 +223,10 @@ export default function HistoryPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                     <div>
-                      <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                      <h3 className="text-xl font-bold text-white group-hover:text-lime-400 transition-colors">
                         {formatDateLong(entry.date)}
                       </h3>
-                      <p className="text-slate-400 text-sm mt-1">
+                      <p className="text-zinc-500 text-sm mt-1">
                         {entry.exercises.length} exercise{entry.exercises.length !== 1 ? 's' : ''} •{' '}
                         {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • {entry.totalVolume.toLocaleString()}kg volume
                       </p>
@@ -239,7 +237,7 @@ export default function HistoryPage() {
                     className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                       confirmDelete === entry.date
                         ? 'bg-red-500 text-white'
-                        : 'bg-slate-700 text-slate-400 hover:bg-red-500/20 hover:text-red-400'
+                        : 'bg-[#1A1A1A] text-zinc-500 hover:bg-red-500/20 hover:text-red-400'
                     }`}
                   >
                     {confirmDelete === entry.date ? 'Click again to confirm' : 'Delete Workout'}
@@ -250,26 +248,26 @@ export default function HistoryPage() {
                 {expandedWorkouts.has(entry.date) && (
                   <div className="space-y-4">
                     {entry.exercises.map((exercise, exIdx) => {
-                      const gradientColor = CATEGORY_COLORS[exercise.workout_type as keyof typeof CATEGORY_COLORS] || 'from-slate-500 to-slate-600'
+                      const gradientColor = CATEGORY_COLORS[exercise.workout_type as keyof typeof CATEGORY_COLORS] || 'from-zinc-500 to-zinc-600'
 
                       return (
-                        <div key={exIdx} className="bg-slate-700/30 rounded-lg p-4">
+                        <div key={exIdx} className="bg-[#1A1A1A] rounded-lg p-4">
                           <div className="flex items-center gap-3 mb-3">
                             <div className={`w-8 h-8 bg-gradient-to-br ${gradientColor} rounded-lg flex items-center justify-center text-sm font-bold text-white`}>
                               {exIdx + 1}
                             </div>
                             <h4 className="text-white font-semibold">{exercise.exercise_name}</h4>
-                            <span className="text-xs text-slate-400 ml-auto">
+                            <span className="text-xs text-zinc-500 ml-auto">
                               {exercise.sets.length} set{exercise.sets.length !== 1 ? 's' : ''}
                             </span>
                           </div>
 
                           {/* Sets Table */}
                           <div className="grid grid-cols-4 gap-2">
-                            <div className="text-xs text-slate-400 uppercase font-semibold">Set</div>
-                            <div className="text-xs text-slate-400 uppercase font-semibold">Weight</div>
-                            <div className="text-xs text-slate-400 uppercase font-semibold">Reps</div>
-                            <div className="text-xs text-slate-400 uppercase font-semibold">Actions</div>
+                            <div className="text-xs text-zinc-500 uppercase font-semibold">Set</div>
+                            <div className="text-xs text-zinc-500 uppercase font-semibold">Weight</div>
+                            <div className="text-xs text-zinc-500 uppercase font-semibold">Reps</div>
+                            <div className="text-xs text-zinc-500 uppercase font-semibold">Actions</div>
 
                             {exercise.sets.map((set) => (
                               <div key={set.id} className="contents">
@@ -281,7 +279,7 @@ export default function HistoryPage() {
                                       step="0.5"
                                       value={editWeight}
                                       onChange={(e) => setEditWeight(e.target.value)}
-                                      className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm"
+                                      className="w-full bg-[#222222] border border-[#333333] rounded px-2 py-1 text-white text-sm"
                                       autoFocus
                                     />
                                   ) : (
@@ -294,7 +292,7 @@ export default function HistoryPage() {
                                       type="number"
                                       value={editReps}
                                       onChange={(e) => setEditReps(e.target.value)}
-                                      className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-white text-sm"
+                                      className="w-full bg-[#222222] border border-[#333333] rounded px-2 py-1 text-white text-sm"
                                     />
                                   ) : (
                                     <span className="text-white">{set.reps}</span>
@@ -305,13 +303,13 @@ export default function HistoryPage() {
                                     <>
                                       <button
                                         onClick={() => handleSaveEdit(set.id)}
-                                        className="px-2 py-1 bg-emerald-500 text-white text-xs rounded hover:bg-emerald-400"
+                                        className="px-2 py-1 bg-lime-400 text-black text-xs rounded hover:bg-lime-300"
                                       >
                                         Save
                                       </button>
                                       <button
                                         onClick={() => setEditingSet(null)}
-                                        className="px-2 py-1 bg-slate-600 text-white text-xs rounded hover:bg-slate-500"
+                                        className="px-2 py-1 bg-[#1A1A1A] text-white text-xs rounded hover:bg-[#222222]"
                                       >
                                         Cancel
                                       </button>
@@ -320,7 +318,7 @@ export default function HistoryPage() {
                                     <>
                                       <button
                                         onClick={() => handleEditSet(set.id, set.weight_kg, set.reps)}
-                                        className="px-2 py-1 bg-slate-600 text-white text-xs rounded hover:bg-slate-500"
+                                        className="px-2 py-1 bg-[#1A1A1A] text-zinc-300 text-xs rounded hover:bg-[#222222]"
                                       >
                                         Edit
                                       </button>

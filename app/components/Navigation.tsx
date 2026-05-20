@@ -44,13 +44,13 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+    <nav className="bg-black/95 border-b border-[#1A1A1A] sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center transform transition-transform group-hover:scale-110">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <div className="w-10 h-10 bg-lime-400 rounded-lg flex items-center justify-center transform transition-transform group-hover:scale-110">
+              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 {/* Barbell bar */}
                 <line x1="4" y1="12" x2="20" y2="12" strokeWidth={2.5} strokeLinecap="round" />
                 {/* Left weight plate */}
@@ -61,7 +61,7 @@ export default function Navigation() {
                 <polyline points="7,16 10,13 13,14 16,10 19,8" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7" />
               </svg>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent hidden sm:block">
+            <span className="text-xl font-bold text-lime-400 hidden sm:block">
               Gym Bestie
             </span>
           </Link>
@@ -76,8 +76,8 @@ export default function Navigation() {
                   href={link.href}
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
                     isActive
-                      ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                      ? 'bg-lime-400 text-black'
+                      : 'text-zinc-500 hover:text-white hover:bg-[#1A1A1A]'
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@ export default function Navigation() {
             {user && (
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800"
+                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-zinc-500 hover:text-white hover:bg-[#1A1A1A]"
                 title="Sign out"
                 aria-label="Sign out"
               >

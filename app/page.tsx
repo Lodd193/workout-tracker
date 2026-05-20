@@ -20,7 +20,7 @@ export default function Home() {
   // Show loading while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white">Loading...</div>
       </div>
     )
@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen bg-black">
       <WorkoutForm />
     </main>
   )

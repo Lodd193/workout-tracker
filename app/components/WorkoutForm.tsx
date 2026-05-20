@@ -127,19 +127,19 @@ export default function WorkoutForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
+    <div className="min-h-screen bg-black py-8 px-4">
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-4xl font-bold text-white tracking-tight">
             Workout Tracker
           </h1>
           {user?.email && (
-            <p className="text-emerald-400 mt-3 font-medium">
+            <p className="text-lime-400 mt-3 font-medium">
               {getGreeting()}, {user.email.split('@')[0]}!
             </p>
           )}
-          <p className="text-slate-400 mt-2">Build your workout, track your progress</p>
+          <p className="text-zinc-500 mt-2">Build your workout, track your progress</p>
         </div>
 
         {/* Date Input */}
@@ -151,7 +151,7 @@ export default function WorkoutForm() {
             type="button"
             onClick={persistence.loadLastWorkout}
             disabled={persistence.loadingLastWorkout}
-            className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-4 rounded-xl font-semibold shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#1A1A1A] hover:bg-[#222222] text-zinc-300 hover:text-white px-4 py-4 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[#222222]"
           >
             {persistence.loadingLastWorkout ? (
               <>
@@ -174,7 +174,7 @@ export default function WorkoutForm() {
           <button
             type="button"
             onClick={() => setIsTemplateSelectorOpen(true)}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white px-4 py-4 rounded-xl font-semibold shadow-lg shadow-purple-500/30 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+            className="bg-[#1A1A1A] hover:bg-[#222222] text-zinc-300 hover:text-white px-4 py-4 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 border border-[#222222] hover:border-[#333333]"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -185,7 +185,7 @@ export default function WorkoutForm() {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-4 py-4 rounded-xl font-semibold shadow-lg shadow-emerald-500/30 hover:from-emerald-400 hover:to-cyan-400 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+            className="bg-lime-400 text-black px-4 py-4 rounded-xl font-semibold hover:bg-lime-300 transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -205,17 +205,17 @@ export default function WorkoutForm() {
                 </h2>
                 {timer.isRunning && timer.elapsedTime > 0 && (
                   <div className="flex items-center gap-2 mt-1">
-                    <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-sm text-cyan-400 font-medium">{timer.formatDuration()}</span>
+                    <span className="text-sm text-lime-400 font-medium">{timer.formatDuration()}</span>
                   </div>
                 )}
               </div>
               <button
                 type="button"
                 onClick={() => setIsSaveTemplateOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 hover:text-purple-300 transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1A1A1A] border border-[#222222] text-zinc-500 hover:text-white hover:border-[#333333] transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -243,9 +243,9 @@ export default function WorkoutForm() {
 
         {/* Empty State */}
         {selectedExercises.length === 0 && (
-          <div className="text-center py-12 bg-slate-800/30 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
+          <div className="text-center py-12 bg-[#111111] rounded-2xl border border-[#222222]">
             <svg
-              className="w-16 h-16 mx-auto text-slate-600 mb-4"
+              className="w-16 h-16 mx-auto text-zinc-700 mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -257,8 +257,8 @@ export default function WorkoutForm() {
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               />
             </svg>
-            <p className="text-slate-400 text-lg mb-2">No exercises added yet</p>
-            <p className="text-slate-500 text-sm">Click "Add Exercise" to build your workout</p>
+            <p className="text-zinc-500 text-lg mb-2">No exercises added yet</p>
+            <p className="text-zinc-600 text-sm">Click "Add Exercise" to build your workout</p>
           </div>
         )}
 
@@ -267,7 +267,7 @@ export default function WorkoutForm() {
           <button
             type="submit"
             disabled={persistence.saving}
-            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-emerald-500/25 hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-lime-400 text-black py-4 rounded-xl font-semibold text-lg hover:bg-lime-300 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             {persistence.saving ? (
               <span className="flex items-center justify-center gap-2">
@@ -301,7 +301,7 @@ export default function WorkoutForm() {
             className={`text-center py-3 px-4 rounded-xl font-medium animate-slideIn ${
               message.includes('Error')
                 ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                : 'bg-lime-400/10 text-lime-400 border border-lime-400/20'
             }`}
           >
             {message}
